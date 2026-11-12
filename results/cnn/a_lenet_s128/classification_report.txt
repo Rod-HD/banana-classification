@@ -1,0 +1,10 @@
+              precision    recall  f1-score   support
+
+ Bangla Kola     0.8971    0.9242    0.9104        66
+ Champa Kola     0.9615    1.0000    0.9804       150
+  Sabri Kola     1.0000    0.9737    0.9867        76
+  Sagor Kola     0.9863    0.9114    0.9474        79
+
+    accuracy                         0.9623       371
+   macro avg     0.9612    0.9523    0.9562       371
+weighted avg     0.9632    0.9623    0.9622       371

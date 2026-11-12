@@ -1,0 +1,42 @@
+{
+  "_ghi_chu": "Chỉ ghi thông tin có nguồn dẫn. Chỗ chưa có nguồn để \"TODO\" cho nhóm bổ sung kèm nguồn.",
+  "_nguon_du_lieu": {
+    "ten": "BananaImageBD: An Extensive Image Dataset of Common Bangladeshi Banana Varieties with Different Ripeness Levels",
+    "phien_ban": "Version 2, công bố 16/09/2024",
+    "doi": "10.17632/ptfscwtnyz.2",
+    "url": "https://data.mendeley.com/datasets/ptfscwtnyz/2",
+    "don_vi": "East West University (Bangladesh)",
+    "giay_phep": "CC BY 4.0",
+    "cach_thu_thap": "Ảnh chụp bằng camera điện thoại thông minh tại các chợ đầu mối chuối và cửa hàng trái cây bán lẻ ở Bangladesh; ảnh JPEG 256×256.",
+    "mo_ta_chung": "Bốn giống trong bộ dữ liệu được tác giả mô tả là bốn giống chuối phổ biến nhất ở Bangladesh."
+  },
+  "Bangla Kola": {
+    "so_anh_goc_trong_bo_du_lieu": 444,
+    "dac_diem_hinh_thai": "TODO",
+    "vung_trong": "TODO",
+    "cach_dung": "TODO",
+    "nguon": "https://data.mendeley.com/datasets/ptfscwtnyz/2"
+  },
+  "Champa Kola": {
+    "so_anh_goc_trong_bo_du_lieu": 994,
+    "ten_khac": "Chompa Kola (cách viết trong phần mô tả của bộ dữ liệu)",
+    "dac_diem_hinh_thai": "TODO",
+    "vung_trong": "TODO",
+    "cach_dung": "TODO",
+    "nguon": "https://data.mendeley.com/datasets/ptfscwtnyz/2"
+  },
+  "Sabri Kola": {
+    "so_anh_goc_trong_bo_du_lieu": 509,
+    "dac_diem_hinh_thai": "TODO",
+    "vung_trong": "TODO",
+    "cach_dung": "TODO",
+    "nguon": "https://data.mendeley.com/datasets/ptfscwtnyz/2"
+  },
+  "Sagor Kola": {
+    "so_anh_goc_trong_bo_du_lieu": 524,
+    "dac_diem_hinh_thai": "TODO",
+    "vung_trong": "TODO",
+    "cach_dung": "TODO",
+    "nguon": "https://data.mendeley.com/datasets/ptfscwtnyz/2"
+  }
+}

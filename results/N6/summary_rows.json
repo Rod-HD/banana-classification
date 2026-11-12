@@ -1,0 +1,67 @@
+[
+  {
+    "experiment": "N6",
+    "group": "CNN hướng A",
+    "config": "a_lenet",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9735,
+    "macro_f1_std": null,
+    "accuracy": 0.9784,
+    "n_features": null,
+    "fit_time_s": 30.8,
+    "predict_ms_per_image": 1.41
+  },
+  {
+    "experiment": "N6",
+    "group": "CNN hướng A",
+    "config": "a_dropout_aug",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.948,
+    "macro_f1_std": null,
+    "accuracy": 0.9542,
+    "n_features": null,
+    "fit_time_s": 194.0,
+    "predict_ms_per_image": 2.51
+  },
+  {
+    "experiment": "N6",
+    "group": "CNN hướng A",
+    "config": "a_vgg16_lr1e-3",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9895,
+    "macro_f1_std": null,
+    "accuracy": 0.9919,
+    "n_features": null,
+    "fit_time_s": 93.9,
+    "predict_ms_per_image": 130.41
+  },
+  {
+    "experiment": "N6",
+    "group": "CNN hướng B",
+    "config": "b_mobilenetv3_lr1e-4",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0,
+    "n_features": null,
+    "fit_time_s": 323.2,
+    "predict_ms_per_image": 12.54
+  },
+  {
+    "experiment": "N6",
+    "group": "CNN hướng B",
+    "config": "b_resnet50",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9976,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": null,
+    "fit_time_s": 729.6,
+    "predict_ms_per_image": 61.06
+  }
+]

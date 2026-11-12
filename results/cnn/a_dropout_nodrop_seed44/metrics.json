@@ -1,0 +1,89 @@
+{
+  "accuracy": 0.9514824797843666,
+  "macro_f1": 0.9465116316109694,
+  "macro_precision": 0.9478127383676583,
+  "macro_recall": 0.9457880100135263,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.8840579710144928,
+      "recall": 0.9242424242424242,
+      "f1": 0.9037037037037037,
+      "support": 66
+    },
+    "Champa Kola": {
+      "precision": 0.9605263157894737,
+      "recall": 0.9733333333333334,
+      "f1": 0.9668874172185431,
+      "support": 150
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 0.9868421052631579,
+      "f1": 0.9933774834437086,
+      "support": 76
+    },
+    "Sagor Kola": {
+      "precision": 0.9466666666666667,
+      "recall": 0.8987341772151899,
+      "f1": 0.922077922077922,
+      "support": 79
+    }
+  },
+  "confusion_matrix": [
+    [
+      61,
+      4,
+      0,
+      1
+    ],
+    [
+      1,
+      146,
+      0,
+      3
+    ],
+    [
+      1,
+      0,
+      75,
+      0
+    ],
+    [
+      6,
+      2,
+      0,
+      71
+    ]
+  ],
+  "run": "a_dropout_nodrop_seed44",
+  "model": "a_dropout",
+  "stage": null,
+  "eval_set": "val",
+  "input_size": 128,
+  "frac": 1.0,
+  "n_train": 1729,
+  "lr": 0.001,
+  "batch": 32,
+  "augment": false,
+  "dropout": false,
+  "class_weight": false,
+  "oversample": false,
+  "minority_aug": false,
+  "seed": 44,
+  "frozen_backbone": false,
+  "params": {
+    "total": 1746260,
+    "trainable": 1746260,
+    "non_trainable": 0
+  },
+  "epochs_run": 40,
+  "best_epoch": 37,
+  "train_time_s": 241.86915069299903,
+  "time_per_epoch_s": 6.046728767324976,
+  "backbone_feature_time_s_all_2471_images": 0.0,
+  "val_loss": 0.4746064245700836,
+  "train_accuracy_inference_mode": 1.0,
+  "train_macro_f1_inference_mode": 1.0,
+  "predict_ms_per_image_batched_val": 4.213926531000262,
+  "best_model_file_mb": 21.004024
+}

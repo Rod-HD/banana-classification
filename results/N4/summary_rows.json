@@ -1,0 +1,80 @@
+[
+  {
+    "experiment": "N4",
+    "group": "CNN hướng B",
+    "config": "b_mobilenetv3_s1",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.987,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "n_features": null,
+    "fit_time_s": 4.0,
+    "predict_ms_per_image": null
+  },
+  {
+    "experiment": "N4",
+    "group": "CNN hướng B",
+    "config": "b_mobilenetv3",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.993,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "n_features": null,
+    "fit_time_s": 341.1,
+    "predict_ms_per_image": null
+  },
+  {
+    "experiment": "N4",
+    "group": "CNN hướng B",
+    "config": "b_mobilenetv3_lr1e-4",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0,
+    "n_features": null,
+    "fit_time_s": 323.2,
+    "predict_ms_per_image": null
+  },
+  {
+    "experiment": "N4",
+    "group": "CNN hướng B",
+    "config": "b_mobilenetv3_lr1e-3",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9933,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "n_features": null,
+    "fit_time_s": 236.3,
+    "predict_ms_per_image": null
+  },
+  {
+    "experiment": "N4",
+    "group": "CNN hướng B",
+    "config": "b_resnet50_s1",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": null,
+    "fit_time_s": 4.1,
+    "predict_ms_per_image": null
+  },
+  {
+    "experiment": "N4",
+    "group": "CNN hướng B",
+    "config": "b_resnet50",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9976,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": null,
+    "fit_time_s": 729.6,
+    "predict_ms_per_image": null
+  }
+]

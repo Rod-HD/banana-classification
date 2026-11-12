@@ -1,0 +1,912 @@
+[
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.2798,
+    "macro_f1_std": null,
+    "accuracy": 0.2992
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.7054,
+    "macro_f1_std": null,
+    "accuracy": 0.7143
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.1451,
+    "macro_f1_std": null,
+    "accuracy": 0.2291
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.4511,
+    "macro_f1_std": null,
+    "accuracy": 0.4474
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.0854,
+    "macro_f1_std": null,
+    "accuracy": 0.2049
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.085,
+    "macro_f1_std": null,
+    "accuracy": 0.2049
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.0755,
+    "macro_f1_std": null,
+    "accuracy": 0.1779
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9874,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9933,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9917,
+    "macro_f1_std": null,
+    "accuracy": 0.9919
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist HSV (8,8,8)",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9941,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9834,
+    "macro_f1_std": null,
+    "accuracy": 0.9865
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.3019,
+    "macro_f1_std": null,
+    "accuracy": 0.3477
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9835,
+    "macro_f1_std": null,
+    "accuracy": 0.9865
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.7996,
+    "macro_f1_std": null,
+    "accuracy": 0.8356
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9805,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.537,
+    "macro_f1_std": null,
+    "accuracy": 0.5606
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.4606,
+    "macro_f1_std": null,
+    "accuracy": 0.4771
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.3182,
+    "macro_f1_std": null,
+    "accuracy": 0.3801
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8007,
+    "macro_f1_std": null,
+    "accuracy": 0.8437
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.6786,
+    "macro_f1_std": null,
+    "accuracy": 0.6496
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9291,
+    "macro_f1_std": null,
+    "accuracy": 0.9353
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8864,
+    "macro_f1_std": null,
+    "accuracy": 0.9057
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: HOG 64×128",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.5503,
+    "macro_f1_std": null,
+    "accuracy": 0.5121
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9976,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8984,
+    "macro_f1_std": null,
+    "accuracy": 0.9137
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9952,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8883,
+    "macro_f1_std": null,
+    "accuracy": 0.9137
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.7701,
+    "macro_f1_std": null,
+    "accuracy": 0.7601
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.7065,
+    "macro_f1_std": null,
+    "accuracy": 0.6873
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.18,
+    "macro_f1_std": null,
+    "accuracy": 0.2183
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.101,
+    "macro_f1_std": null,
+    "accuracy": 0.1887
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9184,
+    "macro_f1_std": null,
+    "accuracy": 0.9353
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9778,
+    "macro_f1_std": null,
+    "accuracy": 0.9811
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9871,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9881,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "N8",
+    "group": "Truyền thống",
+    "config": "Truyền thống: Hist H-S + HOG",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9741,
+    "macro_f1_std": null,
+    "accuracy": 0.9784
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9895,
+    "macro_f1_std": null,
+    "accuracy": 0.9919
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.0974,
+    "macro_f1_std": null,
+    "accuracy": 0.2183
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9845,
+    "macro_f1_std": null,
+    "accuracy": 0.9865
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.969,
+    "macro_f1_std": null,
+    "accuracy": 0.973
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9528,
+    "macro_f1_std": null,
+    "accuracy": 0.9596
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9809,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9759,
+    "macro_f1_std": null,
+    "accuracy": 0.9784
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.932,
+    "macro_f1_std": null,
+    "accuracy": 0.9326
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8501,
+    "macro_f1_std": null,
+    "accuracy": 0.8814
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8877,
+    "macro_f1_std": null,
+    "accuracy": 0.8868
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9733,
+    "macro_f1_std": null,
+    "accuracy": 0.9757
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9797,
+    "macro_f1_std": null,
+    "accuracy": 0.9811
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng A tốt nhất",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9058,
+    "macro_f1_std": null,
+    "accuracy": 0.903
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8498,
+    "macro_f1_std": null,
+    "accuracy": 0.8544
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.913,
+    "macro_f1_std": null,
+    "accuracy": 0.9245
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9073,
+    "macro_f1_std": null,
+    "accuracy": 0.9191
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.963,
+    "macro_f1_std": null,
+    "accuracy": 0.9677
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9867,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9531,
+    "macro_f1_std": null,
+    "accuracy": 0.9596
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.6593,
+    "macro_f1_std": null,
+    "accuracy": 0.6631
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9931,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B tốt nhất",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.993,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.7753,
+    "macro_f1_std": null,
+    "accuracy": 0.7709
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.8993,
+    "macro_f1_std": null,
+    "accuracy": 0.903
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.936,
+    "macro_f1_std": null,
+    "accuracy": 0.9407
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9142,
+    "macro_f1_std": null,
+    "accuracy": 0.9245
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9803,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9716,
+    "macro_f1_std": null,
+    "accuracy": 0.9757
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9494,
+    "macro_f1_std": null,
+    "accuracy": 0.9569
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.5064,
+    "macro_f1_std": null,
+    "accuracy": 0.5067
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9871,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9903,
+    "macro_f1_std": null,
+    "accuracy": 0.9919
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9933,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, có tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9929,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "shuffle4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.7171,
+    "macro_f1_std": null,
+    "accuracy": 0.6927
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "v0.6",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9516,
+    "macro_f1_std": null,
+    "accuracy": 0.9542
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "v1.4",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9115,
+    "macro_f1_std": null,
+    "accuracy": 0.9191
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "gray",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9594,
+    "macro_f1_std": null,
+    "accuracy": 0.965
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "noise5",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9768,
+    "macro_f1_std": null,
+    "accuracy": 0.9811
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "noise10",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9547,
+    "macro_f1_std": null,
+    "accuracy": 0.9623
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "noise20",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9076,
+    "macro_f1_std": null,
+    "accuracy": 0.9191
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "occlude25",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.5549,
+    "macro_f1_std": null,
+    "accuracy": 0.5337
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "rot-30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9582,
+    "macro_f1_std": null,
+    "accuracy": 0.9623
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "rot-15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9773,
+    "macro_f1_std": null,
+    "accuracy": 0.9811
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "rot15",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9929,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "N8",
+    "group": "Hướng B, lr 1e-5, không tăng cường (N5)",
+    "config": "Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug",
+    "condition": "rot30",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.978,
+    "macro_f1_std": null,
+    "accuracy": 0.9811
+  }
+]

@@ -1,0 +1,156 @@
+[
+  {
+    "experiment": "N7",
+    "group": "thủ công",
+    "config": "Hist HSV (8,8,8) + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9821,
+    "macro_f1_std": null,
+    "accuracy": 0.9838,
+    "n_features": 512
+  },
+  {
+    "experiment": "N7",
+    "group": "thủ công",
+    "config": "Hist HSV (8,8,8) + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 512
+  },
+  {
+    "experiment": "N7",
+    "group": "thủ công",
+    "config": "HOG 64×128 + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9447,
+    "macro_f1_std": null,
+    "accuracy": 0.9515,
+    "n_features": 3780
+  },
+  {
+    "experiment": "N7",
+    "group": "thủ công",
+    "config": "HOG 64×128 + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9869,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "n_features": 3780
+  },
+  {
+    "experiment": "N7",
+    "group": "thủ công",
+    "config": "Hist H-S + HOG (ghép, chuẩn hóa từng phần) + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9902,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "n_features": 3844
+  },
+  {
+    "experiment": "N7",
+    "group": "thủ công",
+    "config": "Hist H-S + HOG (ghép, chuẩn hóa từng phần) + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9976,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 3844
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối) + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9319,
+    "macro_f1_std": null,
+    "accuracy": 0.9407,
+    "n_features": 512
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối) + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.986,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "n_features": 512
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "a_vgg16, lớp Dense(256) áp chót + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9863,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "n_features": 256
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "a_vgg16, lớp Dense(256) áp chót + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.986,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "n_features": 256
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "MobileNetV3 ImageNet, sau GAP (chưa fine-tune) + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9806,
+    "macro_f1_std": null,
+    "accuracy": 0.9811,
+    "n_features": 576
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "MobileNetV3 ImageNet, sau GAP (chưa fine-tune) + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9929,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "n_features": 576
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune) + knn",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0,
+    "n_features": 576
+  },
+  {
+    "experiment": "N7",
+    "group": "embedding",
+    "config": "b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune) + logreg",
+    "condition": "clean",
+    "eval_set": "val (học trên train)",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 576
+  }
+]

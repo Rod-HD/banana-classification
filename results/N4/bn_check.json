@@ -1,0 +1,22 @@
+{
+  "b_mobilenetv3|BN mở (trainable=True)": {
+    "relative_embedding_change": 0.8199621438980103,
+    "head_acc_inference_mode": 1.0,
+    "head_acc_on_training_mode_embedding": 0.046875
+  },
+  "b_mobilenetv3|BN đóng băng (cách đồ án dùng)": {
+    "relative_embedding_change": 0.0,
+    "head_acc_inference_mode": 1.0,
+    "head_acc_on_training_mode_embedding": 1.0
+  },
+  "b_resnet50|BN mở (trainable=True)": {
+    "relative_embedding_change": 0.8383143544197083,
+    "head_acc_inference_mode": 1.0,
+    "head_acc_on_training_mode_embedding": 0.125
+  },
+  "b_resnet50|BN đóng băng (cách đồ án dùng)": {
+    "relative_embedding_change": 0.0,
+    "head_acc_inference_mode": 1.0,
+    "head_acc_on_training_mode_embedding": 1.0
+  }
+}

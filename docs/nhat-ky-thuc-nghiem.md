@@ -571,6 +571,200 @@ Giải thích các điểm trái dự đoán:
 - Bốn cấu hình truyền thống đã chốt (`results/select_traditional/selected.json`); tốt nhất là **Hist H-S + HOG + LogReg (C=100, chuẩn hóa từng phần)**, macro-F1 0,996 ± 0,003. Cấu hình này dùng cho I2, S2, so sánh ở N7, N8 và đánh giá cuối.
 - Các cấu hình tốt nhất cách nhau ít hơn độ lệch chuẩn; trên tập test 371 ảnh, một ảnh sai tương ứng 0,27% accuracy, nên so sánh cuối cùng phải đọc kèm khoảng sai số.
 
+## Bước 4–5 — CNN hướng A, hướng B và so sánh hai hướng: N1–N8 (12/11/2026)
+
+**Mục tiêu.** Huấn luyện ba mô hình hướng A theo bài giảng (`a_lenet`, `a_dropout`, `a_vgg16`) và hai mô hình hướng B lớn hơn (`b_mobilenetv3`, `b_resnet50`); kiểm chứng các giả thuyết N1–N8 (mục 6.5); chốt một biến thể cho mỗi mô hình để đánh giá cuối.
+
+**Đã làm.**
+- `src/cnn/models.py`: năm kiến trúc. Hướng A đúng mô tả của kế hoạch. Hướng B: thân ImageNet → GlobalAveragePooling → Dropout(0,2) → Softmax(4). Mọi mô hình nhận ảnh RGB 0–255; phần chuẩn hóa nằm trong mô hình. VGG16 và ResNet50 dùng lớp `Normalization` trừ trung bình ImageNet và đảo trục kênh của kernel tích chập đầu tiên (trọng số gốc học trên ảnh BGR). Cách này tương đương `preprocess_input`: sai khác lớn nhất ở đầu ra thân mạng là 1,5·10⁻⁴ (VGG16, giá trị lớn nhất 228,7) và 8,7·10⁻⁵ (ResNet50).
+- `src/cnn/train.py`: Adam, cross-entropy, dừng sớm theo macro-F1 trên val (giữ trọng số tốt nhất), checkpoint mỗi epoch trong `checkpoints/<run>/`, `--resume`. Mô hình có thân đóng băng (`a_vgg16`, giai đoạn 1 của hướng B) tính trước đầu ra thân mạng một lần (`data/cache/cnnfeat_*.npy`) rồi chỉ huấn luyện phần đầu. Giai đoạn 2 của hướng B nạp đầu phân lớp của giai đoạn 1 rồi mở băng thân mạng.
+- Các lệnh huấn luyện nằm ở bước 4 và 5 của `scripts/run_all.sh` (`bash scripts/run_all.sh 4 5`); kết quả mỗi lần ở `results/cnn/<run>/` (metrics.json, confusion matrix, history.json, curves.png). Bảng tổng hợp: `results/cnn/table_runs.md`.
+- `python -m src.exp_cnn`: các phép đo N1–N8 (`results/N1` … `results/N8`, hình `results/figures/N*_*.png`).
+
+**Lý do chọn cách này.**
+- `a_lenet` dùng ảnh vào 64×64. **[đo]** `results/cnn/table_runs.md`: 32×32 cho 0,954; 64×64 cho 0,973; 128×128 cho 0,956 (macro-F1 trên val).
+- `a_vgg16` dùng learning rate 1e-3 cho phần đầu. **[đo]** 0,990 so với 0,984 khi dùng 1e-4. Chênh 0,006 tương ứng khoảng 2 ảnh val, nên đây là lựa chọn theo val chứ chưa phải khác biệt chắc chắn.
+- Khi fine-tune (giai đoạn 2), các lớp BatchNormalization luôn để đóng băng. **[đo]** Lần chạy đầu để BN mở: accuracy train ở epoch 1 chỉ 0,356 trong khi accuracy val 0,976. Thống kê theo lô làm lệch đầu ra thân mạng, và đầu phân lớp học ở giai đoạn 1 không còn khớp. Phép đo lặp lại được ở `results/N4/table_batchnorm.md`:
+
+| Thân mạng | Cách mở băng | Thay đổi tương đối của embedding (training=True so với suy luận) | Accuracy đầu phân lớp GĐ1, embedding chế độ suy luận | Accuracy đầu phân lớp GĐ1, embedding chế độ huấn luyện |
+|---|---|---|---|---|
+| b_mobilenetv3 | BN mở (trainable=True) | 0,820 | 1,000 | 0,047 |
+| b_mobilenetv3 | BN đóng băng (cách đồ án dùng) | 0,000 | 1,000 | 1,000 |
+| b_resnet50 | BN mở (trainable=True) | 0,838 | 1,000 | 0,125 |
+| b_resnet50 | BN đóng băng (cách đồ án dùng) | 0,000 | 1,000 | 1,000 |
+
+- Biến thể chốt cho đánh giá cuối được chọn theo macro-F1 trên val: `a_lenet`, `a_dropout_aug`, `a_vgg16_lr1e-3`, `b_mobilenetv3_lr1e-4`, `b_resnet50` (`src/exp_cnn.py`, hàm `final_run`). **[đo]** `results/cnn/table_runs.md`. Lưu ý: val chỉ có 371 ảnh và các mô hình tốt nhất đều trên 0,99, nên con số trên val của biến thể được chọn là lạc quan; con số không thiên lệch là kết quả trên test ở bước 8.
+- Thời gian dự đoán trong N6 đo bằng hàm đã biên dịch (`tf.function`) và đo khi máy không chạy tác vụ khác. **[đo]** Lần đo đầu gọi mô hình ở chế độ eager và đo trong lúc máy đang huấn luyện song song: MobileNetV3 ra 137 ms mỗi ảnh, gần bằng VGG16 (159 ms). Đó là chi phí điều phối từng lớp nhỏ chứ không phải chi phí tính toán; đo lại bằng hàm đã biên dịch còn 12,5 ms (`results/N6/metrics.json`).
+- `b_resnet50` chạy được giai đoạn 2 (mở băng khối conv5, 15 triệu tham số) trên CPU: khoảng 61 s mỗi epoch khi máy rảnh, 8 epoch. **[đo]** `results/N6/table.md`.
+
+**Phương án khác và vì sao không chọn.**
+- Mở băng cả BatchNormalization khi fine-tune: không chọn (xem bảng trên). **[đo]**
+- Giai đoạn 2 với lr 1e-3: không chọn. Macro-F1 tốt nhất 0,993, nhưng trong quá trình huấn luyện tụt xuống 0,917 và dao động mạnh. **[đo]** `results/N4/table.md`.
+- Lưu `a_vgg16` vào `models/` cho demo: không làm được, file 370 MB vượt giới hạn 50 MB của kế hoạch. **[đo]** `results/N6/table.md`.
+- Cross-validation cho CNN: không làm, đã quyết định ở bước 0.3. Thay vào đó, N3 lặp 3 seed khởi tạo để ước lượng nhiễu giữa các lần huấn luyện: độ lệch chuẩn 0,005–0,006 trên val. **[đo]** `results/N3/table_seeds.md`.
+
+**Bằng chứng.**
+
+N1 — số tham số (`results/N1/table.md`, `results/N1/table_totals.md`, hình `results/figures/N1_params.png`):
+
+| Mô hình | Lớp | Công thức | Tính tay | model.summary() | Khớp | Ghi chú |
+|---|---|---|---|---|---|---|
+| a_lenet | conv1 | (5×5×3+1)×6 | 456 | 456 | có |  |
+| a_lenet | conv2 | (5×5×6+1)×16 | 2416 | 2416 | có |  |
+| a_lenet | fc1 | (2704+1)×120 | 324600 | 324600 | có | Flatten: 13×13×16 = 2704 |
+| a_lenet | fc2 | (120+1)×84 | 10164 | 10164 | có |  |
+| a_lenet | softmax | (84+1)×4 | 340 | 340 | có |  |
+| a_lenet | Tổng |  | 337976 | 337976 | có | đầu vào 64×64×3 |
+| a_dropout | conv1 | (5×5×3+1)×32 | 2432 | 2432 | có |  |
+| a_dropout | conv2 | (5×5×32+1)×16 | 12816 | 12816 | có |  |
+| a_dropout | fc1 | (13456+1)×128 | 1722496 | 1722496 | có | Flatten: 29×29×16 = 13456 |
+| a_dropout | fc2 | (128+1)×64 | 8256 | 8256 | có |  |
+| a_dropout | softmax | (64+1)×4 | 260 | 260 | có |  |
+| a_dropout | Tổng |  | 1746260 | 1746260 | có | đầu vào 128×128×3 |
+
+| Mô hình | Tổng số tham số | Tham số được huấn luyện |
+|---|---|---|
+| a_lenet | 337976 | 337976 |
+| a_dropout | 1746260 | 1746260 |
+| a_vgg16 | 40669252 | 25954564 |
+| b_mobilenetv3 | 941428 | giai đoạn 1: 2308; giai đoạn 2: 917204 |
+| b_resnet50 | 23595908 | giai đoạn 1: 8196; giai đoạn 2: 14961668 |
+
+Tất cả các lần huấn luyện (`results/cnn/table_runs.md`):
+
+| Run | Mô hình | Ảnh vào | Số ảnh train | lr | Tăng cường | Tham số huấn luyện | Epoch chọn / tổng | Macro-F1 val | Accuracy val | Accuracy train | Giây / epoch | Thời gian huấn luyện (s) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| a_dropout | a_dropout | 128×128 | 1729 | 0,001 | không | 1746260 | 25 / 40 | 0,940 | 0,946 | 0,999 | 4,2 | 168 |
+| a_dropout_aug | a_dropout | 128×128 | 1729 | 0,001 | có | 1746260 | 25 / 40 | 0,948 | 0,954 | 0,967 | 4,8 | 194 |
+| a_dropout_nodrop | a_dropout | 128×128 | 1729 | 0,001 | không | 1746260 | 33 / 40 | 0,951 | 0,957 | 1,000 | 3,8 | 150 |
+| a_dropout_nodrop_seed43 | a_dropout | 128×128 | 1729 | 0,001 | không | 1746260 | 18 / 40 | 0,960 | 0,968 | 1,000 | 5,8 | 234 |
+| a_dropout_nodrop_seed44 | a_dropout | 128×128 | 1729 | 0,001 | không | 1746260 | 37 / 40 | 0,947 | 0,951 | 1,000 | 6,0 | 242 |
+| a_dropout_seed43 | a_dropout | 128×128 | 1729 | 0,001 | không | 1746260 | 22 / 40 | 0,947 | 0,954 | 0,997 | 6,3 | 253 |
+| a_dropout_seed44 | a_dropout | 128×128 | 1729 | 0,001 | không | 1746260 | 39 / 40 | 0,935 | 0,943 | 0,999 | 5,8 | 233 |
+| a_lenet | a_lenet | 64×64 | 1729 | 0,001 | không | 337976 | 40 / 50 | 0,973 | 0,978 | 1,000 | 0,6 | 31 |
+| a_lenet_frac25 | a_lenet | 64×64 | 432 | 0,001 | không | 337976 | 22 / 32 | 0,924 | 0,930 | 1,000 | 0,2 | 7 |
+| a_lenet_frac50 | a_lenet | 64×64 | 864 | 0,001 | không | 337976 | 13 / 23 | 0,950 | 0,957 | 0,995 | 0,4 | 8 |
+| a_lenet_s128 | a_lenet | 128×128 | 1729 | 0,001 | không | 1628216 | 13 / 23 | 0,956 | 0,962 | 1,000 | 1,7 | 40 |
+| a_lenet_s32 | a_lenet | 32×32 | 1729 | 0,001 | không | 61496 | 20 / 30 | 0,954 | 0,960 | 0,984 | 0,3 | 9 |
+| a_vgg16 | a_vgg16 | 224×224 | 1729 | 0,0001 | không | 25954564 | 7 / 15 | 0,984 | 0,987 | 1,000 | 3,9 | 59 |
+| a_vgg16_frac25 | a_vgg16 | 224×224 | 432 | 0,0001 | không | 25954564 | 3 / 11 | 0,967 | 0,973 | 0,995 | 1,2 | 13 |
+| a_vgg16_frac50 | a_vgg16 | 224×224 | 864 | 0,0001 | không | 25954564 | 3 / 11 | 0,963 | 0,968 | 1,000 | 2,1 | 23 |
+| a_vgg16_lr1e-3 | a_vgg16 | 224×224 | 1729 | 0,001 | không | 25954564 | 16 / 24 | 0,990 | 0,992 | 0,999 | 3,9 | 94 |
+| a_vgg16_lr1e-3_cw | a_vgg16 | 224×224 | 1729 | 0,001 | không | 25954564 | 8 / 16 | 0,987 | 0,989 | 0,999 | 4,1 | 66 |
+| a_vgg16_lr1e-3_minaug | a_vgg16 | 224×224 | 2780 | 0,001 | không | 25954564 | 9 / 17 | 0,994 | 0,995 | 0,999 | 6,1 | 104 |
+| a_vgg16_lr1e-3_os | a_vgg16 | 224×224 | 2780 | 0,001 | không | 25954564 | 4 / 12 | 0,987 | 0,989 | 0,997 | 6,1 | 74 |
+| b_mobilenetv3 | b_mobilenetv3 | 224×224 | 1729 | 1e-05 | có | 917204 | 12 / 17 | 0,993 | 0,995 | 0,997 | 20,1 | 341 |
+| b_mobilenetv3_frac25 | b_mobilenetv3 | 224×224 | 432 | 1e-05 | có | 917204 | 12 / 17 | 0,975 | 0,978 | 0,998 | 7,3 | 124 |
+| b_mobilenetv3_frac50 | b_mobilenetv3 | 224×224 | 864 | 1e-05 | có | 917204 | 2 / 7 | 0,974 | 0,978 | 0,994 | 16,2 | 114 |
+| b_mobilenetv3_lr1e-3 | b_mobilenetv3 | 224×224 | 1729 | 0,001 | có | 917204 | 4 / 9 | 0,993 | 0,995 | 0,998 | 26,3 | 236 |
+| b_mobilenetv3_lr1e-4 | b_mobilenetv3 | 224×224 | 1729 | 0,0001 | có | 917204 | 7 / 12 | 1,000 | 1,000 | 1,000 | 26,9 | 323 |
+| b_mobilenetv3_lr1e-4_cw | b_mobilenetv3 | 224×224 | 1729 | 0,0001 | có | 917204 | 8 / 13 | 1,000 | 1,000 | 1,000 | 16,3 | 212 |
+| b_mobilenetv3_lr1e-4_minaug | b_mobilenetv3 | 224×224 | 2780 | 0,0001 | có | 917204 | 5 / 10 | 1,000 | 1,000 | 0,999 | 25,0 | 250 |
+| b_mobilenetv3_lr1e-4_os | b_mobilenetv3 | 224×224 | 2780 | 0,0001 | có | 917204 | 3 / 8 | 1,000 | 1,000 | 0,998 | 28,6 | 229 |
+| b_mobilenetv3_noaug | b_mobilenetv3 | 224×224 | 1729 | 1e-05 | không | 917204 | 4 / 9 | 0,997 | 0,997 | 0,999 | 23,1 | 208 |
+| b_mobilenetv3_s1 | b_mobilenetv3 | 224×224 | 1729 | 0,001 | không | 2308 | 21 / 31 | 0,987 | 0,989 | 0,997 | 0,1 | 4 |
+| b_mobilenetv3_s1_frac25 | b_mobilenetv3 | 224×224 | 432 | 0,001 | không | 2308 | 41 / 51 | 0,974 | 0,978 | 1,000 | 0,1 | 3 |
+| b_mobilenetv3_s1_frac50 | b_mobilenetv3 | 224×224 | 864 | 0,001 | không | 2308 | 17 / 27 | 0,980 | 0,984 | 0,993 | 0,1 | 2 |
+| b_resnet50 | b_resnet50 | 224×224 | 1729 | 1e-05 | có | 14961668 | 3 / 8 | 0,998 | 0,997 | 1,000 | 91,2 | 730 |
+| b_resnet50_s1 | b_resnet50 | 224×224 | 1729 | 0,001 | không | 8196 | 10 / 20 | 0,996 | 0,997 | 1,000 | 0,2 | 4 |
+
+N2 — lượng dữ liệu (`results/N2/table.md`, hình `results/figures/N2_learning_curve.png`):
+
+| Mô hình | 25% train (432 ảnh) | 50% train (864 ảnh) | 100% train (1729 ảnh) | Tăng từ 25% lên 100% |
+|---|---|---|---|---|
+| a_lenet (LeNet, từ đầu) | 0,924 | 0,950 | 0,973 | +0,050 |
+| a_vgg16 (đóng băng) | 0,967 | 0,963 | 0,984 | +0,016 |
+| b_mobilenetv3 (fine-tune) | 0,975 | 0,974 | 0,993 | +0,018 |
+
+N3 — Dropout (`results/N3/table.md`, `results/N3/table_seeds.md`, hình `results/figures/N3_dropout.png`):
+
+| Cấu hình | Epoch chọn / tổng | Macro-F1 val | Accuracy train (epoch chọn) | Accuracy val (epoch chọn) | Loss train (epoch cuối) | Loss val (epoch cuối) | Khoảng cách loss val − train (epoch cuối) | Loss val thấp nhất |
+|---|---|---|---|---|---|---|---|---|
+| a_dropout có Dropout(0,5) | 25 / 40 | 0,940 | 0,999 | 0,946 | 0,0022 | 0,5444 | 0,5422 | 0,2713 |
+| a_dropout không Dropout | 33 / 40 | 0,951 | 1,000 | 0,957 | 0,0000 | 0,3486 | 0,3486 | 0,1584 |
+
+| Cấu hình | Số lần chạy | Macro-F1 val từng seed | Macro-F1 val (TB ± ĐLC) | Khoảng cách loss val − train ở epoch 40 (TB ± ĐLC) | Loss val thấp nhất (TB ± ĐLC) |
+|---|---|---|---|---|---|
+| Có Dropout(0,5) | 3 | 0,940, 0,947, 0,935 | 0,941 ± 0,005 | 0,456 ± 0,061 | 0,248 ± 0,021 |
+| Không Dropout | 3 | 0,951, 0,960, 0,947 | 0,953 ± 0,006 | 0,376 ± 0,081 | 0,202 ± 0,055 |
+
+N4 — đóng băng và fine-tune (`results/N4/table.md`, hình `results/figures/N4_finetune_lr.png`):
+
+| Cấu hình | Tham số được huấn luyện | Macro-F1 val | Accuracy val | Loss val (epoch chọn) | Macro-F1 val sau epoch 1 | Macro-F1 val thấp nhất | Epoch chọn / tổng | Thời gian mỗi epoch (s) |
+|---|---|---|---|---|---|---|---|---|
+| MobileNetV3-Small, giai đoạn 1 (đóng băng thân) | 2308 | 0,987 | 0,989 | 0,0505 | 0,872 | 0,872 | 21 / 31 | 0,1 |
+| MobileNetV3-Small, giai đoạn 2, lr = 1e-5 | 917204 | 0,993 | 0,995 | 0,0203 | 0,981 | 0,978 | 12 / 17 | 20,1 |
+| MobileNetV3-Small, giai đoạn 2, lr = 1e-4 | 917204 | 1,000 | 1,000 | 0,0045 | 0,974 | 0,974 | 7 / 12 | 26,9 |
+| MobileNetV3-Small, giai đoạn 2, lr = 1e-3 | 917204 | 0,993 | 0,995 | 0,0184 | 0,964 | 0,917 | 4 / 9 | 26,3 |
+| ResNet50, giai đoạn 1 (đóng băng thân) | 8196 | 0,996 | 0,997 | 0,0269 | 0,942 | 0,942 | 10 / 20 | 0,2 |
+| ResNet50, giai đoạn 2 (mở băng conv5), lr = 1e-5 | 14961668 | 0,998 | 0,997 | 0,0140 | 0,984 | 0,984 | 3 / 8 | 91,2 |
+
+N5 — tăng cường ảnh (`results/N5/table.md`, hình `results/figures/N5_augment_a_dropout.png`, `results/figures/N5_augment_b_mobilenetv3.png`):
+
+| Cấu hình | Epoch chọn / tổng | Macro-F1 val | Accuracy train (epoch chọn) | Accuracy val (epoch chọn) | Loss train (epoch cuối) | Loss val (epoch cuối) | Khoảng cách loss val − train (epoch cuối) | Loss val thấp nhất |
+|---|---|---|---|---|---|---|---|---|
+| a_dropout, không tăng cường | 25 / 40 | 0,940 | 0,999 | 0,946 | 0,0022 | 0,5444 | 0,5422 | 0,2713 |
+| a_dropout, có tăng cường | 25 / 40 | 0,948 | 0,967 | 0,954 | 0,2613 | 0,3150 | 0,0536 | 0,1286 |
+| b_mobilenetv3 giai đoạn 2, không tăng cường | 4 / 9 | 0,997 | 0,999 | 0,997 | 0,0045 | 0,0107 | 0,0062 | 0,0107 |
+| b_mobilenetv3 giai đoạn 2, có tăng cường | 12 / 17 | 0,993 | 0,997 | 0,995 | 0,0125 | 0,0183 | 0,0058 | 0,0183 |
+
+N6 — hướng A so với hướng B (`results/N6/table.md`, hình `results/figures/N6_a_vs_b.png`):
+
+| Hướng | Mô hình | Biến thể được chốt | Macro-F1 val | Accuracy val | Số tham số | File mô hình (MB) | Thời gian huấn luyện (s) | Dự đoán 1 ảnh (ms, CPU) | Dự đoán theo lô 32 (ms/ảnh) | Cách tính thời gian huấn luyện |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A | a_lenet | a_lenet | 0,973 | 0,978 | 337976 | 4,1 | 30 | 1,4 | 0,2 | 50 epoch × 0,6 s |
+| A | a_dropout | a_dropout_aug | 0,948 | 0,954 | 1746260 | 21,0 | 192 | 2,5 | 0,7 | 40 epoch × 4,8 s |
+| A | a_vgg16 | a_vgg16_lr1e-3 | 0,990 | 0,992 | 40669252 | 370,4 | 226 | 130,4 | 67,5 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 129 s; đầu phân lớp 24 epoch × 4,0 s |
+| B | b_mobilenetv3 | b_mobilenetv3_lr1e-4 | 1,000 | 1,000 | 941428 | 11,7 | 216 | 12,5 | 2,6 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 25 s; giai đoạn 1: 31 epoch, 4 s; giai đoạn 2: 12 epoch × 15,6 s |
+| B | b_resnet50 | b_resnet50 | 0,998 | 0,997 | 23595908 | 214,8 | 591 | 61,1 | 28,0 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 98 s; giai đoạn 1: 20 epoch, 4 s; giai đoạn 2: 8 epoch × 61,2 s |
+
+N7 — embedding (`results/N7/table.md`, hình `results/figures/N7_embedding.png`):
+
+| Đặc trưng | Loại | Số chiều | KNN (k=5) | LogReg |
+|---|---|---|---|---|
+| Hist HSV (8,8,8) | thủ công | 512 | 0,982 | 0,997 |
+| HOG 64×128 | thủ công | 3780 | 0,945 | 0,987 |
+| Hist H-S + HOG (ghép, chuẩn hóa từng phần) | thủ công | 3844 | 0,990 | 0,998 |
+| VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối) | embedding | 512 | 0,932 | 0,986 |
+| a_vgg16, lớp Dense(256) áp chót | embedding | 256 | 0,986 | 0,986 |
+| MobileNetV3 ImageNet, sau GAP (chưa fine-tune) | embedding | 576 | 0,981 | 0,993 |
+| b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune) | embedding | 576 | 1,000 | 0,996 |
+
+N8 — độ bền (`results/N8/table.md`, hình `results/figures/N8_robustness.png`):
+
+| Mô hình | Ảnh gốc | Xáo trộn 4×4 | V×0,6 | V×1,4 | Ảnh xám | Nhiễu σ=5 | Nhiễu σ=10 | Nhiễu σ=20 | Che 25% | Xoay −30° | Xoay −15° | Xoay +15° | Xoay +30° |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống: Hist HSV (8,8,8) | 0,997 | 0,997 | 0,280 | 0,705 | 0,145 | 0,451 | 0,085 | 0,085 | 0,076 | 0,987 | 0,993 | 0,992 | 0,994 |
+| Truyền thống: HOG 64×128 | 0,983 | 0,302 | 0,984 | 0,800 | 0,981 | 0,537 | 0,461 | 0,318 | 0,801 | 0,679 | 0,929 | 0,886 | 0,550 |
+| Truyền thống: Hist H-S + HOG | 0,998 | 0,898 | 0,995 | 0,888 | 0,770 | 0,706 | 0,180 | 0,101 | 0,918 | 0,978 | 0,987 | 0,988 | 0,974 |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | 0,990 | 0,097 | 0,984 | 0,969 | 0,953 | 0,981 | 0,976 | 0,932 | 0,850 | 0,888 | 0,973 | 0,980 | 0,906 |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | 1,000 | 0,850 | 0,913 | 0,907 | 0,963 | 0,997 | 0,987 | 0,953 | 0,659 | 0,993 | 1,000 | 0,997 | 0,996 |
+| Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3 | 0,993 | 0,775 | 0,899 | 0,936 | 0,914 | 0,980 | 0,972 | 0,949 | 0,506 | 0,987 | 0,990 | 0,993 | 0,993 |
+| Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug | 0,997 | 0,717 | 0,952 | 0,911 | 0,959 | 0,977 | 0,955 | 0,908 | 0,555 | 0,958 | 0,977 | 0,993 | 0,978 |
+
+**Kết quả và kết luận.**
+
+| # | Dự đoán | Kết quả đo | Kết luận |
+|---|---|---|---|
+| N1 | Số tham số tính được từ kiến trúc | 10/10 lớp của `a_lenet` và `a_dropout` khớp đúng `model.summary()`. Lớp Dense đầu tiên chiếm 96% (`a_lenet`: 324.600/337.976) và 99% (`a_dropout`: 1.722.496/1.746.260) số tham số | Khớp |
+| N2 | Mô hình học từ đầu cần nhiều dữ liệu hơn mô hình dùng transfer learning | Từ 25% lên 100% train: `a_lenet` tăng 0,050; `a_vgg16` tăng 0,016; `b_mobilenetv3` tăng 0,018. Với 25% train, hai mô hình pretrained (0,967; 0,975) đã hơn `a_lenet` dùng 100% train (0,973) hoặc ngang | Khớp. Đường của hai mô hình pretrained không đơn điệu (50% không hơn 25%); chênh 0,004 ≈ 1–2 ảnh val, nằm trong nhiễu |
+| N3 | Dropout giảm quá khớp | Qua 3 seed: có Dropout 0,941 ± 0,005, không Dropout 0,953 ± 0,006; khoảng cách loss val − train ở epoch 40: 0,456 ± 0,061 so với 0,376 ± 0,081 | **Trái dự đoán**: Dropout(0,5) làm kém đi 0,012, lớn hơn độ lệch chuẩn giữa các seed |
+| N4 | Fine-tune thích nghi tốt hơn đóng băng; lr lớn phá trọng số đã học | MobileNetV3: giai đoạn 1 đạt 0,987; giai đoạn 2 đạt 0,993 (lr 1e-5), 1,000 (lr 1e-4), 0,993 (lr 1e-3). Với lr 1e-3, macro-F1 tụt xuống 0,917 ở epoch 2 và dao động tới epoch cuối; lr 1e-5 không xuống dưới 0,978. ResNet50: 0,996 → 0,998 | Khớp vế đầu (mức tăng nhỏ vì giai đoạn 1 đã cao). Vế lr: lr 1e-3 làm quá trình huấn luyện mất ổn định, nhưng nhờ dừng sớm theo val nên kết quả cuối không kém |
+| N5 | Tăng cường ảnh giảm quá khớp | `a_dropout`: khoảng cách loss val − train giảm từ 0,542 xuống 0,054, macro-F1 0,940 → 0,948. `b_mobilenetv3` (lr 1e-5): 0,997 không tăng cường so với 0,993 có tăng cường. Trên ảnh xoay ±30° (bảng N8), bản có tăng cường giữ 0,987–0,993, bản không tăng cường 0,958–0,978 | Khớp với mô hình học từ đầu. Với mô hình pretrained, quá khớp vốn đã nhỏ (khoảng cách 0,006) nên tăng cường không tăng điểm trên val, nhưng làm mô hình bền hơn với phép xoay |
+| N6 | Mạng lớn, pretrained tốt hơn nhưng tốn tài nguyên hơn | Hướng B: 1,000 (MobileNetV3) và 0,998 (ResNet50); hướng A: 0,948–0,990. Dự đoán 1 ảnh: `a_lenet` 1,4 ms, MobileNetV3 12,5 ms, ResNet50 61,1 ms, `a_vgg16` 130,4 ms | Vế "tốt hơn" khớp. Vế "tốn tài nguyên" chỉ đúng với ResNet50: MobileNetV3 (0,94 triệu tham số, 11,7 MB) nhỏ hơn và dự đoán nhanh hơn `a_vgg16` (40,7 triệu tham số, 370 MB) gấp khoảng 10 lần |
+| N7 | Embedding do mạng học tốt hơn đặc trưng thủ công | KNN trên embedding MobileNetV3 đã fine-tune: 1,000; LogReg: 0,996. Đặc trưng thủ công tốt nhất (H-S + HOG) + LogReg: 0,998. Embedding ImageNet chưa học trên chuối (VGG16, trung bình 7×7) + KNN: 0,932, kém hist HSV + KNN (0,982) | Khớp với KNN. Với LogReg, embedding và đặc trưng thủ công tốt nhất ngang nhau. Embedding chỉ vượt trội sau khi được fine-tune trên chính dữ liệu này |
+| N8 | CNN bền với biến đổi hơn đặc trưng thủ công | Xem bảng N8 | Khớp với nhiễu, xoay, đổi độ sáng. **Trái dự đoán** với che 25% (MobileNetV3 còn 0,659, kém HOG 0,801 và H-S + HOG 0,918) và với xáo trộn 4×4 (`a_vgg16` còn 0,097) |
+
+Giải thích các điểm trái dự đoán:
+- N3: lớp Dropout đặt sau Dense(128), còn 1,72 triệu tham số của lớp Dense ngay sau Flatten (99% mô hình) vẫn khớp tập train đến accuracy 0,999 ở cả hai cấu hình. Dropout chỉ làm nhiễu 128 đầu ra của lớp đó, nên không chặn được quá khớp ở nơi nó xảy ra mà lại làm quá trình tối ưu ồn hơn. **[lập luận]** Tăng cường ảnh (N5) tác động vào đầu vào nên giảm quá khớp rõ hơn nhiều: khoảng cách 0,054 so với 0,542. **[đo]**
+- N8, che 25%: hình vuông đen là thứ chưa từng xuất hiện trong ảnh huấn luyện, và mạng không có cơ chế chuẩn hóa cục bộ như block của HOG. Bộ ghép H-S + HOG có hai phần độc lập nên khi phần màu bị lệch thì phần HOG còn giữ được. **[lập luận]**
+- N8, xáo trộn 4×4: `a_vgg16` dùng Flatten trên bản đồ 7×7×512 nên mỗi trọng số gắn với một vị trí cố định; xáo trộn ô làm sai toàn bộ vị trí. MobileNetV3 dùng GlobalAveragePooling (lấy trung bình theo vị trí) nên ít nhạy hơn: 0,850 so với 0,097. **[lập luận]**, khớp số liệu đo.
+
+**Ảnh hưởng tới bước sau.**
+- Năm biến thể chốt dùng cho đánh giá cuối: `a_lenet`, `a_dropout_aug`, `a_vgg16_lr1e-3`, `b_mobilenetv3_lr1e-4`, `b_resnet50`.
+- I2 dùng `a_vgg16_lr1e-3` (hướng A) và `b_mobilenetv3_lr1e-4` (hướng B) làm mô hình gốc.
+- Demo dùng `b_mobilenetv3` (11,7 MB) thay cho `a_vgg16` (370 MB).
+
 ---
 
 ## Bảng quyết định
@@ -596,3 +790,8 @@ Giải thích các điểm trái dự đoán:
 | Ghép đặc trưng: chuẩn hóa từng phần rồi ghép | Ghép thẳng, z-score chung | Bước 3, `results/C5/table.md`: KNN 0,977 so với 0,948; LogReg ngang nhau | [đo] |
 | Cấu hình truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100 | Màu riêng (0,991), HOG riêng (0,986), cạnh (0,955); KNN, Linear SVM | Bước 3, `results/select_traditional/table.md` | [đo] |
 | Thêm mức nhiễu σ = 2 cho C1 | Chỉ σ = 5, 10, 20 | Bước 3, `results/C1/table.md`: từ σ = 10 mọi toán tử đều về mức đoán mò | [đo] |
+| `a_lenet` dùng ảnh vào 64×64 | 32×32, 128×128 | Bước 4–5, `results/cnn/table_runs.md`: 0,973 so với 0,954 và 0,956 | [đo] |
+| Fine-tune với BatchNormalization đóng băng | Mở băng cả BN | Bước 4–5, `results/N4/table_batchnorm.md` | [đo] |
+| Biến thể CNN chốt theo macro-F1 trên val | Cấu hình mặc định | Bước 4–5, `results/cnn/table_runs.md` | [đo] |
+| Giai đoạn 2 hướng B: lr 1e-4 | 1e-5, 1e-3 | Bước 4–5, `results/N4/table.md`: 1,000 / 0,993 / 0,993; lr 1e-3 dao động xuống 0,917 | [đo] |
+| Demo dùng `b_mobilenetv3` | `a_vgg16` | Bước 4–5, `results/N6/table.md`: 11,7 MB so với 370 MB (giới hạn 50 MB) | [đo] |

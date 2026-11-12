@@ -1,0 +1,72 @@
+{
+  "Hist HSV (8,8,8)|knn": {
+    "macro_f1": 0.9821423570928522,
+    "accuracy": 0.9838274932614556,
+    "n_features": 512
+  },
+  "Hist HSV (8,8,8)|logreg": {
+    "macro_f1": 0.9965279440639816,
+    "accuracy": 0.9973045822102425,
+    "n_features": 512
+  },
+  "HOG 64×128|knn": {
+    "macro_f1": 0.9447012366367206,
+    "accuracy": 0.9514824797843666,
+    "n_features": 3780
+  },
+  "HOG 64×128|logreg": {
+    "macro_f1": 0.9868711408908291,
+    "accuracy": 0.9892183288409704,
+    "n_features": 3780
+  },
+  "Hist H-S + HOG (ghép, chuẩn hóa từng phần)|knn": {
+    "macro_f1": 0.990217019822283,
+    "accuracy": 0.9892183288409704,
+    "n_features": 3844
+  },
+  "Hist H-S + HOG (ghép, chuẩn hóa từng phần)|logreg": {
+    "macro_f1": 0.997591552554637,
+    "accuracy": 0.9973045822102425,
+    "n_features": 3844
+  },
+  "VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối)|knn": {
+    "macro_f1": 0.9318973738328576,
+    "accuracy": 0.9407008086253369,
+    "n_features": 512
+  },
+  "VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối)|logreg": {
+    "macro_f1": 0.9859567242475122,
+    "accuracy": 0.9892183288409704,
+    "n_features": 512
+  },
+  "a_vgg16, lớp Dense(256) áp chót|knn": {
+    "macro_f1": 0.9863105877902303,
+    "accuracy": 0.9892183288409704,
+    "n_features": 256
+  },
+  "a_vgg16, lớp Dense(256) áp chót|logreg": {
+    "macro_f1": 0.9859702117780066,
+    "accuracy": 0.9892183288409704,
+    "n_features": 256
+  },
+  "MobileNetV3 ImageNet, sau GAP (chưa fine-tune)|knn": {
+    "macro_f1": 0.9806387976108324,
+    "accuracy": 0.9811320754716981,
+    "n_features": 576
+  },
+  "MobileNetV3 ImageNet, sau GAP (chưa fine-tune)|logreg": {
+    "macro_f1": 0.9929070929070929,
+    "accuracy": 0.9946091644204852,
+    "n_features": 576
+  },
+  "b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune)|knn": {
+    "macro_f1": 1.0,
+    "accuracy": 1.0,
+    "n_features": 576
+  },
+  "b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune)|logreg": {
+    "macro_f1": 0.9964576161253306,
+    "accuracy": 0.9973045822102425,
+    "n_features": 576
+  }
+}

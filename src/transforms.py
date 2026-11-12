@@ -59,6 +59,10 @@ def hflip(img, rng=None):
     return img[:, ::-1].copy()
 
 
+def vflip(img, rng=None):
+    return img[::-1].copy()
+
+
 TRANSFORMS = {
     "shuffle4": (shuffle_grid, {"n": 4}),
     "v0.6": (scale_v, {"factor": 0.6}),
@@ -73,6 +77,8 @@ TRANSFORMS = {
     "rot-15": (rotate, {"angle": -15.0}),
     "rot15": (rotate, {"angle": 15.0}),
     "rot30": (rotate, {"angle": 30.0}),
+    "hflip": (hflip, {}),
+    "vflip": (vflip, {}),
 }
 
 

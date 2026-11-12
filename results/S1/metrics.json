@@ -1,0 +1,46 @@
+{
+  "Ngưỡng toàn cục (T=127)": {
+    "mean_components": 11.635,
+    "median_components": 9.0,
+    "mean_hole_fraction": 0.0853416476669938,
+    "mean_foreground_fraction": 0.10469932556152343,
+    "mean_iou_with_selected_method": 0.688793993004564
+  },
+  "Otsu (ảnh xám)": {
+    "mean_components": 2.915,
+    "median_components": 2.0,
+    "mean_hole_fraction": 0.05161774806353181,
+    "mean_foreground_fraction": 0.14912525177001953,
+    "mean_iou_with_selected_method": 0.7994113184915946
+  },
+  "Ngưỡng thích nghi": {
+    "mean_components": 16.9125,
+    "median_components": 13.5,
+    "mean_hole_fraction": 0.28237314831626525,
+    "mean_foreground_fraction": 0.08127601623535156,
+    "mean_iou_with_selected_method": 0.5611981104867948
+  },
+  "K-means màu (k=2)": {
+    "mean_components": 2.455,
+    "median_components": 1.0,
+    "mean_hole_fraction": 0.026540219795098016,
+    "mean_foreground_fraction": 0.1403738784790039,
+    "mean_iou_with_selected_method": 0.8591995700029639
+  },
+  "Otsu trên khoảng cách màu tới nền": {
+    "mean_components": 2.475,
+    "median_components": 1.0,
+    "mean_hole_fraction": 0.010498744536224023,
+    "mean_foreground_fraction": 0.14515132904052735,
+    "mean_iou_with_selected_method": 0.9707154635975991
+  },
+  "Otsu khoảng cách màu + hậu xử lý (dùng cho S2)": {
+    "mean_components": 1.0,
+    "median_components": 1.0,
+    "mean_hole_fraction": 0.0,
+    "mean_foreground_fraction": 0.1438446807861328,
+    "mean_iou_with_selected_method": 1.0
+  },
+  "_note": "Không có nhãn mask: các chỉ số này không phải IoU/Dice so với nhãn thật.",
+  "_n_images": 400
+}

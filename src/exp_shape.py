@@ -10,11 +10,10 @@ import argparse
 
 import matplotlib.pyplot as plt
 import numpy as np
-from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from .classical import cv_eval, make_clf
+from .classical import BlockScaler, cv_eval, make_clf
 from .config import FIG_DIR
 from .exp_color import CLF_NAME, CLFS, bar_groups
 from .exp_common import dev_features, dev_set, extract_ms, register, run, strip, summary_row
@@ -172,22 +171,6 @@ def c4():
         bar_groups(ax, [n for _, _, n in confs], ser, "Macro-F1 (5-fold)", f"C4 — {CLF_NAME[c]}", (0, 1.2))
         ax.tick_params(axis="x", rotation=20)
     fig.tight_layout(); fig.savefig(FIG_DIR / "C4_occlusion.png", dpi=130); plt.close(fig)
-
-
-class BlockScaler(BaseEstimator, TransformerMixin):
-    """Chuẩn hóa từng phần trước khi ghép: z-score từng chiều, rồi chia mỗi phần cho căn bậc hai
-    số chiều của phần đó, để mỗi phần (màu, HOG) đóng góp ngang nhau vào khoảng cách."""
-
-    def __init__(self, dims):
-        self.dims = dims
-
-    def fit(self, X, y=None):
-        self.scaler_ = StandardScaler().fit(X)
-        self.w_ = np.concatenate([np.full(d, 1.0 / np.sqrt(d)) for d in self.dims]).astype(np.float32)
-        return self
-
-    def transform(self, X):
-        return self.scaler_.transform(X) * self.w_
 
 
 def fused(parts):

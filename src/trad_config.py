@@ -10,7 +10,7 @@ import numpy as np
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-from .classical import make_clf
+from .classical import BlockScaler, make_clf
 from .features import compute, extract
 from .transforms import transformed_images
 
@@ -36,7 +36,6 @@ def features_of_images(cfg, imgs: np.ndarray) -> np.ndarray:
 
 
 def build_clf(cfg, dims):
-    from .exp_shape import BlockScaler
     kw = dict(cfg.get("cparams", {}))
     if len(cfg["parts"]) > 1 and cfg.get("fusion", "balanced") == "balanced":
         base = make_clf(cfg["clf"], scale="none", **kw)

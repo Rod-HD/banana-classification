@@ -6,6 +6,7 @@ import time
 import warnings
 
 import numpy as np
+from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.model_selection import StratifiedKFold
@@ -35,6 +36,22 @@ def make_scaler(scale: str):
     if scale == "none":
         return []
     raise ValueError(scale)
+
+
+class BlockScaler(BaseEstimator, TransformerMixin):
+    """Chuẩn hóa từng phần trước khi ghép: z-score từng chiều, rồi chia mỗi phần cho căn bậc hai
+    số chiều của phần đó, để mỗi phần (màu, HOG) đóng góp ngang nhau vào khoảng cách."""
+
+    def __init__(self, dims):
+        self.dims = dims
+
+    def fit(self, X, y=None):
+        self.scaler_ = StandardScaler().fit(X)
+        self.w_ = np.concatenate([np.full(d, 1.0 / np.sqrt(d)) for d in self.dims]).astype(np.float32)
+        return self
+
+    def transform(self, X):
+        return self.scaler_.transform(X) * self.w_
 
 
 def make_clf(kind: str = "knn", scale: str = "standard", **kw):

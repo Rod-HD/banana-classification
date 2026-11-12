@@ -1,0 +1,162 @@
+[
+  {
+    "experiment": "I2",
+    "group": "truyền thống",
+    "config": "Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Không xử lý",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.9964,
+    "macro_f1_std": 0.0031,
+    "accuracy": 0.9967
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống",
+    "config": "Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Class weight",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.9964,
+    "macro_f1_std": 0.0031,
+    "accuracy": 0.9967
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống",
+    "config": "Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Oversampling",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.9952,
+    "macro_f1_std": 0.0051,
+    "accuracy": 0.9957
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống",
+    "config": "Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Tăng cường lớp ít",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.996,
+    "macro_f1_std": 0.0024,
+    "accuracy": 0.9962
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống (minh họa)",
+    "config": "Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Không xử lý",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.8937,
+    "macro_f1_std": 0.0076,
+    "accuracy": 0.9005
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống (minh họa)",
+    "config": "Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Class weight",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.8885,
+    "macro_f1_std": 0.0074,
+    "accuracy": 0.8948
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống (minh họa)",
+    "config": "Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Oversampling",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.8879,
+    "macro_f1_std": 0.0054,
+    "accuracy": 0.8948
+  },
+  {
+    "experiment": "I2",
+    "group": "truyền thống (minh họa)",
+    "config": "Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Tăng cường lớp ít",
+    "condition": "clean",
+    "eval_set": "5-fold CV",
+    "macro_f1": 0.8841,
+    "macro_f1_std": 0.0114,
+    "accuracy": 0.8924
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng A",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3 | Không xử lý",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9895,
+    "macro_f1_std": null,
+    "accuracy": 0.9919
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng A",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3 | Class weight",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9871,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng A",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3 | Oversampling",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9869,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng A",
+    "config": "Hướng A tốt nhất: a_vgg16_lr1e-3 | Tăng cường lớp ít",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 0.9943,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng B",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Không xử lý",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng B",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Class weight",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng B",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Oversampling",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "I2",
+    "group": "CNN hướng B",
+    "config": "Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Tăng cường lớp ít",
+    "condition": "clean",
+    "eval_set": "val",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  }
+]

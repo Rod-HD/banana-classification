@@ -1,0 +1,141 @@
+{
+  "a_lenet": [
+    {
+      "Mô hình": "a_lenet",
+      "Lớp": "conv1",
+      "Công thức": "(5×5×3+1)×6",
+      "Tính tay": 456,
+      "model.summary()": 456,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_lenet",
+      "Lớp": "conv2",
+      "Công thức": "(5×5×6+1)×16",
+      "Tính tay": 2416,
+      "model.summary()": 2416,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_lenet",
+      "Lớp": "fc1",
+      "Công thức": "(2704+1)×120",
+      "Tính tay": 324600,
+      "model.summary()": 324600,
+      "Khớp": "có",
+      "Ghi chú": "Flatten: 13×13×16 = 2704"
+    },
+    {
+      "Mô hình": "a_lenet",
+      "Lớp": "fc2",
+      "Công thức": "(120+1)×84",
+      "Tính tay": 10164,
+      "model.summary()": 10164,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_lenet",
+      "Lớp": "softmax",
+      "Công thức": "(84+1)×4",
+      "Tính tay": 340,
+      "model.summary()": 340,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_lenet",
+      "Lớp": "Tổng",
+      "Công thức": "",
+      "Tính tay": 337976,
+      "model.summary()": 337976,
+      "Khớp": "có",
+      "Ghi chú": "đầu vào 64×64×3"
+    }
+  ],
+  "a_dropout": [
+    {
+      "Mô hình": "a_dropout",
+      "Lớp": "conv1",
+      "Công thức": "(5×5×3+1)×32",
+      "Tính tay": 2432,
+      "model.summary()": 2432,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_dropout",
+      "Lớp": "conv2",
+      "Công thức": "(5×5×32+1)×16",
+      "Tính tay": 12816,
+      "model.summary()": 12816,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_dropout",
+      "Lớp": "fc1",
+      "Công thức": "(13456+1)×128",
+      "Tính tay": 1722496,
+      "model.summary()": 1722496,
+      "Khớp": "có",
+      "Ghi chú": "Flatten: 29×29×16 = 13456"
+    },
+    {
+      "Mô hình": "a_dropout",
+      "Lớp": "fc2",
+      "Công thức": "(128+1)×64",
+      "Tính tay": 8256,
+      "model.summary()": 8256,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_dropout",
+      "Lớp": "softmax",
+      "Công thức": "(64+1)×4",
+      "Tính tay": 260,
+      "model.summary()": 260,
+      "Khớp": "có",
+      "Ghi chú": ""
+    },
+    {
+      "Mô hình": "a_dropout",
+      "Lớp": "Tổng",
+      "Công thức": "",
+      "Tính tay": 1746260,
+      "model.summary()": 1746260,
+      "Khớp": "có",
+      "Ghi chú": "đầu vào 128×128×3"
+    }
+  ],
+  "totals": {
+    "a_lenet": {
+      "total": 337976,
+      "trainable": 337976,
+      "non_trainable": 0
+    },
+    "a_dropout": {
+      "total": 1746260,
+      "trainable": 1746260,
+      "non_trainable": 0
+    },
+    "a_vgg16": {
+      "total": 40669252,
+      "trainable": 25954564,
+      "non_trainable": 14714688
+    },
+    "b_mobilenetv3": {
+      "total": 941428,
+      "trainable_stage1": 2308,
+      "trainable_stage2": 917204
+    },
+    "b_resnet50": {
+      "total": 23595908,
+      "trainable_stage1": 8196,
+      "trainable_stage2": 14961668
+    }
+  }
+}

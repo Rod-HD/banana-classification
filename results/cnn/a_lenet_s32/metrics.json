@@ -1,0 +1,87 @@
+{
+  "accuracy": 0.9595687331536388,
+  "macro_f1": 0.9543230898357979,
+  "macro_precision": 0.9508281573498965,
+  "macro_recall": 0.9587758665939878,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.8985507246376812,
+      "recall": 0.9393939393939394,
+      "f1": 0.9185185185185185,
+      "support": 66
+    },
+    "Champa Kola": {
+      "precision": 1.0,
+      "recall": 0.96,
+      "f1": 0.9795918367346939,
+      "support": 150
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 0.9736842105263158,
+      "f1": 0.9866666666666667,
+      "support": 76
+    },
+    "Sagor Kola": {
+      "precision": 0.9047619047619048,
+      "recall": 0.9620253164556962,
+      "f1": 0.9325153374233128,
+      "support": 79
+    }
+  },
+  "confusion_matrix": [
+    [
+      62,
+      0,
+      0,
+      4
+    ],
+    [
+      2,
+      144,
+      0,
+      4
+    ],
+    [
+      2,
+      0,
+      74,
+      0
+    ],
+    [
+      3,
+      0,
+      0,
+      76
+    ]
+  ],
+  "run": "a_lenet_s32",
+  "model": "a_lenet",
+  "stage": null,
+  "eval_set": "val",
+  "input_size": 32,
+  "frac": 1.0,
+  "n_train": 1729,
+  "lr": 0.001,
+  "batch": 32,
+  "augment": false,
+  "dropout": true,
+  "class_weight": false,
+  "oversample": false,
+  "frozen_backbone": false,
+  "params": {
+    "total": 61496,
+    "trainable": 61496,
+    "non_trainable": 0
+  },
+  "epochs_run": 30,
+  "best_epoch": 20,
+  "train_time_s": 9.054973445996438,
+  "time_per_epoch_s": 0.30183244819988125,
+  "backbone_feature_time_s_all_2471_images": 0.0,
+  "val_loss": 0.13712769746780396,
+  "train_accuracy_inference_mode": 0.9838056680161943,
+  "train_macro_f1_inference_mode": 0.9810767123544911,
+  "predict_ms_per_image_batched_val": 0.21805108894962008,
+  "best_model_file_mb": 0.78683
+}

@@ -1,0 +1,196 @@
+"""Thí nghiệm phân đoạn tách nền S1–S2 (mục 6.7 của kế hoạch).
+
+S1: so các phương pháp phân đoạn trên ảnh mẫu (hình định tính) và hai chỉ số không cần nhãn mask.
+S2: rút đặc trưng trên toàn ảnh / chỉ vùng chuối / chỉ vùng nền để xem mô hình có dựa vào nền không.
+
+    python -m src.exp_segment
+"""
+from __future__ import annotations
+
+import argparse
+
+import cv2
+import matplotlib.pyplot as plt
+import numpy as np
+from joblib import Parallel, delayed
+
+from . import segmentation as S
+from .classical import cv_eval, make_clf
+from .config import CACHE_DIR, CLASS_NAMES, FIG_DIR, SEED
+from .data import list_images, load_all_images
+from .exp_common import dev_set, register, strip, summary_row
+from .exp_shape import fusion_clf
+from .features import color as C
+from .features.hog import hog_batch
+from .report_utils import exp_dir, pm, save_json, save_table
+
+
+def s1(n_per_class: int = 100):
+    df = list_images(); imgs = load_all_images(256)
+    rng = np.random.default_rng(SEED)
+    # Hình định tính: 2 ảnh mỗi lớp
+    ids = np.concatenate([rng.choice(np.where(df["label_id"].values == c)[0], 2, replace=False) for c in range(4)])
+    methods = dict(S.METHODS); methods["Otsu khoảng cách màu + hậu xử lý (dùng cho S2)"] = S.banana_mask
+    fig, axes = plt.subplots(len(ids), len(methods) + 1, figsize=(2.1 * (len(methods) + 1), 2.1 * len(ids)))
+    for r, i in enumerate(ids):
+        im = np.asarray(imgs[i]); axes[r, 0].imshow(im); axes[r, 0].set_ylabel(CLASS_NAMES[df["label_id"].values[i]], fontsize=8)
+        for j, (name, fn) in enumerate(methods.items()):
+            axes[r, j + 1].imshow(fn(im), cmap="gray", vmin=0, vmax=255)
+            if r == 0:
+                axes[r, j + 1].set_title(name.replace(" (", "\n(").replace(" + ", "\n+ "), fontsize=7)
+        for a in axes[r]:
+            a.set_xticks([]); a.set_yticks([])
+    axes[0, 0].set_title("Ảnh gốc", fontsize=8)
+    fig.suptitle("S1 — Các phương pháp phân đoạn trên ảnh mẫu (trắng = vùng được coi là chuối)")
+    fig.tight_layout(); fig.savefig(FIG_DIR / "S1_segmentation.png", dpi=110); plt.close(fig)
+
+    # Chỉ số không cần nhãn: số mảnh rời và tỉ lệ lỗ thủng bên trong vật, trên n_per_class ảnh mỗi lớp
+    sample = np.concatenate([rng.choice(np.where(df["label_id"].values == c)[0], n_per_class, replace=False) for c in range(4)])
+    ref = {i: S.banana_mask(np.asarray(imgs[i])) for i in sample}
+    rows, raw = [], {}
+    for name, fn in methods.items():
+        ncomp, holes, area, iou = [], [], [], []
+        for i in sample:
+            m = fn(np.asarray(imgs[i]))
+            n, lab, stats, _ = cv2.connectedComponentsWithStats(m, connectivity=8)
+            ncomp.append(n - 1)
+            cnts, _ = cv2.findContours(m, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            filled = np.zeros_like(m); cv2.drawContours(filled, cnts, -1, 255, -1)
+            holes.append(1 - (m > 0).sum() / max((filled > 0).sum(), 1)); area.append((m > 0).mean())
+            inter = ((m > 0) & (ref[i] > 0)).sum(); union = ((m > 0) | (ref[i] > 0)).sum(); iou.append(inter / max(union, 1))
+        raw[name] = {"mean_components": float(np.mean(ncomp)), "median_components": float(np.median(ncomp)),
+                     "mean_hole_fraction": float(np.mean(holes)), "mean_foreground_fraction": float(np.mean(area)),
+                     "mean_iou_with_selected_method": float(np.mean(iou))}
+        rows.append({"Phương pháp": name, "Số mảnh rời (trung bình)": f"{np.mean(ncomp):.1f}", "Số mảnh rời (trung vị)": f"{np.median(ncomp):.0f}",
+                     "Tỉ lệ lỗ thủng trong vật": f"{np.mean(holes):.3f}", "Tỉ lệ diện tích vật": f"{np.mean(area):.3f}",
+                     "IoU với phương pháp được chọn": f"{np.mean(iou):.3f}"})
+    save_json(exp_dir("S1") / "metrics.json", dict(raw, _note="Không có nhãn mask: các chỉ số này không phải IoU/Dice so với nhãn thật.",
+                                                    _n_images=int(len(sample)))); register("S1", [])
+    print(save_table("S1", rows, title=f"S1 — Chỉ số không cần nhãn mask trên {len(sample)} ảnh ({n_per_class} ảnh mỗi lớp)"))
+
+
+def all_masks():
+    f = CACHE_DIR / "masks_256.npy"
+    if not f.exists():
+        imgs = load_all_images(256)
+        ms = Parallel(n_jobs=4)(delayed(lambda a, b: np.stack([S.banana_mask(np.asarray(imgs[i])) for i in range(a, b)]))(a, min(a + 100, len(imgs)))
+                                for a in range(0, len(imgs), 100))
+        np.save(f, np.concatenate(ms))
+    return np.load(f)
+
+
+def s2():
+    ids, y = dev_set()
+    imgs = load_all_images(256); masks = all_masks()
+    I = [np.asarray(imgs[i]) for i in ids]; Mk = [masks[i] for i in ids]
+    # Vùng nền lấy từ mask đã nới rộng 12 điểm ảnh, để phần mép quả và bóng đổ sát quả
+    # (chỗ phân đoạn hay sai) không bị tính là nền.
+    kd = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))
+    Mk_dil = [cv2.dilate(m, kd) for m in Mk]
+    Bg = [cv2.bitwise_not(m) for m in Mk_dil]
+
+    def feat(fn, ms):
+        return np.stack([fn(im, mask=m) for im, m in zip(I, ms)]).astype(np.float32)
+
+    def bg_color(im, m):       # màu Lab trung bình của nền: 3 con số
+        return cv2.cvtColor(im, cv2.COLOR_RGB2LAB)[m == 0].mean(0)
+
+    def filled(im, m, keep_fg):  # giữ một vùng, vùng còn lại tô bằng màu nền trung vị (chỉ chuối: nền phẳng; chỉ nền: lấp chỗ quả chuối)
+        out = im.copy(); med = np.median(im[m == 0], axis=0).astype(np.uint8) if (m == 0).any() else np.array([128, 128, 128], np.uint8)
+        out[(m == 0) if keep_fg else (m > 0)] = med
+        return out
+
+    def inpainted(im, m):        # chỉ nền: lấp vùng chuối (mask đã nới rộng) bằng inpainting Telea, giảm vết viền hình bóng
+        return cv2.inpaint(im, m, 7, cv2.INPAINT_TELEA)
+
+    none = [None] * len(I)
+    versions = {"Toàn ảnh": (none, I), "Chỉ vùng chuối": (Mk, [filled(im, m, True) for im, m in zip(I, Mk)]),
+                "Chỉ vùng nền": (Bg, [inpainted(im, m) for im, m in zip(I, Mk_dil)])}
+    rows, srows, raw = [], [], {}
+    hogp = dict(size=(64, 128))
+    for vname, (ms, ims) in versions.items():
+        Xhsv = feat(C.hsv_hist, ms); Xhs = feat(C.hs_hist, ms); Xhog = hog_batch(np.stack(ims), **hogp)
+        confs = [("Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất]", Xhsv, lambda: make_clf("logreg", C=0.1)),
+                 ("HOG 64×128 + LogReg C=0.1", Xhog, lambda: make_clf("logreg", C=0.1)),
+                 ("Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất]", np.concatenate([Xhs, Xhog], 1),
+                  lambda: fusion_clf("logreg", [Xhs.shape[1], Xhog.shape[1]], True, C=100.0))]
+        for cname, X, fac in confs:
+            r = cv_eval(X, y, fac); raw[f"{cname}|{vname}"] = strip(r)
+            rows.append({"Đặc trưng + bộ phân lớp": cname, "Phiên bản ảnh": vname, "Macro-F1": pm(r["macro_f1"], r["macro_f1_std"]),
+                         "Accuracy": pm(r["accuracy"], r["accuracy_std"])})
+            srows.append(summary_row("S2", f"{cname} | {vname}", r))
+    # Kiểm tra rò rỉ: trên ảnh "chỉ vùng nền" (đã lấp vùng chuối), độ lớn gradient trung bình dọc viền mask
+    # so với vùng nền xa quả. Tỉ số > 1 nghĩa là còn vết viền hình bóng mà HOG có thể dùng.
+    ring_k = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (7, 7))
+    ratios = []
+    for im, m in zip(versions["Chỉ vùng nền"][1], Mk_dil):
+        g = cv2.cvtColor(im, cv2.COLOR_RGB2GRAY).astype(np.float32)
+        mag = np.sqrt(cv2.Sobel(g, cv2.CV_32F, 1, 0) ** 2 + cv2.Sobel(g, cv2.CV_32F, 0, 1) ** 2)
+        ring = cv2.morphologyEx(m, cv2.MORPH_GRADIENT, ring_k) > 0
+        far = cv2.dilate(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41))) == 0
+        if ring.any() and far.any():
+            ratios.append(float(mag[ring].mean() / max(mag[far].mean(), 1e-6)))
+    raw["_silhouette_leak_gradient_ratio"] = {"mean": float(np.mean(ratios)), "median": float(np.median(ratios))}
+    # Hai phép thử cực đoan: chỉ 3 con số màu nền; chỉ hình bóng (mask nhị phân)
+    Xbg = np.stack([bg_color(im, cv2.bitwise_not(b)) for im, b in zip(I, Bg)]).astype(np.float32)
+    Xsil = hog_batch(np.stack([np.repeat(m[..., None], 3, 2) for m in Mk]), **hogp)
+    Xarea = np.array([[(m > 0).mean()] for m in Mk], np.float32)
+    extra = []
+    for cname, X, fac in [("Màu Lab trung bình của nền (3 số) + KNN k=5", Xbg, lambda: make_clf("knn")),
+                          ("Màu Lab trung bình của nền (3 số) + LogReg", Xbg, lambda: make_clf("logreg")),
+                          ("Tỉ lệ diện tích quả chuối trong ảnh (1 số) + KNN k=5", Xarea, lambda: make_clf("knn")),
+                          ("HOG của mask nhị phân (chỉ hình bóng) + LogReg C=0.1", Xsil, lambda: make_clf("logreg", C=0.1))]:
+        r = cv_eval(X, y, fac); raw[cname] = strip(r)
+        extra.append({"Đặc trưng + bộ phân lớp": cname, "Số chiều": X.shape[1], "Macro-F1": pm(r["macro_f1"], r["macro_f1_std"]),
+                      "Accuracy": pm(r["accuracy"], r["accuracy_std"])})
+        srows.append(summary_row("S2", cname, r))
+    # Thống kê nền theo lớp
+    Xbg64 = Xbg.astype(np.float64)
+    lab_mean = {CLASS_NAMES[c]: np.round(Xbg64[y == c].mean(0), 1).tolist() for c in range(4)}
+    lab_std = {CLASS_NAMES[c]: np.round(Xbg64[y == c].std(0), 1).tolist() for c in range(4)}
+    area = {CLASS_NAMES[c]: float(Xarea[y == c].mean()) for c in range(4)}
+    raw["_background_lab_mean"] = lab_mean; raw["_background_lab_std"] = lab_std; raw["_banana_area_fraction"] = area
+    stat_rows = [{"Lớp": k, "Nền: L trung bình ± std": f"{lab_mean[k][0]} ± {lab_std[k][0]}", "Nền: a": f"{lab_mean[k][1]} ± {lab_std[k][1]}",
+                  "Nền: b": f"{lab_mean[k][2]} ± {lab_std[k][2]}", "Tỉ lệ diện tích quả chuối": f"{area[k]:.3f}"} for k in CLASS_NAMES]
+    save_json(exp_dir("S2") / "metrics.json", raw); register("S2", srows)
+    print(save_table("S2", rows, title="S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val)"))
+    print(save_table("S2", extra, "table_extreme", title="S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng"))
+    print("rò rỉ hình bóng (tỉ số gradient viền / nền xa):", raw["_silhouette_leak_gradient_ratio"])
+    print(save_table("S2", stat_rows, "table_background_stats", title="S2 — Màu nền (Lab của OpenCV, thang 0–255) và kích thước quả theo lớp (train+val)"))
+
+    fig, ax = plt.subplots(figsize=(11, 4))
+    cn = [c for c, _, _ in confs]; x = np.arange(len(cn)); w = 0.26
+    for j, v in enumerate(versions):
+        m = [raw[f"{c}|{v}"]["macro_f1"] for c in cn]; s = [raw[f"{c}|{v}"]["macro_f1_std"] for c in cn]
+        ax.bar(x + (j - 1) * w, m, w, yerr=s, capsize=3, label=v)
+        for xi, val, e in zip(x + (j - 1) * w, m, s):
+            ax.text(xi, val + e + 0.004, f"{val:.3f}", ha="center", fontsize=8)
+    ax.set_xticks(x); ax.set_xticklabels([c.replace(" [", "\n[") for c in cn], fontsize=8); ax.set_ylim(0.6, 1.04)
+    ax.set_ylabel("Macro-F1 (5-fold)"); ax.set_title("S2 — Mô hình dựa vào quả chuối hay vào nền?"); ax.legend(fontsize=8, loc="lower right")
+    fig.tight_layout(); fig.savefig(FIG_DIR / "S2_background_bias.png", dpi=130); plt.close(fig)
+    # Hình: ba phiên bản ảnh của một mẫu mỗi lớp
+    fig, axes = plt.subplots(3, 4, figsize=(9, 6.8))
+    for c in range(4):
+        k = int(np.where(y == c)[0][5])
+        for r, (v, (_, ims)) in enumerate(versions.items()):
+            axes[r, c].imshow(ims[k]); axes[r, c].set_xticks([]); axes[r, c].set_yticks([])
+            if c == 0: axes[r, c].set_ylabel(v)
+        axes[0, c].set_title(CLASS_NAMES[c], fontsize=9)
+    fig.suptitle("S2 — Ba phiên bản ảnh (chỉ chuối: nền tô màu trung vị; chỉ nền: vùng chuối nới rộng 12 px rồi inpainting)")
+    fig.tight_layout(); fig.savefig(FIG_DIR / "S2_versions.png", dpi=110); plt.close(fig)
+
+
+EXPS = {"S1": s1, "S2": s2}
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("--only", choices=list(EXPS), nargs="*")
+    args = ap.parse_args()
+    for k in (args.only or EXPS):
+        print(f"===== {k} =====", flush=True)
+        EXPS[k]()
+
+
+if __name__ == "__main__":
+    main()
