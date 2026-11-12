@@ -9,8 +9,8 @@
     "macro_f1_std": 0.0075,
     "accuracy": 0.9576,
     "n_features": 2520,
-    "fit_time_s": 0.0379,
-    "predict_ms_per_image": 0.1144
+    "fit_time_s": 0.0433,
+    "predict_ms_per_image": 0.1036
   },
   {
     "experiment": "C3",
@@ -22,8 +22,8 @@
     "macro_f1_std": 0.0065,
     "accuracy": 0.9848,
     "n_features": 2520,
-    "fit_time_s": 0.3658,
-    "predict_ms_per_image": 0.0148
+    "fit_time_s": 1.1634,
+    "predict_ms_per_image": 0.0294
   },
   {
     "experiment": "C3",
@@ -35,8 +35,8 @@
     "macro_f1_std": 0.0033,
     "accuracy": 0.981,
     "n_features": 2520,
-    "fit_time_s": 1.7676,
-    "predict_ms_per_image": 0.0145
+    "fit_time_s": 1.5296,
+    "predict_ms_per_image": 0.0157
   },
   {
     "experiment": "C3",
@@ -48,8 +48,8 @@
     "macro_f1_std": 0.0074,
     "accuracy": 0.9505,
     "n_features": 3780,
-    "fit_time_s": 0.0735,
-    "predict_ms_per_image": 0.2096
+    "fit_time_s": 0.077,
+    "predict_ms_per_image": 0.1851
   },
   {
     "experiment": "C3",
@@ -61,8 +61,8 @@
     "macro_f1_std": 0.0042,
     "accuracy": 0.9876,
     "n_features": 3780,
-    "fit_time_s": 0.6947,
-    "predict_ms_per_image": 0.0173
+    "fit_time_s": 0.9376,
+    "predict_ms_per_image": 0.018
   },
   {
     "experiment": "C3",
@@ -74,8 +74,8 @@
     "macro_f1_std": 0.0036,
     "accuracy": 0.9843,
     "n_features": 3780,
-    "fit_time_s": 2.7159,
-    "predict_ms_per_image": 0.021
+    "fit_time_s": 2.3186,
+    "predict_ms_per_image": 0.0216
   },
   {
     "experiment": "C3",
@@ -87,8 +87,8 @@
     "macro_f1_std": 0.0107,
     "accuracy": 0.9433,
     "n_features": 5040,
-    "fit_time_s": 0.1317,
-    "predict_ms_per_image": 0.3087
+    "fit_time_s": 0.0917,
+    "predict_ms_per_image": 0.2604
   },
   {
     "experiment": "C3",
@@ -100,8 +100,8 @@
     "macro_f1_std": 0.0063,
     "accuracy": 0.9876,
     "n_features": 5040,
-    "fit_time_s": 1.1065,
-    "predict_ms_per_image": 0.0338
+    "fit_time_s": 1.0085,
+    "predict_ms_per_image": 0.037
   },
   {
     "experiment": "C3",
@@ -113,8 +113,8 @@
     "macro_f1_std": 0.0056,
     "accuracy": 0.9824,
     "n_features": 5040,
-    "fit_time_s": 3.5164,
-    "predict_ms_per_image": 0.0282
+    "fit_time_s": 3.3484,
+    "predict_ms_per_image": 0.026
   },
   {
     "experiment": "C3",
@@ -126,8 +126,8 @@
     "macro_f1_std": 0.0099,
     "accuracy": 0.9262,
     "n_features": 504,
-    "fit_time_s": 0.0084,
-    "predict_ms_per_image": 0.0281
+    "fit_time_s": 0.0082,
+    "predict_ms_per_image": 0.0235
   },
   {
     "experiment": "C3",
@@ -139,8 +139,8 @@
     "macro_f1_std": 0.0061,
     "accuracy": 0.9638,
     "n_features": 504,
-    "fit_time_s": 1.8157,
-    "predict_ms_per_image": 0.0042
+    "fit_time_s": 1.7626,
+    "predict_ms_per_image": 0.0041
   },
   {
     "experiment": "C3",
@@ -152,8 +152,8 @@
     "macro_f1_std": 0.0082,
     "accuracy": 0.9643,
     "n_features": 504,
-    "fit_time_s": 0.4563,
-    "predict_ms_per_image": 0.0048
+    "fit_time_s": 0.4305,
+    "predict_ms_per_image": 0.0052
   },
   {
     "experiment": "C3",
@@ -165,8 +165,8 @@
     "macro_f1_std": 0.0101,
     "accuracy": 0.9176,
     "n_features": 756,
-    "fit_time_s": 0.0119,
-    "predict_ms_per_image": 0.0329
+    "fit_time_s": 0.0101,
+    "predict_ms_per_image": 0.0301
   },
   {
     "experiment": "C3",
@@ -178,8 +178,8 @@
     "macro_f1_std": 0.0047,
     "accuracy": 0.9648,
     "n_features": 756,
-    "fit_time_s": 1.143,
-    "predict_ms_per_image": 0.016
+    "fit_time_s": 1.1626,
+    "predict_ms_per_image": 0.0133
   },
   {
     "experiment": "C3",
@@ -191,8 +191,8 @@
     "macro_f1_std": 0.0088,
     "accuracy": 0.9629,
     "n_features": 756,
-    "fit_time_s": 0.6715,
-    "predict_ms_per_image": 0.0068
+    "fit_time_s": 0.6644,
+    "predict_ms_per_image": 0.0062
   },
   {
     "experiment": "C3",
@@ -204,8 +204,8 @@
     "macro_f1_std": 0.0075,
     "accuracy": 0.9162,
     "n_features": 1008,
-    "fit_time_s": 0.014,
-    "predict_ms_per_image": 0.0413
+    "fit_time_s": 0.0126,
+    "predict_ms_per_image": 0.0429
   },
   {
     "experiment": "C3",
@@ -217,8 +217,8 @@
     "macro_f1_std": 0.006,
     "accuracy": 0.9652,
     "n_features": 1008,
-    "fit_time_s": 0.8008,
-    "predict_ms_per_image": 0.0129
+    "fit_time_s": 1.0808,
+    "predict_ms_per_image": 0.0128
   },
   {
     "experiment": "C3",
@@ -230,8 +230,8 @@
     "macro_f1_std": 0.0095,
     "accuracy": 0.9629,
     "n_features": 1008,
-    "fit_time_s": 1.0109,
-    "predict_ms_per_image": 0.0075
+    "fit_time_s": 1.0867,
+    "predict_ms_per_image": 0.0084
   },
   {
     "experiment": "C3",
@@ -243,8 +243,8 @@
     "macro_f1_std": 0.0129,
     "accuracy": 0.9595,
     "n_features": 5400,
-    "fit_time_s": 0.0958,
-    "predict_ms_per_image": 0.307
+    "fit_time_s": 0.0962,
+    "predict_ms_per_image": 0.2702
   },
   {
     "experiment": "C3",
@@ -256,8 +256,8 @@
     "macro_f1_std": 0.0054,
     "accuracy": 0.9876,
     "n_features": 5400,
-    "fit_time_s": 1.0202,
-    "predict_ms_per_image": 0.0285
+    "fit_time_s": 1.0148,
+    "predict_ms_per_image": 0.0355
   },
   {
     "experiment": "C3",
@@ -269,8 +269,8 @@
     "macro_f1_std": 0.0064,
     "accuracy": 0.9819,
     "n_features": 5400,
-    "fit_time_s": 4.0182,
-    "predict_ms_per_image": 0.0378
+    "fit_time_s": 3.6797,
+    "predict_ms_per_image": 0.0296
   },
   {
     "experiment": "C3",
@@ -282,8 +282,8 @@
     "macro_f1_std": 0.0167,
     "accuracy": 0.9514,
     "n_features": 8100,
-    "fit_time_s": 0.1351,
-    "predict_ms_per_image": 0.4718
+    "fit_time_s": 0.1699,
+    "predict_ms_per_image": 0.4167
   },
   {
     "experiment": "C3",
@@ -295,8 +295,8 @@
     "macro_f1_std": 0.004,
     "accuracy": 0.9886,
     "n_features": 8100,
-    "fit_time_s": 1.1045,
-    "predict_ms_per_image": 0.0423
+    "fit_time_s": 0.7549,
+    "predict_ms_per_image": 0.0344
   },
   {
     "experiment": "C3",
@@ -308,8 +308,8 @@
     "macro_f1_std": 0.0069,
     "accuracy": 0.9852,
     "n_features": 8100,
-    "fit_time_s": 5.0659,
-    "predict_ms_per_image": 0.0741
+    "fit_time_s": 4.8821,
+    "predict_ms_per_image": 0.0451
   },
   {
     "experiment": "C3",
@@ -321,8 +321,8 @@
     "macro_f1_std": 0.0134,
     "accuracy": 0.95,
     "n_features": 10800,
-    "fit_time_s": 0.2043,
-    "predict_ms_per_image": 0.6356
+    "fit_time_s": 0.1948,
+    "predict_ms_per_image": 0.589
   },
   {
     "experiment": "C3",
@@ -334,8 +334,8 @@
     "macro_f1_std": 0.005,
     "accuracy": 0.9876,
     "n_features": 10800,
-    "fit_time_s": 0.9744,
-    "predict_ms_per_image": 0.0519
+    "fit_time_s": 1.4714,
+    "predict_ms_per_image": 0.0767
   },
   {
     "experiment": "C3",
@@ -347,8 +347,8 @@
     "macro_f1_std": 0.0101,
     "accuracy": 0.9819,
     "n_features": 10800,
-    "fit_time_s": 5.8843,
-    "predict_ms_per_image": 0.067
+    "fit_time_s": 5.9921,
+    "predict_ms_per_image": 0.0562
   },
   {
     "experiment": "C3",
@@ -360,8 +360,8 @@
     "macro_f1_std": 0.007,
     "accuracy": 0.9671,
     "n_features": 1176,
-    "fit_time_s": 0.0168,
-    "predict_ms_per_image": 0.0566
+    "fit_time_s": 0.0165,
+    "predict_ms_per_image": 0.0518
   },
   {
     "experiment": "C3",
@@ -373,8 +373,8 @@
     "macro_f1_std": 0.0069,
     "accuracy": 0.9857,
     "n_features": 1176,
-    "fit_time_s": 0.5026,
-    "predict_ms_per_image": 0.019
+    "fit_time_s": 0.3914,
+    "predict_ms_per_image": 0.0149
   },
   {
     "experiment": "C3",
@@ -386,8 +386,8 @@
     "macro_f1_std": 0.0054,
     "accuracy": 0.9838,
     "n_features": 1176,
-    "fit_time_s": 1.2351,
-    "predict_ms_per_image": 0.0093
+    "fit_time_s": 1.2768,
+    "predict_ms_per_image": 0.0135
   },
   {
     "experiment": "C3",
@@ -399,8 +399,8 @@
     "macro_f1_std": 0.0136,
     "accuracy": 0.9586,
     "n_features": 1764,
-    "fit_time_s": 0.0253,
-    "predict_ms_per_image": 0.0754
+    "fit_time_s": 0.0266,
+    "predict_ms_per_image": 0.0893
   },
   {
     "experiment": "C3",
@@ -412,8 +412,8 @@
     "macro_f1_std": 0.0066,
     "accuracy": 0.9852,
     "n_features": 1764,
-    "fit_time_s": 0.5047,
-    "predict_ms_per_image": 0.0248
+    "fit_time_s": 0.4168,
+    "predict_ms_per_image": 0.0174
   },
   {
     "experiment": "C3",
@@ -425,8 +425,8 @@
     "macro_f1_std": 0.0111,
     "accuracy": 0.9843,
     "n_features": 1764,
-    "fit_time_s": 1.0037,
-    "predict_ms_per_image": 0.0108
+    "fit_time_s": 0.9385,
+    "predict_ms_per_image": 0.0109
   },
   {
     "experiment": "C3",
@@ -438,8 +438,8 @@
     "macro_f1_std": 0.0113,
     "accuracy": 0.96,
     "n_features": 2352,
-    "fit_time_s": 0.036,
-    "predict_ms_per_image": 0.1127
+    "fit_time_s": 0.0415,
+    "predict_ms_per_image": 0.095
   },
   {
     "experiment": "C3",
@@ -451,8 +451,8 @@
     "macro_f1_std": 0.0059,
     "accuracy": 0.9867,
     "n_features": 2352,
-    "fit_time_s": 0.3384,
-    "predict_ms_per_image": 0.0359
+    "fit_time_s": 0.3382,
+    "predict_ms_per_image": 0.0242
   },
   {
     "experiment": "C3",
@@ -464,8 +464,8 @@
     "macro_f1_std": 0.0095,
     "accuracy": 0.9838,
     "n_features": 2352,
-    "fit_time_s": 1.5358,
-    "predict_ms_per_image": 0.0139
+    "fit_time_s": 1.4754,
+    "predict_ms_per_image": 0.0134
   },
   {
     "experiment": "C3",
@@ -477,8 +477,8 @@
     "macro_f1_std": 0.0085,
     "accuracy": 0.9333,
     "n_features": 3780,
-    "fit_time_s": 0.075,
-    "predict_ms_per_image": 0.1881
+    "fit_time_s": 0.0747,
+    "predict_ms_per_image": 0.2005
   },
   {
     "experiment": "C3",
@@ -490,8 +490,8 @@
     "macro_f1_std": 0.0042,
     "accuracy": 0.9881,
     "n_features": 3780,
-    "fit_time_s": 0.9709,
-    "predict_ms_per_image": 0.0261
+    "fit_time_s": 1.2977,
+    "predict_ms_per_image": 0.0329
   },
   {
     "experiment": "C3",
@@ -503,8 +503,8 @@
     "macro_f1_std": 0.0028,
     "accuracy": 0.98,
     "n_features": 3780,
-    "fit_time_s": 2.2025,
-    "predict_ms_per_image": 0.0243
+    "fit_time_s": 2.1964,
+    "predict_ms_per_image": 0.0196
   },
   {
     "experiment": "C3",
@@ -516,8 +516,8 @@
     "macro_f1_std": 0.0127,
     "accuracy": 0.949,
     "n_features": 3780,
-    "fit_time_s": 0.0636,
-    "predict_ms_per_image": 0.1863
+    "fit_time_s": 0.064,
+    "predict_ms_per_image": 0.1954
   },
   {
     "experiment": "C3",
@@ -529,8 +529,8 @@
     "macro_f1_std": 0.0053,
     "accuracy": 0.9843,
     "n_features": 3780,
-    "fit_time_s": 0.8115,
-    "predict_ms_per_image": 0.0231
+    "fit_time_s": 0.787,
+    "predict_ms_per_image": 0.0261
   },
   {
     "experiment": "C3",
@@ -542,7 +542,7 @@
     "macro_f1_std": 0.0062,
     "accuracy": 0.98,
     "n_features": 3780,
-    "fit_time_s": 2.7893,
-    "predict_ms_per_image": 0.0306
+    "fit_time_s": 2.1636,
+    "predict_ms_per_image": 0.0206
   }
 ]

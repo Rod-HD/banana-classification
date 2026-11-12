@@ -1,113 +1,113 @@
 {
   "moments|brute": {
-    "build_time_s": 0.0005874680000488297,
-    "predict_time_s": 0.001624039000034827,
-    "predict_ms_per_image": 0.0038667595238924455,
+    "build_time_s": 0.0007347990012931405,
+    "predict_time_s": 0.0018021510004473384,
+    "predict_ms_per_image": 0.004290835715350806,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "moments|kd_tree": {
-    "build_time_s": 0.0013680909996764967,
-    "predict_time_s": 0.0032411889997092658,
-    "predict_ms_per_image": 0.007717116665974443,
+    "build_time_s": 0.0015251000004354864,
+    "predict_time_s": 0.004045038998810924,
+    "predict_ms_per_image": 0.009631045235264105,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "moments|ball_tree": {
-    "build_time_s": 0.0010993760001838382,
-    "predict_time_s": 0.004486025000005611,
-    "predict_ms_per_image": 0.010681011904775264,
+    "build_time_s": 0.001633309000681038,
+    "predict_time_s": 0.004921886000374798,
+    "predict_ms_per_image": 0.011718776191368565,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "hsv_hist|brute": {
-    "build_time_s": 0.0013131239998074307,
-    "predict_time_s": 0.009132104999935109,
-    "predict_ms_per_image": 0.02174310714270264,
+    "build_time_s": 0.0015228459997160826,
+    "predict_time_s": 0.008072046999586746,
+    "predict_ms_per_image": 0.019219159522825584,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "hsv_hist|kd_tree": {
-    "build_time_s": 0.038705391000348754,
-    "predict_time_s": 0.36107140800004345,
-    "predict_ms_per_image": 0.859693828571532,
+    "build_time_s": 0.038140110998938326,
+    "predict_time_s": 0.36372196999946027,
+    "predict_ms_per_image": 0.8660046904749054,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "hsv_hist|ball_tree": {
-    "build_time_s": 0.029321855000034702,
-    "predict_time_s": 0.24429356400014512,
-    "predict_ms_per_image": 0.5816513428574884,
+    "build_time_s": 0.032693896000637324,
+    "predict_time_s": 0.2716027629994642,
+    "predict_ms_per_image": 0.6466732452368195,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "hog|brute": {
-    "build_time_s": 0.008104843000182882,
-    "predict_time_s": 0.07393991099979758,
-    "predict_ms_per_image": 0.17604740714237518,
+    "build_time_s": 0.007313523999982863,
+    "predict_time_s": 0.06325909800034424,
+    "predict_ms_per_image": 0.15061690000081962,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "hog|kd_tree": {
-    "build_time_s": 0.36771510699963983,
-    "predict_time_s": 4.533670703000098,
-    "predict_ms_per_image": 10.794454054762138,
+    "build_time_s": 0.27621446900047886,
+    "predict_time_s": 3.795919200998469,
+    "predict_ms_per_image": 9.037902859520164,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "hog|ball_tree": {
-    "build_time_s": 0.2235221629998705,
-    "predict_time_s": 2.2318343100000675,
-    "predict_ms_per_image": 5.313891214285875,
+    "build_time_s": 0.3038623150005151,
+    "predict_time_s": 3.196549443000549,
+    "predict_ms_per_image": 7.610832007144165,
     "same_predictions_as_brute": true,
     "same_neighbor_distances_as_brute": true
   },
   "moments_x1|brute": {
     "n_reference": 1680,
-    "predict_time_s": 0.0019654940001601062
+    "predict_time_s": 0.0018695639992074575
   },
   "moments_x1|kd_tree": {
     "n_reference": 1680,
-    "predict_time_s": 0.0036625140000978718
+    "predict_time_s": 0.0036647739998443285
   },
   "moments_x1|ball_tree": {
     "n_reference": 1680,
-    "predict_time_s": 0.005021089999900141
+    "predict_time_s": 0.0044832709991169395
   },
   "moments_x5|brute": {
     "n_reference": 8400,
-    "predict_time_s": 0.022260623999954987
+    "predict_time_s": 0.021342670999729307
   },
   "moments_x5|kd_tree": {
     "n_reference": 8400,
-    "predict_time_s": 0.006100882000282581
+    "predict_time_s": 0.005831462000060128
   },
   "moments_x5|ball_tree": {
     "n_reference": 8400,
-    "predict_time_s": 0.00941699199984214
+    "predict_time_s": 0.008444691000477178
   },
   "moments_x20|brute": {
     "n_reference": 33600,
-    "predict_time_s": 0.12034604799964654
+    "predict_time_s": 0.11125958999946306
   },
   "moments_x20|kd_tree": {
     "n_reference": 33600,
-    "predict_time_s": 0.011597557999721175
+    "predict_time_s": 0.010617834999720799
   },
   "moments_x20|ball_tree": {
     "n_reference": 33600,
-    "predict_time_s": 0.020647960000133025
+    "predict_time_s": 0.023968673000126728
   },
   "moments_x60|brute": {
     "n_reference": 100800,
-    "predict_time_s": 0.4125086359999841
+    "predict_time_s": 0.4869646540009853
   },
   "moments_x60|kd_tree": {
     "n_reference": 100800,
-    "predict_time_s": 0.018568756000149733
+    "predict_time_s": 0.020581258000675007
   },
   "moments_x60|ball_tree": {
     "n_reference": 100800,
-    "predict_time_s": 0.06696014399994965
+    "predict_time_s": 0.06830975599950762
   }
 }

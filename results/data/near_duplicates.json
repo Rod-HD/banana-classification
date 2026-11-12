@@ -1,7 +1,7 @@
 {
   "n_images": 2471,
   "hash": "phash 64 bit",
-  "time_s": 2.8,
+  "time_s": 3.4,
   "thresholds": {
     "<= 0": {
       "pairs_total": 3,

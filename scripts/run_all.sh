@@ -4,6 +4,8 @@
 #
 #   bash scripts/run_all.sh            # chạy tất cả các bước
 #   bash scripts/run_all.sh 2 3        # chỉ chạy bước 2 và 3
+# Các bước: 1 dữ liệu + D1 | 2 màu, bộ phân lớp | 3 cạnh, HOG, chốt cấu hình | 4 CNN hướng A | 5 CNN hướng B + N1–N8
+#           6 mất cân bằng | 7 phân đoạn | 8 đánh giá cuối trên test | 9 demo, báo cáo, slide
 #   FRESH=1 bash scripts/run_all.sh    # xóa data/cache/ trước (rút lại toàn bộ đặc trưng)
 #
 # Yêu cầu: đã cài thư viện (bash scripts/setup_env.sh) và có ảnh trong data/raw/
@@ -85,6 +87,9 @@ if want 8; then   # Bước 8: đánh giá cuối trên test, tổng hợp
   run src.error_analysis
   run src.summarize
 fi
-if want 9; then   # Bước 9: xuất mô hình cho demo
+if want 9; then   # Bước 9: mô hình cho demo, ví dụ tính tay, báo cáo (md + docx), slide
   run src.export_demo
+  run src.hand_calc
+  run src.build_report
+  run src.make_slides
 fi

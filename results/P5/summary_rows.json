@@ -9,8 +9,8 @@
     "macro_f1_std": 0.0084,
     "accuracy": 0.9748,
     "n_features": 9,
-    "fit_time_s": 0.0016,
-    "predict_ms_per_image": 0.0072
+    "fit_time_s": 0.0022,
+    "predict_ms_per_image": 0.0094
   },
   {
     "experiment": "P5",
@@ -22,8 +22,8 @@
     "macro_f1_std": 0.0093,
     "accuracy": 0.9248,
     "n_features": 9,
-    "fit_time_s": 0.0152,
-    "predict_ms_per_image": 0.0011
+    "fit_time_s": 0.0147,
+    "predict_ms_per_image": 0.001
   },
   {
     "experiment": "P5",
@@ -35,8 +35,8 @@
     "macro_f1_std": 0.0113,
     "accuracy": 0.8657,
     "n_features": 9,
-    "fit_time_s": 0.0053,
-    "predict_ms_per_image": 0.0012
+    "fit_time_s": 0.005,
+    "predict_ms_per_image": 0.0011
   },
   {
     "experiment": "P5",
@@ -48,8 +48,8 @@
     "macro_f1_std": 0.0139,
     "accuracy": 0.9671,
     "n_features": 512,
-    "fit_time_s": 0.0088,
-    "predict_ms_per_image": 0.0461
+    "fit_time_s": 0.008,
+    "predict_ms_per_image": 0.0518
   },
   {
     "experiment": "P5",
@@ -61,8 +61,8 @@
     "macro_f1_std": 0.0051,
     "accuracy": 0.9924,
     "n_features": 512,
-    "fit_time_s": 0.5289,
-    "predict_ms_per_image": 0.0035
+    "fit_time_s": 0.4791,
+    "predict_ms_per_image": 0.0095
   },
   {
     "experiment": "P5",
@@ -74,8 +74,8 @@
     "macro_f1_std": 0.0083,
     "accuracy": 0.9905,
     "n_features": 512,
-    "fit_time_s": 0.4913,
-    "predict_ms_per_image": 0.0049
+    "fit_time_s": 0.4642,
+    "predict_ms_per_image": 0.0065
   },
   {
     "experiment": "P5",
@@ -87,8 +87,8 @@
     "macro_f1_std": 0.0074,
     "accuracy": 0.9505,
     "n_features": 3780,
-    "fit_time_s": 0.065,
-    "predict_ms_per_image": 0.2203
+    "fit_time_s": 0.0707,
+    "predict_ms_per_image": 0.2014
   },
   {
     "experiment": "P5",
@@ -100,8 +100,8 @@
     "macro_f1_std": 0.0042,
     "accuracy": 0.9876,
     "n_features": 3780,
-    "fit_time_s": 1.2251,
-    "predict_ms_per_image": 0.0245
+    "fit_time_s": 1.0192,
+    "predict_ms_per_image": 0.0328
   },
   {
     "experiment": "P5",
@@ -113,7 +113,7 @@
     "macro_f1_std": 0.0036,
     "accuracy": 0.9843,
     "n_features": 3780,
-    "fit_time_s": 2.568,
-    "predict_ms_per_image": 0.0225
+    "fit_time_s": 2.2117,
+    "predict_ms_per_image": 0.0197
   }
 ]

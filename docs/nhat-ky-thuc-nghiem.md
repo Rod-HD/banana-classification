@@ -993,6 +993,41 @@ Phân tích lỗi (`results/final/table_error_pairs.md`, `results/final/table_er
 - Báo cáo, slide và README dùng `results/final/table.md` làm bảng kết quả chính, luôn kèm cảnh báo của S2: điểm gần tuyệt đối có một phần đến từ bối cảnh chụp.
 - Demo dùng `b_mobilenetv3` làm mặc định; có thêm `a_lenet` và cấu hình truyền thống tốt nhất để so sánh.
 
+## Bước 9 — Demo, báo cáo, slide, tài liệu hỏi đáp, README và kiểm tra tái lập (12/11/2026)
+
+**Mục tiêu.** Hoàn thiện các sản phẩm phải nộp theo mục 3 và mục 8 của kế hoạch; bảo đảm người khác chạy lại được toàn bộ mà không phải làm thêm gì.
+
+**Đã làm.**
+- `report/report_template.md` → `python -m src.build_report` → `report/report.md` và `report/report.docx`. Báo cáo viết lại từ nhật ký theo đúng 7 mục của kế hoạch; mỗi thí nghiệm trình bày theo trình tự tính chất → dự đoán → kết quả đo → kết luận. Bảng số liệu không gõ tay: chỗ `{{T:đường_dẫn}}` trong file mẫu được thay bằng bảng trong `results/`. Bảng thành viên để trống.
+- `python -m src.hand_calc`: số liệu cho ba ví dụ tính tay (Precision/Recall từ Confusion Matrix, khoảng cách giữa hai vector moment màu, số tham số lớp tích chập) trong `results/hand_calc/`.
+- `python -m src.make_slides` → `slides/bao-cao-do-an.pptx`: 28 slide, cả 28 slide có ghi chú thuyết trình; bảng trên slide đọc trực tiếp từ `results/`.
+- `docs/hoi-dap-bao-ve.md`: 36 câu hỏi, mỗi câu dẫn tới bảng hoặc hình cụ thể.
+- `README.md`: cách cài đặt, cách chạy lại (cả 9 bước hoặc từng bước), demo, bảng kết quả chính, cảnh báo về thiên lệch nền.
+- `requirements.txt`: ghim đúng phiên bản thư viện đã dùng để sinh `results/`.
+- Thuộc tính tác giả của file docx và pptx: "Nhóm đồ án CS231".
+
+**Lý do chọn cách này.**
+- Báo cáo và slide được sinh bằng code từ `results/` thay vì chép số bằng tay, để khi chạy lại thí nghiệm thì số trong báo cáo tự cập nhật và không lệch với kết quả. **[lập luận]**
+- Ghim phiên bản thư viện. **[đo]** `pip install --dry-run -r requirements.txt` giải được đầy đủ trên Python 3.13.
+
+**Phương án khác và vì sao không chọn.**
+- Xuất báo cáo PDF: không làm; kế hoạch cho phép pdf hoặc docx, nhóm chọn docx để còn điền bảng thành viên. **[lập luận]**
+
+**Bằng chứng.** Kiểm tra tái lập: chạy lại `bash scripts/run_all.sh 1 2 3` từ đầu rồi so từng dòng `summary_rows.json` với bản đã commit.
+
+| Phép kiểm tra | Kết quả |
+|---|---|
+| Số dòng cấu hình được so (macro-F1, độ lệch chuẩn, accuracy) | 718 |
+| Số dòng khác biệt | 0 |
+| `data/splits/`, `results/select_traditional/selected.json` | không đổi |
+| Phần thay đổi sau khi chạy lại | chỉ các cột thời gian (huấn luyện, dự đoán, rút đặc trưng) |
+| Demo dòng lệnh (`python app/app.py --image …`) với 3 mô hình | chạy được, đoán đúng ảnh ví dụ |
+| Demo web (`python app/app.py`) | HTTP 200; ảnh chụp `results/figures/demo_screenshot.png` |
+
+**Kết quả và kết luận.** Các sản phẩm theo mục 3 đã đủ. Phần truyền thống tái lập chính xác từng con số. Phần CNN cố định seed và bật chế độ tính toán tất định của TensorFlow, nhưng chưa chạy lại toàn bộ để đối chiếu (mất khoảng 2 giờ); trên máy khác hoặc phiên bản thư viện khác, số liệu CNN có thể lệch nhẹ.
+
+**Ảnh hưởng tới bước sau.** Khi thêm thí nghiệm mới, sửa `report/report_template.md` và `src/make_slides.py` rồi chạy lại bước 9 của `scripts/run_all.sh`.
+
 ---
 
 ## Bảng quyết định

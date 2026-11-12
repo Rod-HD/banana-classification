@@ -9,8 +9,8 @@
     "macro_f1_std": 0.0123,
     "accuracy": 0.9662,
     "n_features": 96,
-    "fit_time_s": 0.0033,
-    "predict_ms_per_image": 0.0115
+    "fit_time_s": 0.0031,
+    "predict_ms_per_image": 0.0144
   },
   {
     "experiment": "M2",
@@ -22,8 +22,8 @@
     "macro_f1_std": 0.0025,
     "accuracy": 0.1976,
     "n_features": 96,
-    "fit_time_s": 0.0033,
-    "predict_ms_per_image": 0.0115
+    "fit_time_s": 0.0031,
+    "predict_ms_per_image": 0.0144
   },
   {
     "experiment": "M2",
@@ -35,8 +35,8 @@
     "macro_f1_std": 0.0185,
     "accuracy": 0.2929,
     "n_features": 96,
-    "fit_time_s": 0.0033,
-    "predict_ms_per_image": 0.0115
+    "fit_time_s": 0.0031,
+    "predict_ms_per_image": 0.0144
   },
   {
     "experiment": "M2",
@@ -48,8 +48,8 @@
     "macro_f1_std": 0.0134,
     "accuracy": 0.9786,
     "n_features": 96,
-    "fit_time_s": 0.0378,
-    "predict_ms_per_image": 0.002
+    "fit_time_s": 0.0435,
+    "predict_ms_per_image": 0.0017
   },
   {
     "experiment": "M2",
@@ -61,8 +61,8 @@
     "macro_f1_std": 0.054,
     "accuracy": 0.2833,
     "n_features": 96,
-    "fit_time_s": 0.0378,
-    "predict_ms_per_image": 0.002
+    "fit_time_s": 0.0435,
+    "predict_ms_per_image": 0.0017
   },
   {
     "experiment": "M2",
@@ -74,8 +74,8 @@
     "macro_f1_std": 0.0377,
     "accuracy": 0.321,
     "n_features": 96,
-    "fit_time_s": 0.0378,
-    "predict_ms_per_image": 0.002
+    "fit_time_s": 0.0435,
+    "predict_ms_per_image": 0.0017
   },
   {
     "experiment": "M2",
@@ -87,8 +87,8 @@
     "macro_f1_std": 0.0139,
     "accuracy": 0.9671,
     "n_features": 512,
-    "fit_time_s": 0.0094,
-    "predict_ms_per_image": 0.0729
+    "fit_time_s": 0.0091,
+    "predict_ms_per_image": 0.0281
   },
   {
     "experiment": "M2",
@@ -100,8 +100,8 @@
     "macro_f1_std": 0.0419,
     "accuracy": 0.341,
     "n_features": 512,
-    "fit_time_s": 0.0094,
-    "predict_ms_per_image": 0.0729
+    "fit_time_s": 0.0091,
+    "predict_ms_per_image": 0.0281
   },
   {
     "experiment": "M2",
@@ -113,8 +113,8 @@
     "macro_f1_std": 0.0203,
     "accuracy": 0.6086,
     "n_features": 512,
-    "fit_time_s": 0.0094,
-    "predict_ms_per_image": 0.0729
+    "fit_time_s": 0.0091,
+    "predict_ms_per_image": 0.0281
   },
   {
     "experiment": "M2",
@@ -126,8 +126,8 @@
     "macro_f1_std": 0.0051,
     "accuracy": 0.9924,
     "n_features": 512,
-    "fit_time_s": 0.376,
-    "predict_ms_per_image": 0.0034
+    "fit_time_s": 0.498,
+    "predict_ms_per_image": 0.0041
   },
   {
     "experiment": "M2",
@@ -139,8 +139,8 @@
     "macro_f1_std": 0.0349,
     "accuracy": 0.3343,
     "n_features": 512,
-    "fit_time_s": 0.376,
-    "predict_ms_per_image": 0.0034
+    "fit_time_s": 0.498,
+    "predict_ms_per_image": 0.0041
   },
   {
     "experiment": "M2",
@@ -152,8 +152,8 @@
     "macro_f1_std": 0.0045,
     "accuracy": 0.6719,
     "n_features": 512,
-    "fit_time_s": 0.376,
-    "predict_ms_per_image": 0.0034
+    "fit_time_s": 0.498,
+    "predict_ms_per_image": 0.0041
   },
   {
     "experiment": "M2",
@@ -165,8 +165,8 @@
     "macro_f1_std": 0.0064,
     "accuracy": 0.9762,
     "n_features": 64,
-    "fit_time_s": 0.0024,
-    "predict_ms_per_image": 0.0533
+    "fit_time_s": 0.0029,
+    "predict_ms_per_image": 0.0633
   },
   {
     "experiment": "M2",
@@ -178,8 +178,8 @@
     "macro_f1_std": 0.0086,
     "accuracy": 0.9757,
     "n_features": 64,
-    "fit_time_s": 0.0024,
-    "predict_ms_per_image": 0.0533
+    "fit_time_s": 0.0029,
+    "predict_ms_per_image": 0.0633
   },
   {
     "experiment": "M2",
@@ -191,8 +191,8 @@
     "macro_f1_std": 0.0057,
     "accuracy": 0.9781,
     "n_features": 64,
-    "fit_time_s": 0.0024,
-    "predict_ms_per_image": 0.0533
+    "fit_time_s": 0.0029,
+    "predict_ms_per_image": 0.0633
   },
   {
     "experiment": "M2",
@@ -204,8 +204,8 @@
     "macro_f1_std": 0.0078,
     "accuracy": 0.9857,
     "n_features": 64,
-    "fit_time_s": 0.0183,
-    "predict_ms_per_image": 0.0014
+    "fit_time_s": 0.0223,
+    "predict_ms_per_image": 0.0013
   },
   {
     "experiment": "M2",
@@ -217,8 +217,8 @@
     "macro_f1_std": 0.0141,
     "accuracy": 0.9557,
     "n_features": 64,
-    "fit_time_s": 0.0183,
-    "predict_ms_per_image": 0.0014
+    "fit_time_s": 0.0223,
+    "predict_ms_per_image": 0.0013
   },
   {
     "experiment": "M2",
@@ -230,7 +230,7 @@
     "macro_f1_std": 0.0068,
     "accuracy": 0.9781,
     "n_features": 64,
-    "fit_time_s": 0.0183,
-    "predict_ms_per_image": 0.0014
+    "fit_time_s": 0.0223,
+    "predict_ms_per_image": 0.0013
   }
 ]

@@ -9,9 +9,9 @@
     "macro_f1_std": 0.0123,
     "accuracy": 0.9662,
     "n_features": 96,
-    "fit_time_s": 0.0026,
-    "predict_ms_per_image": 0.0094,
-    "extract_ms_per_image": 0.161
+    "fit_time_s": 0.0028,
+    "predict_ms_per_image": 0.0098,
+    "extract_ms_per_image": 0.149
   },
   {
     "experiment": "M4",
@@ -23,9 +23,9 @@
     "macro_f1_std": 0.0134,
     "accuracy": 0.9786,
     "n_features": 96,
-    "fit_time_s": 0.037,
+    "fit_time_s": 0.0383,
     "predict_ms_per_image": 0.0016,
-    "extract_ms_per_image": 0.161
+    "extract_ms_per_image": 0.149
   },
   {
     "experiment": "M4",
@@ -37,9 +37,9 @@
     "macro_f1_std": 0.012,
     "accuracy": 0.9662,
     "n_features": 96,
-    "fit_time_s": 0.0557,
+    "fit_time_s": 0.0592,
     "predict_ms_per_image": 0.0022,
-    "extract_ms_per_image": 0.161
+    "extract_ms_per_image": 0.149
   },
   {
     "experiment": "M4",
@@ -51,9 +51,9 @@
     "macro_f1_std": 0.0139,
     "accuracy": 0.9671,
     "n_features": 512,
-    "fit_time_s": 0.0077,
-    "predict_ms_per_image": 0.025,
-    "extract_ms_per_image": 0.208
+    "fit_time_s": 0.0083,
+    "predict_ms_per_image": 0.0241,
+    "extract_ms_per_image": 0.233
   },
   {
     "experiment": "M4",
@@ -65,9 +65,9 @@
     "macro_f1_std": 0.0051,
     "accuracy": 0.9924,
     "n_features": 512,
-    "fit_time_s": 0.7346,
-    "predict_ms_per_image": 0.0079,
-    "extract_ms_per_image": 0.208
+    "fit_time_s": 0.7742,
+    "predict_ms_per_image": 0.0066,
+    "extract_ms_per_image": 0.233
   },
   {
     "experiment": "M4",
@@ -79,9 +79,9 @@
     "macro_f1_std": 0.0083,
     "accuracy": 0.9905,
     "n_features": 512,
-    "fit_time_s": 0.5012,
-    "predict_ms_per_image": 0.0049,
-    "extract_ms_per_image": 0.208
+    "fit_time_s": 0.476,
+    "predict_ms_per_image": 0.0045,
+    "extract_ms_per_image": 0.233
   },
   {
     "experiment": "M4",
@@ -93,9 +93,9 @@
     "macro_f1_std": 0.0064,
     "accuracy": 0.9762,
     "n_features": 64,
-    "fit_time_s": 0.002,
-    "predict_ms_per_image": 0.0089,
-    "extract_ms_per_image": 0.209
+    "fit_time_s": 0.0021,
+    "predict_ms_per_image": 0.0094,
+    "extract_ms_per_image": 0.197
   },
   {
     "experiment": "M4",
@@ -107,9 +107,9 @@
     "macro_f1_std": 0.0078,
     "accuracy": 0.9857,
     "n_features": 64,
-    "fit_time_s": 0.016,
-    "predict_ms_per_image": 0.0012,
-    "extract_ms_per_image": 0.209
+    "fit_time_s": 0.0172,
+    "predict_ms_per_image": 0.0011,
+    "extract_ms_per_image": 0.197
   },
   {
     "experiment": "M4",
@@ -121,9 +121,9 @@
     "macro_f1_std": 0.0073,
     "accuracy": 0.9633,
     "n_features": 64,
-    "fit_time_s": 0.0284,
-    "predict_ms_per_image": 0.0019,
-    "extract_ms_per_image": 0.209
+    "fit_time_s": 0.0269,
+    "predict_ms_per_image": 0.0024,
+    "extract_ms_per_image": 0.197
   },
   {
     "experiment": "M4",
@@ -136,8 +136,8 @@
     "accuracy": 0.9748,
     "n_features": 9,
     "fit_time_s": 0.0015,
-    "predict_ms_per_image": 0.0066,
-    "extract_ms_per_image": 4.254
+    "predict_ms_per_image": 0.0073,
+    "extract_ms_per_image": 4.037
   },
   {
     "experiment": "M4",
@@ -149,9 +149,9 @@
     "macro_f1_std": 0.0093,
     "accuracy": 0.9248,
     "n_features": 9,
-    "fit_time_s": 0.0144,
+    "fit_time_s": 0.0174,
     "predict_ms_per_image": 0.001,
-    "extract_ms_per_image": 4.254
+    "extract_ms_per_image": 4.037
   },
   {
     "experiment": "M4",
@@ -163,9 +163,9 @@
     "macro_f1_std": 0.0113,
     "accuracy": 0.8657,
     "n_features": 9,
-    "fit_time_s": 0.0051,
-    "predict_ms_per_image": 0.001,
-    "extract_ms_per_image": 4.254
+    "fit_time_s": 0.0052,
+    "predict_ms_per_image": 0.0011,
+    "extract_ms_per_image": 4.037
   },
   {
     "experiment": "M4",
@@ -177,9 +177,9 @@
     "macro_f1_std": 0.0048,
     "accuracy": 0.9486,
     "n_features": 12,
-    "fit_time_s": 0.0015,
-    "predict_ms_per_image": 0.0063,
-    "extract_ms_per_image": 1.577
+    "fit_time_s": 0.0016,
+    "predict_ms_per_image": 0.0068,
+    "extract_ms_per_image": 1.576
   },
   {
     "experiment": "M4",
@@ -191,9 +191,9 @@
     "macro_f1_std": 0.009,
     "accuracy": 0.9152,
     "n_features": 12,
-    "fit_time_s": 0.0169,
+    "fit_time_s": 0.0185,
     "predict_ms_per_image": 0.001,
-    "extract_ms_per_image": 1.577
+    "extract_ms_per_image": 1.576
   },
   {
     "experiment": "M4",
@@ -205,9 +205,9 @@
     "macro_f1_std": 0.0126,
     "accuracy": 0.8452,
     "n_features": 12,
-    "fit_time_s": 0.0071,
-    "predict_ms_per_image": 0.0012,
-    "extract_ms_per_image": 1.577
+    "fit_time_s": 0.0064,
+    "predict_ms_per_image": 0.001,
+    "extract_ms_per_image": 1.576
   },
   {
     "experiment": "M4",
@@ -219,9 +219,9 @@
     "macro_f1_std": 0.0112,
     "accuracy": 0.9529,
     "n_features": 128,
-    "fit_time_s": 0.0029,
-    "predict_ms_per_image": 0.0125,
-    "extract_ms_per_image": 2.03
+    "fit_time_s": 0.0028,
+    "predict_ms_per_image": 0.0121,
+    "extract_ms_per_image": 1.905
   },
   {
     "experiment": "M4",
@@ -233,9 +233,9 @@
     "macro_f1_std": 0.0058,
     "accuracy": 0.9781,
     "n_features": 128,
-    "fit_time_s": 0.017,
-    "predict_ms_per_image": 0.0014,
-    "extract_ms_per_image": 2.03
+    "fit_time_s": 0.0159,
+    "predict_ms_per_image": 0.0013,
+    "extract_ms_per_image": 1.905
   },
   {
     "experiment": "M4",
@@ -247,9 +247,9 @@
     "macro_f1_std": 0.014,
     "accuracy": 0.9686,
     "n_features": 128,
-    "fit_time_s": 0.025,
-    "predict_ms_per_image": 0.002,
-    "extract_ms_per_image": 2.03
+    "fit_time_s": 0.0231,
+    "predict_ms_per_image": 0.0018,
+    "extract_ms_per_image": 1.905
   },
   {
     "experiment": "M4",
@@ -261,9 +261,9 @@
     "macro_f1_std": 0.0098,
     "accuracy": 0.9681,
     "n_features": 64,
-    "fit_time_s": 0.0021,
-    "predict_ms_per_image": 0.008,
-    "extract_ms_per_image": 0.526
+    "fit_time_s": 0.0023,
+    "predict_ms_per_image": 0.0081,
+    "extract_ms_per_image": 0.505
   },
   {
     "experiment": "M4",
@@ -275,9 +275,9 @@
     "macro_f1_std": 0.0082,
     "accuracy": 0.971,
     "n_features": 64,
-    "fit_time_s": 0.0137,
-    "predict_ms_per_image": 0.0013,
-    "extract_ms_per_image": 0.526
+    "fit_time_s": 0.0143,
+    "predict_ms_per_image": 0.0012,
+    "extract_ms_per_image": 0.505
   },
   {
     "experiment": "M4",
@@ -289,8 +289,8 @@
     "macro_f1_std": 0.0204,
     "accuracy": 0.95,
     "n_features": 64,
-    "fit_time_s": 0.0133,
-    "predict_ms_per_image": 0.0014,
-    "extract_ms_per_image": 0.526
+    "fit_time_s": 0.0141,
+    "predict_ms_per_image": 0.0015,
+    "extract_ms_per_image": 0.505
   }
 ]
