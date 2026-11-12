@@ -1,0 +1,173 @@
+{
+  "n_images": 2471,
+  "hash": "phash 64 bit",
+  "time_s": 2.8,
+  "thresholds": {
+    "<= 0": {
+      "pairs_total": 3,
+      "pairs_same_class": 3,
+      "pairs_diff_class": 0,
+      "pairs_cross_split": 1,
+      "pairs_train_test": 0,
+      "pairs_train_val": 1,
+      "pairs_val_test": 0,
+      "test_images_with_neighbor_in_train": 0
+    },
+    "<= 2": {
+      "pairs_total": 42,
+      "pairs_same_class": 41,
+      "pairs_diff_class": 1,
+      "pairs_cross_split": 17,
+      "pairs_train_test": 7,
+      "pairs_train_val": 8,
+      "pairs_val_test": 2,
+      "test_images_with_neighbor_in_train": 7
+    },
+    "<= 4": {
+      "pairs_total": 383,
+      "pairs_same_class": 373,
+      "pairs_diff_class": 10,
+      "pairs_cross_split": 184,
+      "pairs_train_test": 83,
+      "pairs_train_val": 86,
+      "pairs_val_test": 15,
+      "test_images_with_neighbor_in_train": 44
+    },
+    "<= 6": {
+      "pairs_total": 1527,
+      "pairs_same_class": 1471,
+      "pairs_diff_class": 56,
+      "pairs_cross_split": 753,
+      "pairs_train_test": 336,
+      "pairs_train_val": 355,
+      "pairs_val_test": 62,
+      "test_images_with_neighbor_in_train": 103
+    },
+    "<= 8": {
+      "pairs_total": 4367,
+      "pairs_same_class": 4092,
+      "pairs_diff_class": 275,
+      "pairs_cross_split": 2138,
+      "pairs_train_test": 957,
+      "pairs_train_val": 960,
+      "pairs_val_test": 221,
+      "test_images_with_neighbor_in_train": 180
+    }
+  },
+  "distance_histogram_first_16": [
+    3,
+    0,
+    39,
+    0,
+    341,
+    0,
+    1144,
+    0,
+    2840,
+    0,
+    5559,
+    0,
+    10120,
+    0,
+    17869,
+    0
+  ],
+  "closest_pairs": [
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_427.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_428.jpg",
+      "dist": 0,
+      "split_a": "train",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/sabri_kola/Sabri_Kola_16.jpg",
+      "b": "data/raw/sabri_kola/Sabri_Kola_17.jpg",
+      "dist": 0,
+      "split_a": "train",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/sabri_kola/Sabri_Kola_40.jpg",
+      "b": "data/raw/sabri_kola/Sabri_Kola_75.jpg",
+      "dist": 0,
+      "split_a": "train",
+      "split_b": "val"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_142.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_148.jpg",
+      "dist": 2,
+      "split_a": "val",
+      "split_b": "test"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_145.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_153.jpg",
+      "dist": 2,
+      "split_a": "train",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_205.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_214.jpg",
+      "dist": 2,
+      "split_a": "train",
+      "split_b": "val"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_248.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_250.jpg",
+      "dist": 2,
+      "split_a": "train",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_260.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_289.jpg",
+      "dist": 2,
+      "split_a": "train",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_271.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_281.jpg",
+      "dist": 2,
+      "split_a": "val",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_348.JPG",
+      "b": "data/raw/sabri_kola/Sabri_Kola_383.jpg",
+      "dist": 2,
+      "split_a": "test",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_404.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_407.jpg",
+      "dist": 2,
+      "split_a": "val",
+      "split_b": "train"
+    },
+    {
+      "a": "data/raw/bangla_kola/Bangla_Kola_404.jpg",
+      "b": "data/raw/bangla_kola/Bangla_Kola_427.jpg",
+      "dist": 2,
+      "split_a": "val",
+      "split_b": "train"
+    }
+  ],
+  "groups_th2": {
+    "n_groups": 2431,
+    "n_groups_size_gt1": 31,
+    "images_in_groups_size_gt1": 71,
+    "largest_group": 6
+  },
+  "groups_th4": {
+    "n_groups": 2202,
+    "n_groups_size_gt1": 105,
+    "images_in_groups_size_gt1": 374,
+    "largest_group": 58
+  }
+}

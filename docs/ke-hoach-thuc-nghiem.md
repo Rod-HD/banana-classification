@@ -51,6 +51,7 @@ Thư viện: OpenCV, scikit-image, scikit-learn cho phần truyền thống; Ten
 
 - Chia một lần, cố định: stratified 70/15/15 (train/val/test), `seed=42`, lưu `data/splits/{train,val,test}.csv`.
 - **Tập test chỉ dùng một lần ở cuối** cho các cấu hình đã chốt.
+- Ở mục 6, cụm "ảnh test" trong các thí nghiệm kiểm chứng (D1, M1, M2, M6, C1, C2, C4, N8) nghĩa là phần ảnh giữ lại để chấm trong giai đoạn phát triển: fold giữ lại của cross-validation (nhóm truyền thống) hoặc tập val (CNN). D1 chạy trong tập train+val. Tập test chính thức không dùng cho các thí nghiệm này (cập nhật ở bước 1 của nhật ký).
 - Nhóm truyền thống: gộp train+val, chọn siêu tham số bằng 5-fold stratified cross-validation, báo cáo trung bình ± độ lệch chuẩn. Chênh lệch nhỏ hơn độ lệch chuẩn thì kết luận là "chưa đủ cơ sở phân biệt", không tuyên bố hơn kém.
 - Nhóm CNN: huấn luyện trên train, chọn epoch và siêu tham số theo val.
 - Chỉ số chính: **macro-F1** (vì dữ liệu mất cân bằng). Luôn báo cáo kèm Accuracy, Precision và Recall từng lớp, Confusion Matrix dạng số lượng và dạng chuẩn hóa theo hàng.

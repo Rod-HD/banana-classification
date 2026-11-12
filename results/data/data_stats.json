@@ -1,0 +1,56 @@
+{
+  "class_names": [
+    "Bangla Kola",
+    "Champa Kola",
+    "Sabri Kola",
+    "Sagor Kola"
+  ],
+  "counts_per_split": {
+    "train": [
+      311,
+      695,
+      356,
+      367
+    ],
+    "val": [
+      66,
+      150,
+      76,
+      79
+    ],
+    "test": [
+      67,
+      149,
+      77,
+      78
+    ]
+  },
+  "total_per_class": [
+    444,
+    994,
+    509,
+    524
+  ],
+  "mean_rgb_per_class": {
+    "Bangla Kola": [
+      186.4,
+      183.7,
+      177.7
+    ],
+    "Champa Kola": [
+      167.4,
+      170.8,
+      167.6
+    ],
+    "Sabri Kola": [
+      187.6,
+      197.1,
+      205.9
+    ],
+    "Sagor Kola": [
+      179.7,
+      175.0,
+      164.0
+    ]
+  }
+}
