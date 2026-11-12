@@ -1,0 +1,62 @@
+{
+  "accuracy": 0.9923809523809524,
+  "macro_f1": 0.9913356112377945,
+  "macro_precision": 0.991509717255568,
+  "macro_recall": 0.9912348092336213,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.9765013054830287,
+      "recall": 0.9920424403183024,
+      "f1": 0.9842105263157894,
+      "support": 377
+    },
+    "Champa Kola": {
+      "precision": 0.9941037735849056,
+      "recall": 0.9976331360946745,
+      "f1": 0.9958653278204371,
+      "support": 845
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 0.9976851851851852,
+      "f1": 0.9988412514484357,
+      "support": 432
+    },
+    "Sagor Kola": {
+      "precision": 0.9954337899543378,
+      "recall": 0.9775784753363229,
+      "f1": 0.9864253393665159,
+      "support": 446
+    }
+  },
+  "confusion_matrix": [
+    [
+      374,
+      1,
+      0,
+      2
+    ],
+    [
+      2,
+      843,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      431,
+      0
+    ],
+    [
+      6,
+      4,
+      0,
+      436
+    ]
+  ],
+  "config": "Hist HSV (8,8,8) + LogReg C=0.1",
+  "eval": "out-of-fold, 5-fold CV trên train+val",
+  "cv_macro_f1_mean": 0.9913325056832398,
+  "cv_macro_f1_std": 0.005116589856547791
+}

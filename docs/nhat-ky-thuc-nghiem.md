@@ -378,6 +378,199 @@ Giải thích các điểm trái dự đoán:
 - KNN ở bước chốt cấu hình sẽ quét k ∈ {1, 3, 5}, độ đo Euclidean/Manhattan/Hellinger thay vì cố định k=5.
 - Hai đặc trưng màu và hình dạng đều đạt trên 0,98 một mình; cần S2 để biết phần của nền ảnh trong con số này.
 
+## Bước 3 — Đặc trưng cạnh, HOG, ghép đặc trưng (C1–C5) và chốt cấu hình truyền thống (12/11/2026)
+
+**Mục tiêu.** Kiểm chứng các giả thuyết ở mục 6.3; chọn siêu tham số và chốt cấu hình tốt nhất của nhóm truyền thống cho từng họ đặc trưng (màu, cạnh, HOG, ghép).
+
+**Đã làm.**
+- `src/features/edge.py`: Roberts, Prewitt, Sobel, Laplacian; vector 512 chiều (tổng độ lớn gradient theo 256 hàng và 256 cột).
+- `src/features/hog.py`: HOG theo các bước của bài giảng, có tùy chọn bỏ chuẩn hóa block, phiếu cứng/chia phiếu, ảnh xám/ảnh màu.
+- `python -m src.exp_shape` (C1–C5): `results/C1` … `results/C5`, hình `results/figures/C*_*.png`.
+- `python -m src.exp_select`: quét k ∈ {1, 3, 5} và độ đo (Euclidean, Manhattan, Hellinger) cho KNN; C cho Logistic Regression và Linear SVM; ghi `results/select_traditional/` (bảng, `selected.json`, confusion matrix out-of-fold của 4 cấu hình đã chốt).
+- `src/trad_config.py`: một cấu hình truyền thống được mô tả bằng dict (đặc trưng, cách ghép, bộ phân lớp) để các bước sau và demo dựng lại đúng mô hình đã chốt.
+
+**Lý do chọn cách này.**
+- C1 thêm mức nhiễu σ = 2 ngoài ba mức 5, 10, 20 của kế hoạch. **[đo]** `results/C1/table.md`: từ σ = 10 mọi toán tử đều rơi về mức đoán mò (macro-F1 ≈ 0,09), nên ba mức gốc không phân biệt được các toán tử; ở σ = 2 mới thấy khác biệt (Prewitt/Sobel sụt 0,02–0,23, Roberts 0,46–0,67, Laplacian 0,60–0,83).
+- C1 đo thêm mức thay đổi tương đối của chính vector đặc trưng, không qua bộ phân lớp, để tách "độ nhạy của toán tử" khỏi "độ nhạy của bộ phân lớp". **[đo]** `results/C1/table_feature_change.md`.
+- Ghép đặc trưng "chuẩn hóa từng phần": z-score từng chiều rồi chia mỗi phần cho căn bậc hai số chiều của phần đó, để phần màu (64–512 chiều) không bị phần HOG (3.780 chiều) lấn át trong khoảng cách. **[đo]** `results/C5/table.md`: với KNN, Hist H-S + HOG tăng từ 0,948 (z-score chung) lên 0,977; Hist HSV + moment + HOG từ 0,945 lên 0,985.
+- HOG giữ cấu hình của bài giảng (64×128, cell 8×8, 9 bin, 3.780 chiều). **[đo]** `results/C3/table.md`: với LogReg, 9 trong 12 cấu hình nằm trong khoảng 0,982–0,986, chênh nhỏ hơn độ lệch chuẩn (0,004–0,007); không có cơ sở để chọn cấu hình khác.
+
+**Phương án khác và vì sao không chọn.**
+- HOG 64×128 với cell 16×16 (504–1.008 chiều): không chọn, LogReg chỉ 0,959–0,960 so với 0,985 của cell 8×8, chênh lớn hơn độ lệch chuẩn. **[đo]** `results/C3/table.md`.
+- HOG 128×128 (8.100 chiều): không chọn, 0,986 ± 0,004 so với 0,985 ± 0,004 của 64×128, chưa đủ cơ sở phân biệt, mà vector dài gấp 2,1 lần và rút đặc trưng lâu gấp 2,2 lần. **[đo]** `results/C3/table.md`.
+- HOG trên ảnh màu (lấy kênh có gradient lớn nhất): 0,982 ± 0,005 so với 0,985 ± 0,004 trên ảnh xám; chưa đủ cơ sở phân biệt, giữ ảnh xám cho đơn giản. **[đo]** `results/C3/table_variants.md`.
+- HOG phiếu cứng như skimage: LogReg ngang nhau (0,985), KNN kém hơn (0,928 so với 0,946); giữ cách chia phiếu cho hai bin gần nhất như bài giảng. **[đo]** `results/C3/table_variants.md`.
+- Ghép thẳng rồi z-score chung: với LogReg ngang cách chuẩn hóa từng phần (0,989–0,993 so với 0,991–0,993), nhưng với KNN kém hơn rõ (xem trên). **[đo]** `results/C5/table.md`.
+- Linear SVM với C cố định 0,01 trên đặc trưng ghép đã chuẩn hóa từng phần: tụt còn 0,959–0,966. Nguyên nhân là phép chia cho căn số chiều làm đặc trưng nhỏ đi nên cùng một C thành điều chuẩn mạnh hơn; khi quét C, Linear SVM C=1 đạt 0,996. **[đo]** `results/select_traditional/table.md`.
+- Chọn đặc trưng cạnh làm đại diện hình dạng thay cho HOG: không chọn; cấu hình cạnh tốt nhất 0,955 ± 0,015 so với HOG 0,986 ± 0,007, và sập hoàn toàn với nhiễu σ ≥ 5. **[đo]** `results/select_traditional/table_selected.md`, `results/C1/table.md`.
+
+**Bằng chứng.** (macro-F1 trung bình ± độ lệch chuẩn qua 5 fold)
+
+C1 — toán tử cạnh và nhiễu (`results/C1/table.md`, `results/C1/table_feature_change.md`, hình `results/figures/C1_edge_noise.png`):
+
+| Toán tử | Bộ phân lớp | Ảnh gốc | Sụt σ=2 | Sụt σ=5 | Sụt σ=10 | Sụt σ=20 |
+|---|---|---|---|---|---|---|
+| Roberts (2×2) | KNN (k=5) | 0,901 ± 0,019 | +0,461 ± 0,017 | +0,789 ± 0,019 | +0,813 ± 0,019 | +0,813 ± 0,019 |
+| Roberts (2×2) | LogReg | 0,932 ± 0,011 | +0,669 ± 0,015 | +0,839 ± 0,007 | +0,844 ± 0,010 | +0,844 ± 0,010 |
+| Prewitt (3×3) | KNN (k=5) | 0,890 ± 0,019 | +0,026 ± 0,020 | +0,523 ± 0,025 | +0,799 ± 0,014 | +0,803 ± 0,019 |
+| Prewitt (3×3) | LogReg | 0,892 ± 0,007 | +0,198 ± 0,019 | +0,768 ± 0,013 | +0,805 ± 0,007 | +0,805 ± 0,007 |
+| Sobel (3×3) | KNN (k=5) | 0,890 ± 0,019 | +0,023 ± 0,022 | +0,535 ± 0,021 | +0,800 ± 0,017 | +0,802 ± 0,019 |
+| Sobel (3×3) | LogReg | 0,894 ± 0,008 | +0,226 ± 0,020 | +0,776 ± 0,013 | +0,806 ± 0,007 | +0,806 ± 0,007 |
+| Laplacian (bậc hai) | KNN (k=5) | 0,886 ± 0,014 | +0,601 ± 0,008 | +0,797 ± 0,014 | +0,798 ± 0,014 | +0,798 ± 0,014 |
+| Laplacian (bậc hai) | LogReg | 0,914 ± 0,015 | +0,826 ± 0,015 | +0,827 ± 0,015 | +0,827 ± 0,015 | +0,827 ± 0,015 |
+
+| Toán tử | σ=2 | σ=5 | σ=10 | σ=20 |
+|---|---|---|---|---|
+| Roberts (2×2) | 0,35 | 1,00 | 2,14 | 4,47 |
+| Prewitt (3×3) | 0,14 | 0,43 | 0,98 | 2,11 |
+| Sobel (3×3) | 0,15 | 0,46 | 1,03 | 2,22 |
+| Laplacian (bậc hai) | 0,78 | 2,16 | 4,55 | 9,37 |
+
+C2 — HOG và độ sáng (`results/C2/table.md`, `results/C2/table_feature_change.md`, `results/C2/table_saturation.md`, hình `results/figures/C2_hog_brightness.png`):
+
+| Đặc trưng | Số chiều | Bộ phân lớp | Ảnh gốc | Sụt (V×0,6) | Sụt (V×1,4) |
+|---|---|---|---|---|---|
+| HOG, chuẩn hóa block L2 | 3780 | KNN (k=5) | 0,946 ± 0,007 | +0,009 ± 0,007 | +0,163 ± 0,008 |
+| HOG, chuẩn hóa block L2 | 3780 | LogReg | 0,985 ± 0,004 | +0,004 ± 0,004 | +0,215 ± 0,033 |
+| HOG, không chuẩn hóa block | 1152 | KNN (k=5) | 0,845 ± 0,015 | +0,394 ± 0,023 | -0,032 ± 0,011 |
+| HOG, không chuẩn hóa block | 1152 | LogReg | 0,960 ± 0,005 | +0,080 ± 0,009 | +0,057 ± 0,006 |
+| Hist RGB (3×32) | 96 | KNN (k=5) | 0,964 ± 0,012 | +0,873 ± 0,013 | +0,760 ± 0,024 |
+| Hist RGB (3×32) | 96 | LogReg | 0,976 ± 0,013 | +0,763 ± 0,064 | +0,696 ± 0,036 |
+| Hist HSV (8,8,8) | 512 | KNN (k=5) | 0,965 ± 0,014 | +0,663 ± 0,043 | +0,376 ± 0,025 |
+| Hist HSV (8,8,8) | 512 | LogReg | 0,991 ± 0,005 | +0,673 ± 0,035 | +0,329 ± 0,009 |
+| Hist H-S (8,8) | 64 | KNN (k=5) | 0,976 ± 0,006 | +0,000 ± 0,008 | +0,001 ± 0,002 |
+| Hist H-S (8,8) | 64 | LogReg | 0,985 ± 0,008 | +0,027 ± 0,011 | +0,011 ± 0,004 |
+
+| Đặc trưng | Thay đổi tương đối của vector (V×0,6) | Thay đổi tương đối của vector (V×1,4) |
+|---|---|---|
+| HOG, chuẩn hóa block L2 | 0,21 | 0,60 |
+| HOG, không chuẩn hóa block | 0,40 | 0,28 |
+
+| Ảnh | Tỉ lệ cell gần như không có gradient | Tỉ lệ điểm ảnh bão hòa (kênh lớn nhất = 255) |
+|---|---|---|
+| Ảnh gốc | 0,002 | 0,005 |
+| V×0,6 | 0,003 | 0,000 |
+| V×1,4 | 0,141 | 0,687 |
+
+C3 — tham số HOG (`results/C3/table.md`, `results/C3/table_variants.md`, hình `results/figures/C3_hog_params.png`):
+
+| Kích thước ảnh (rộng×cao) | Cell | Số bin | Số chiều | Rút đặc trưng (ms/ảnh) | KNN (k=5) | LogReg | Linear SVM |
+|---|---|---|---|---|---|---|---|
+| 64×128 | 8×8 | 6 | 2520 | 0,90 | 0,954 ± 0,007 | 0,982 ± 0,007 | 0,977 ± 0,003 |
+| 64×128 | 8×8 | 9 | 3780 | 1,03 | 0,946 ± 0,007 | 0,985 ± 0,004 | 0,982 ± 0,004 |
+| 64×128 | 8×8 | 12 | 5040 | 1,36 | 0,939 ± 0,011 | 0,985 ± 0,006 | 0,979 ± 0,006 |
+| 64×128 | 16×16 | 6 | 504 | 0,83 | 0,920 ± 0,010 | 0,959 ± 0,006 | 0,959 ± 0,008 |
+| 64×128 | 16×16 | 9 | 756 | 0,92 | 0,911 ± 0,010 | 0,959 ± 0,005 | 0,958 ± 0,009 |
+| 64×128 | 16×16 | 12 | 1008 | 1,05 | 0,910 ± 0,008 | 0,960 ± 0,006 | 0,959 ± 0,009 |
+| 128×128 | 8×8 | 6 | 5400 | 1,86 | 0,952 ± 0,013 | 0,986 ± 0,005 | 0,978 ± 0,006 |
+| 128×128 | 8×8 | 9 | 8100 | 2,29 | 0,942 ± 0,017 | 0,986 ± 0,004 | 0,982 ± 0,007 |
+| 128×128 | 8×8 | 12 | 10800 | 2,39 | 0,941 ± 0,013 | 0,985 ± 0,005 | 0,978 ± 0,010 |
+| 128×128 | 16×16 | 6 | 1176 | 1,47 | 0,961 ± 0,007 | 0,983 ± 0,007 | 0,981 ± 0,005 |
+| 128×128 | 16×16 | 9 | 1764 | 1,82 | 0,951 ± 0,014 | 0,982 ± 0,007 | 0,981 ± 0,011 |
+| 128×128 | 16×16 | 12 | 2352 | 2,18 | 0,954 ± 0,011 | 0,984 ± 0,006 | 0,981 ± 0,010 |
+
+| Biến thể | KNN (k=5) | LogReg | Linear SVM |
+|---|---|---|---|
+| 64×128, cell 8, 9 bin, phiếu cứng (như skimage) | 0,928 ± 0,009 | 0,985 ± 0,004 | 0,976 ± 0,003 |
+| 64×128, cell 8, 9 bin, ảnh màu (kênh gradient lớn nhất) | 0,944 ± 0,013 | 0,982 ± 0,005 | 0,977 ± 0,006 |
+
+C4 — che 25% diện tích (`results/C4/table.md`, `results/C4/table_hist_scaling.md`, hình `results/figures/C4_occlusion.png`):
+
+| Đặc trưng | Loại | Bộ phân lớp | Ảnh gốc | Che 25% | Độ sụt |
+|---|---|---|---|---|---|
+| Hist RGB (3×32) | toàn cục | KNN (k=5) | 0,964 ± 0,012 | 0,085 ± 0,000 | +0,879 ± 0,012 |
+| Hist RGB (3×32) | toàn cục | LogReg | 0,976 ± 0,013 | 0,085 ± 0,000 | +0,890 ± 0,014 |
+| Hist HSV (8,8,8) | toàn cục | KNN (k=5) | 0,965 ± 0,014 | 0,077 ± 0,003 | +0,887 ± 0,013 |
+| Hist HSV (8,8,8) | toàn cục | LogReg | 0,991 ± 0,005 | 0,222 ± 0,113 | +0,769 ± 0,117 |
+| Hist H-S (8,8) | toàn cục | KNN (k=5) | 0,976 ± 0,006 | 0,843 ± 0,030 | +0,133 ± 0,029 |
+| Hist H-S (8,8) | toàn cục | LogReg | 0,985 ± 0,008 | 0,762 ± 0,028 | +0,224 ± 0,021 |
+| Moment màu | toàn cục | KNN (k=5) | 0,972 ± 0,008 | 0,312 ± 0,042 | +0,659 ± 0,043 |
+| Moment màu | toàn cục | LogReg | 0,908 ± 0,009 | 0,227 ± 0,006 | +0,681 ± 0,010 |
+| HOG 64×128 | cục bộ ghép lại | KNN (k=5) | 0,946 ± 0,007 | 0,784 ± 0,030 | +0,162 ± 0,028 |
+| HOG 64×128 | cục bộ ghép lại | LogReg | 0,985 ± 0,004 | 0,794 ± 0,027 | +0,192 ± 0,026 |
+| Cạnh Sobel | cục bộ ghép lại | KNN (k=5) | 0,890 ± 0,019 | 0,322 ± 0,006 | +0,568 ± 0,023 |
+| Cạnh Sobel | cục bộ ghép lại | LogReg | 0,894 ± 0,008 | 0,272 ± 0,014 | +0,621 ± 0,017 |
+
+| Đặc trưng | KNN (k=5), chuẩn hóa | Ảnh gốc | Che 25% | Độ sụt |
+|---|---|---|---|---|
+| Hist RGB (3×32) | z-score | 0,964 ± 0,012 | 0,085 ± 0,000 | +0,879 ± 0,012 |
+| Hist RGB (3×32) | không chuẩn hóa | 0,952 ± 0,013 | 0,859 ± 0,024 | +0,093 ± 0,027 |
+| Hist RGB (3×32) | Hellinger | 0,974 ± 0,011 | 0,870 ± 0,028 | +0,104 ± 0,026 |
+| Hist HSV (8,8,8) | z-score | 0,965 ± 0,014 | 0,077 ± 0,003 | +0,887 ± 0,013 |
+| Hist HSV (8,8,8) | không chuẩn hóa | 0,953 ± 0,006 | 0,920 ± 0,021 | +0,032 ± 0,019 |
+| Hist HSV (8,8,8) | Hellinger | 0,976 ± 0,015 | 0,964 ± 0,013 | +0,012 ± 0,002 |
+| Hist H-S (8,8) | z-score | 0,976 ± 0,006 | 0,843 ± 0,030 | +0,133 ± 0,029 |
+| Hist H-S (8,8) | không chuẩn hóa | 0,947 ± 0,011 | 0,556 ± 0,103 | +0,391 ± 0,107 |
+| Hist H-S (8,8) | Hellinger | 0,979 ± 0,005 | 0,605 ± 0,136 | +0,374 ± 0,138 |
+
+C5 — ghép đặc trưng (`results/C5/table.md`, hình `results/figures/C5_fusion.png`):
+
+| Đặc trưng | Cách ghép | Số chiều | KNN (k=5) | LogReg | Linear SVM |
+|---|---|---|---|---|---|
+| Hist HSV (8,8,8) | — | 512 | 0,965 ± 0,014 | 0,991 ± 0,005 | 0,989 ± 0,008 |
+| Hist H-S (8,8) | — | 64 | 0,976 ± 0,006 | 0,985 ± 0,008 | 0,958 ± 0,007 |
+| HOG 64×128 | — | 3780 | 0,946 ± 0,007 | 0,985 ± 0,004 | 0,982 ± 0,004 |
+| Hist HSV + HOG | ghép thẳng, z-score chung | 4292 | 0,943 ± 0,008 | 0,993 ± 0,003 | 0,991 ± 0,003 |
+| Hist HSV + HOG | chuẩn hóa từng phần rồi ghép | 4292 | 0,956 ± 0,012 | 0,993 ± 0,004 | 0,961 ± 0,007 |
+| Hist H-S + HOG | ghép thẳng, z-score chung | 3844 | 0,948 ± 0,009 | 0,989 ± 0,003 | 0,989 ± 0,003 |
+| Hist H-S + HOG | chuẩn hóa từng phần rồi ghép | 3844 | 0,977 ± 0,005 | 0,992 ± 0,003 | 0,966 ± 0,014 |
+| Hist HSV + moment + HOG | ghép thẳng, z-score chung | 4301 | 0,945 ± 0,008 | 0,993 ± 0,003 | 0,992 ± 0,003 |
+| Hist HSV + moment + HOG | chuẩn hóa từng phần rồi ghép | 4301 | 0,985 ± 0,009 | 0,991 ± 0,004 | 0,959 ± 0,007 |
+
+Chốt cấu hình (`results/select_traditional/table.md`, `results/select_traditional/table_selected.md`):
+
+| Họ | Đặc trưng | Cấu hình tốt nhất của bộ phân lớp | Số chiều | Macro-F1 | Accuracy | Huấn luyện (s) | Dự đoán (ms/ảnh) |
+|---|---|---|---|---|---|---|---|
+| màu | Hist HSV (8,8,8) | KNN k=1, Hellinger, ưu tiên điểm gần | 512 | 0,987 ± 0,006 | 0,989 ± 0,006 | 0,01 | 0,031 |
+| màu | Hist HSV (8,8,8) | LogReg C=0,1 | 512 | 0,991 ± 0,005 | 0,992 ± 0,005 | 0,72 | 0,004 |
+| màu | Hist HSV (8,8,8) | Linear SVM C=0,1 | 512 | 0,990 ± 0,004 | 0,991 ± 0,004 | 2,95 | 0,006 |
+| màu | Hist H-S (8,8) | KNN k=1, Manhattan, ưu tiên điểm gần | 64 | 0,986 ± 0,004 | 0,986 ± 0,004 | 0,00 | 0,039 |
+| màu | Hist H-S (8,8) | LogReg C=1 | 64 | 0,985 ± 0,008 | 0,986 ± 0,007 | 0,02 | 0,001 |
+| màu | Hist H-S (8,8) | Linear SVM C=0,1 | 64 | 0,973 ± 0,004 | 0,977 ± 0,003 | 0,04 | 0,003 |
+| màu | Moment màu | KNN k=1, Manhattan, ưu tiên điểm gần | 9 | 0,978 ± 0,004 | 0,981 ± 0,003 | 0,00 | 0,011 |
+| màu | Moment màu | LogReg C=10 | 9 | 0,910 ± 0,011 | 0,926 ± 0,008 | 0,03 | 0,001 |
+| màu | Moment màu | Linear SVM C=1 | 9 | 0,874 ± 0,007 | 0,894 ± 0,004 | 0,01 | 0,001 |
+| cạnh | Cạnh Roberts | KNN k=1, Manhattan, ưu tiên điểm gần | 512 | 0,955 ± 0,015 | 0,959 ± 0,013 | 0,01 | 0,219 |
+| cạnh | Cạnh Roberts | LogReg C=1 | 512 | 0,932 ± 0,011 | 0,940 ± 0,009 | 5,02 | 0,004 |
+| cạnh | Cạnh Roberts | Linear SVM C=0,01 | 512 | 0,925 ± 0,014 | 0,937 ± 0,012 | 0,55 | 0,005 |
+| cạnh | Cạnh Sobel | KNN k=1, Manhattan, ưu tiên điểm gần | 512 | 0,952 ± 0,014 | 0,956 ± 0,012 | 0,01 | 0,235 |
+| cạnh | Cạnh Sobel | LogReg C=1 | 512 | 0,894 ± 0,008 | 0,900 ± 0,006 | 6,86 | 0,004 |
+| cạnh | Cạnh Sobel | Linear SVM C=0,1 | 512 | 0,883 ± 0,014 | 0,895 ± 0,013 | 1,01 | 0,005 |
+| HOG | HOG 64×128 | KNN k=1, Manhattan, ưu tiên điểm gần | 3780 | 0,983 ± 0,004 | 0,984 ± 0,003 | 0,07 | 1,892 |
+| HOG | HOG 64×128 | LogReg C=0,1 | 3780 | 0,986 ± 0,007 | 0,989 ± 0,006 | 2,66 | 0,041 |
+| HOG | HOG 64×128 | Linear SVM C=0,001 | 3780 | 0,983 ± 0,003 | 0,985 ± 0,002 | 1,98 | 0,023 |
+| ghép | Hist HSV + HOG | KNN k=1, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần | 4292 | 0,989 ± 0,003 | 0,989 ± 0,002 | 0,12 | 2,204 |
+| ghép | Hist HSV + HOG | LogReg C=10, chuẩn hóa từng phần | 4292 | 0,996 ± 0,003 | 0,997 ± 0,002 | 1,58 | 0,055 |
+| ghép | Hist HSV + HOG | Linear SVM C=1, chuẩn hóa từng phần | 4292 | 0,996 ± 0,004 | 0,996 ± 0,003 | 1,18 | 0,027 |
+| ghép | Hist H-S + HOG | KNN k=1, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần | 3844 | 0,990 ± 0,003 | 0,990 ± 0,003 | 0,07 | 1,918 |
+| ghép | Hist H-S + HOG | LogReg C=100, chuẩn hóa từng phần | 3844 | 0,996 ± 0,003 | 0,997 ± 0,003 | 1,29 | 0,047 |
+| ghép | Hist H-S + HOG | Linear SVM C=1, chuẩn hóa từng phần | 3844 | 0,996 ± 0,003 | 0,997 ± 0,003 | 1,03 | 0,024 |
+
+| Vai trò | Cấu hình | Macro-F1 (5-fold) | Accuracy |
+|---|---|---|---|
+| trad_color | Hist HSV (8,8,8) + LogReg C=0,1 | 0,991 ± 0,005 | 0,992 |
+| trad_edge | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,955 ± 0,015 | 0,959 |
+| trad_hog | HOG 64×128 + LogReg C=0,1 | 0,986 ± 0,007 | 0,989 |
+| trad_fusion | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,996 ± 0,003 | 0,997 |
+
+**Kết quả và kết luận.**
+
+| # | Dự đoán | Kết quả đo | Kết luận |
+|---|---|---|---|
+| C1 | Roberts nhạy nhiễu; Prewitt, Sobel có làm trơn nên bền hơn; Laplacian nhạy nhất | Thay đổi tương đối của vector ở σ = 5: Prewitt 0,43; Sobel 0,46; Roberts 1,00; Laplacian 2,16. Ở σ = 2, độ sụt macro-F1 theo đúng thứ tự đó | Khớp. Ngoài dự đoán: vector "tổng theo hàng/cột" rất kém bền, mọi toán tử đều sập từ σ = 10 |
+| C2 | HOG chuẩn hóa block bền với thay đổi độ sáng; bỏ chuẩn hóa thì kém bền | V×0,6: có chuẩn hóa sụt 0,004–0,009, không chuẩn hóa sụt 0,08–0,39. V×1,4: có chuẩn hóa sụt 0,16–0,22, không chuẩn hóa chỉ −0,03 đến +0,06 | Khớp khi làm tối. **Trái dự đoán** khi làm sáng |
+| C3 | Tham số HOG quyết định mức chi tiết | Cell 16×16 trên ảnh 64×128 kém rõ (0,959). Các cấu hình còn lại ngang nhau với LogReg. Số bin (6, 9, 12) không tạo khác biệt vượt độ lệch chuẩn | Khớp một phần: chỉ kích thước cell so với kích thước ảnh là có tác dụng đo được |
+| C4 | Histogram toàn cục sụt nhiều hơn HOG khi bị che | Với z-score: Hist RGB/HSV rơi về 0,08–0,22; HOG còn 0,78–0,79; Hist H-S còn 0,76–0,84. Với Hellinger: Hist HSV chỉ sụt 0,012 | Khớp theo cấu hình mặc định, nhưng nguyên nhân chính là bước z-score chứ không phải tính "toàn cục" |
+| C5 | Màu và hình dạng bổ sung cho nhau | Sau khi quét siêu tham số: ghép 0,996 ± 0,003; màu riêng 0,991 ± 0,005; HOG riêng 0,986 ± 0,007 | Ghép hơn HOG riêng 0,010 (lớn hơn độ lệch chuẩn); hơn màu riêng 0,005 (bằng độ lệch chuẩn, chưa đủ cơ sở phân biệt) |
+
+Giải thích các điểm trái dự đoán:
+- C2, V×1,4: phép nhân làm 68,7% điểm ảnh bão hòa ở 255 (ảnh gốc 0,5%) và 14,1% số cell mất hẳn gradient (ảnh gốc 0,2%). Đây không còn là phép đổi độ sáng tuyến tính mà chuẩn hóa block khử được. Chuẩn hóa L2 khuếch đại các block nền có gradient yếu lên độ dài đơn vị; khi nền bão hòa, các block đó về 0 nên vector đã chuẩn hóa đổi nhiều (thay đổi tương đối 0,60) hơn vector chưa chuẩn hóa (0,28). **[đo]** `results/C2/table_saturation.md`, `results/C2/table_feature_change.md`.
+- C4: hình vuông đen dồn 25% khối lượng histogram vào một bin gần như luôn bằng 0 trên ảnh huấn luyện; z-score chia cho độ lệch chuẩn rất nhỏ của bin đó nên khoảng cách bị một chiều chi phối. Bỏ z-score hoặc dùng Hellinger thì Hist HSV chỉ sụt 0,03 và 0,012. Hist H-S thì ngược lại (z-score sụt 0,13, Hellinger 0,37) vì điểm đen có H = 0, S = 0 rơi vào cùng bin với nền xám trắng vốn đã lớn. **[đo]** `results/C4/table_hist_scaling.md`.
+
+**Ảnh hưởng tới bước sau.**
+- Bốn cấu hình truyền thống đã chốt (`results/select_traditional/selected.json`); tốt nhất là **Hist H-S + HOG + LogReg (C=100, chuẩn hóa từng phần)**, macro-F1 0,996 ± 0,003. Cấu hình này dùng cho I2, S2, so sánh ở N7, N8 và đánh giá cuối.
+- Các cấu hình tốt nhất cách nhau ít hơn độ lệch chuẩn; trên tập test 371 ảnh, một ảnh sai tương ứng 0,27% accuracy, nên so sánh cuối cùng phải đọc kèm khoảng sai số.
+
 ---
 
 ## Bảng quyết định
@@ -399,3 +592,7 @@ Giải thích các điểm trái dự đoán:
 | k của KNN chọn bằng cross-validation | Quy tắc k = số lớp + 1 | Bước 2, `results/P1/table.md`: k=1 hơn k=5 từ 0,006 đến 0,020 | [đo] |
 | KNN dùng Brute Force | K-D Tree, Ball Tree | Bước 2, `results/P4/table.md`: brute nhanh nhất với 1.680 ảnh tham chiếu, kết quả trùng nhau | [đo] |
 | Đặc trưng nhiều chiều dùng bộ phân lớp tuyến tính, đặc trưng ít chiều dùng KNN | Một bộ phân lớp cho mọi đặc trưng | Bước 2, `results/P6/table.md` | [đo] |
+| HOG 64×128, cell 8×8, 9 bin, ảnh xám, chia phiếu hai bin | 11 cấu hình kích thước/cell/bin khác; ảnh màu; phiếu cứng | Bước 3, `results/C3/table.md`: 9/12 cấu hình trong 0,982–0,986 (LogReg), chênh < độ lệch chuẩn; cell 16×16 trên 64×128 kém (0,959) | [đo] |
+| Ghép đặc trưng: chuẩn hóa từng phần rồi ghép | Ghép thẳng, z-score chung | Bước 3, `results/C5/table.md`: KNN 0,977 so với 0,948; LogReg ngang nhau | [đo] |
+| Cấu hình truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100 | Màu riêng (0,991), HOG riêng (0,986), cạnh (0,955); KNN, Linear SVM | Bước 3, `results/select_traditional/table.md` | [đo] |
+| Thêm mức nhiễu σ = 2 cho C1 | Chỉ σ = 5, 10, 20 | Bước 3, `results/C1/table.md`: từ σ = 10 mọi toán tử đều về mức đoán mò | [đo] |

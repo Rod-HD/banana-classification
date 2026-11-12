@@ -27,3 +27,7 @@ if want 2; then   # Bước 2: đặc trưng màu (M1–M6), bộ phân lớp (P
   run src.exp_color
   run src.exp_classifier
 fi
+if want 3; then   # Bước 3: cạnh, HOG, ghép đặc trưng (C1–C5), chốt cấu hình truyền thống
+  run src.exp_shape
+  run src.exp_select
+fi

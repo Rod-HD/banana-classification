@@ -1,0 +1,98 @@
+{
+  "trad_color": {
+    "parts": [
+      [
+        "hsv_hist",
+        {}
+      ]
+    ],
+    "clf": "logreg",
+    "scale": "standard",
+    "cparams": {
+      "C": 0.1
+    },
+    "name": "Hist HSV (8,8,8) + LogReg C=0.1",
+    "family": "màu",
+    "cv_macro_f1": 0.9913325056832398,
+    "cv_macro_f1_std": 0.005116589856547791,
+    "cv_accuracy": 0.9923809523809524
+  },
+  "trad_edge": {
+    "parts": [
+      [
+        "edge",
+        {
+          "op": "roberts"
+        }
+      ]
+    ],
+    "clf": "knn",
+    "scale": "standard",
+    "cparams": {
+      "n_neighbors": 1,
+      "metric": "manhattan",
+      "weights": "distance"
+    },
+    "name": "Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần",
+    "family": "cạnh",
+    "cv_macro_f1": 0.9550344517046684,
+    "cv_macro_f1_std": 0.014652408081351204,
+    "cv_accuracy": 0.959047619047619
+  },
+  "trad_hog": {
+    "parts": [
+      [
+        "hog",
+        {
+          "size": [
+            64,
+            128
+          ],
+          "cell": 8,
+          "bins": 9
+        }
+      ]
+    ],
+    "clf": "logreg",
+    "scale": "standard",
+    "cparams": {
+      "C": 0.1
+    },
+    "name": "HOG 64×128 + LogReg C=0.1",
+    "family": "HOG",
+    "cv_macro_f1": 0.9861492479343161,
+    "cv_macro_f1_std": 0.0068672475157437905,
+    "cv_accuracy": 0.9885714285714287
+  },
+  "trad_fusion": {
+    "parts": [
+      [
+        "hs_hist",
+        {}
+      ],
+      [
+        "hog",
+        {
+          "size": [
+            64,
+            128
+          ],
+          "cell": 8,
+          "bins": 9
+        }
+      ]
+    ],
+    "fusion": "balanced",
+    "clf": "logreg",
+    "scale": "standard",
+    "cparams": {
+      "C": 100.0
+    },
+    "name": "Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
+    "family": "ghép",
+    "cv_macro_f1": 0.9964090526967864,
+    "cv_macro_f1_std": 0.003115400207913416,
+    "cv_accuracy": 0.9966666666666667
+  },
+  "_best_overall": "trad_fusion"
+}

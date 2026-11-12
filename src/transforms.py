@@ -64,6 +64,7 @@ TRANSFORMS = {
     "v0.6": (scale_v, {"factor": 0.6}),
     "v1.4": (scale_v, {"factor": 1.4}),
     "gray": (to_gray, {}),
+    "noise2": (gauss_noise, {"sigma": 2.0}),
     "noise5": (gauss_noise, {"sigma": 5.0}),
     "noise10": (gauss_noise, {"sigma": 10.0}),
     "noise20": (gauss_noise, {"sigma": 20.0}),
