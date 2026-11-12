@@ -1,0 +1,16 @@
+numpy
+pandas
+scikit-learn
+scikit-image
+imbalanced-learn
+opencv-python-headless
+pillow
+imagehash
+matplotlib
+seaborn
+joblib
+tqdm
+tensorflow-cpu
+gradio
+python-docx
+python-pptx
