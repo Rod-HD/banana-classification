@@ -30,7 +30,11 @@ def slides():
               "notes": "Chào thầy/cô và các bạn. Nhóm trình bày đồ án nhận diện 4 giống chuối Bangladesh từ ảnh. "
                        "Mục tiêu không chỉ là có mô hình chính xác mà là thử tất cả phương pháp đã học, so sánh bằng thực nghiệm "
                        "và giải thích kết quả bằng tính chất của từng phương pháp."})
-    s.append({"title": "Thành viên và mức độ hoàn thành",
+    s.append({"title": "Nội dung", "toc": True,
+              "bullets": ["Giới thiệu", "Phương pháp", "Kết quả thực nghiệm", "Phần mở rộng: ba nhánh so sánh", "Kết luận"],
+              "notes": "Bài trình bày gồm năm phần: giới thiệu bài toán và dữ liệu; phương pháp; kết quả 30 thí nghiệm và đánh giá cuối; "
+                       "phần mở rộng so sánh ba nhánh độc lập với pipeline gốc; ưu điểm, hạn chế và hướng phát triển."})
+    s.append({"section": "Giới thiệu", "title": "Thành viên và mức độ hoàn thành",
               "table": [["STT", "Họ và tên", "MSSV", "Công việc", "Mức độ hoàn thành"]] + [[str(i), "", "", "", ""] for i in range(1, 5)],
               "notes": "Phần này nhóm tự điền: thành viên, công việc phụ trách và mức độ hoàn thành."})
     s.append({"title": "Lý do chọn đề tài",
@@ -60,7 +64,7 @@ def slides():
               "notes": "Quy trình đánh giá chốt từ đầu để mọi phương pháp so sánh được với nhau. Test chỉ dùng một lần. "
                        "Chênh lệch nhỏ hơn độ lệch chuẩn giữa các fold thì nhóm kết luận là chưa đủ cơ sở phân biệt. "
                        "Bảng ảnh gần trùng ở results/data/near_duplicates.json."})
-    s.append({"title": "Phương pháp — hướng truyền thống",
+    s.append({"section": "Phương pháp", "title": "Phương pháp — hướng truyền thống",
               "bullets": ["**Đặc trưng màu:** histogram RGB, HSV (8,8,8), H-S; moment màu (9 chiều); màu chủ đạo k-means; CCV",
                           "**Đặc trưng cạnh:** Roberts, Prewitt, Sobel, Laplacian → tổng theo hàng/cột (512 chiều)",
                           "**HOG** tự cài đặt: 64×128, cell 8×8, 9 bin, block 16×16 L2 → 3.780 chiều (lệch skimage 2·10⁻⁷)",
@@ -78,7 +82,7 @@ def slides():
               "notes": "Hướng A làm đúng các ví dụ trong bài giảng. Hướng B dùng kiến trúc ngoài bài giảng nhưng vẫn là khái niệm đã học: "
                        "transfer learning. Chung: Adam, cross-entropy, dừng sớm theo macro-F1 trên val. "
                        "Khi fine-tune, BatchNorm phải giữ đóng băng (slide N4)."})
-    s.append({"title": "D1 — Rò rỉ khi tăng cường ảnh trước khi chia", "image": F / "D1_leakage.png",
+    s.append({"section": "Kết quả thực nghiệm", "title": "D1 — Rò rỉ khi tăng cường ảnh trước khi chia", "image": F / "D1_leakage.png",
               "bullets": ["Histogram HSV + KNN: thổi phồng +0,021", "HOG: ≈ 0 (trái dự đoán)", "Rò rỉ chỉ hại khi đặc trưng bất biến với phép tăng cường"],
               "notes": "Dự đoán: tăng cường rồi mới chia làm bản sao của ảnh test nằm trong train nên kết quả bị thổi phồng. "
                        "Đúng với histogram vì histogram gần như không đổi khi lật/xoay. Với HOG mức thổi phồng gần 0 vì bản lật có vector khác hẳn. "
@@ -177,7 +181,7 @@ def slides():
               "notes": "Lỗi khớp với thiên lệch đo ở S2: ảnh không giống ảnh điển hình của lớp về kích thước quả và nền thì dễ bị đoán sai."})
     s.append({"title": "Demo", "image": F / "demo_screenshot.png",
               "notes": "Chạy: python app/app.py. Tải ảnh, chọn mô hình, nhận giống và xác suất 4 lớp. Thông tin giống chỉ ghi những gì có nguồn."})
-    s.append({"title": "Ưu điểm và hạn chế",
+    s.append({"section": "Kết luận", "title": "Ưu điểm và hạn chế",
               "bullets": ["**Ưu điểm**", ("30 thí nghiệm, mỗi nhận định có bảng hoặc hình; ghi cả kết quả trái dự đoán", 1),
                           ("Quy trình đánh giá chặt: test dùng một lần, CV, độ lệch chuẩn, khoảng tin cậy", 1),
                           ("Mô hình 11,7 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test", 1), ("Chạy lại toàn bộ bằng một lệnh", 1),

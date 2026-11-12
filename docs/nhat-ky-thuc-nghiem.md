@@ -1157,6 +1157,93 @@ T-tl — chia ngẫu nhiên theo thông lệ, chấm trên tập test của chí
 
 **Ảnh hưởng tới bước sau.** Nhánh T trong bảng so sánh bốn nhánh là T-kr. Bước 12 dùng lại cách ánh xạ file → ảnh gốc để chia fold theo nhóm.
 
+## Bước 12 — Nhánh B: phương pháp của bài báo trên bộ BananaImageBD (12/11/2026)
+
+**Mục tiêu.** Chạy phương pháp của các bài báo đã công bố trên chính bộ dữ liệu này và so với pipeline của đồ án, theo hai hướng: B1 chỉ dùng tới mức CNN (trong phạm vi môn học), B2 đúng như bài báo.
+
+**Đã làm.**
+- Đọc hai bài báo:
+  - Ferdaus và cộng sự (2025), *Data in Brief* 58, 111239: bài báo mô tả dữ liệu. Chuối được đặt trên giấy trắng dưới đèn LED trắng, **mỗi quả chụp từ bốn mặt** bằng iPhone 13 Pro Max; ảnh được loại trùng, lọc ảnh kém, resize 256×256, làm nét ảnh mờ; bản Augmented gồm ảnh gốc và 2 bản tăng cường mỗi ảnh. **Bài báo không huấn luyện mô hình nào và không công bố kết quả phân loại**; phần xử lý dữ liệu của bài báo đã được kiểm chứng ở nhánh T.
+  - Ergün (2025), *Scientific Reports* 15, 10366: rút đặc trưng bằng Vision Transformer (ViT) pretrained rồi phân lớp bằng SVM; so với đặc trưng ResNet, SqueezeNet và các bộ phân lớp GBM, MLP, CNN. Dùng bản Augmented (7.413 ảnh), ảnh 224×224, 5-fold cross-validation. Kết quả công bố tốt nhất trên BananaImageBD: ViT + SVM, accuracy 99,70%, F1 0,9965.
+  - Cả hai bài báo đều **không dùng YOLO**.
+- `python -m src.exp_papers` (cần PyTorch cho ViT và SqueezeNet):
+  - **B1 — trong phạm vi môn học:** bộ rút đặc trưng là CNN pretrained ImageNet: ResNet50 (2.048 chiều), MobileNetV3-Small (576 chiều), SqueezeNet 1.1 (512 chiều); bộ phân lớp: SVM (RBF và tuyến tính), Logistic Regression, KNN, MLP (một lớp ẩn 256).
+  - **B2 — đúng như bài báo:** ViT-B/16 pretrained ImageNet, vector 768 chiều của token phân lớp; bộ phân lớp: SVM (RBF và tuyến tính), MLP, GBM.
+  - Ba giao thức chấm: (i) như bài báo: bản Augmented, 5-fold phân tầng; (ii) cùng dữ liệu, 5-fold giữ 3 file của cùng ảnh gốc trong một fold; (iii) giao thức của đồ án: học trên train+val gốc (2.100 ảnh), chấm trên test gốc (371 ảnh) và bộ kiểm tra khó.
+
+**Lý do chọn cách này.**
+- Bài báo của Ergün không nêu tên checkpoint ViT, kernel và siêu tham số của SVM, biến thể ResNet/SqueezeNet, tham số GBM/MLP. Đồ án chọn: ViT-B/16 của torchvision (trọng số ImageNet-1k), SVM RBF với C = 1 và gamma mặc định, ResNet50, SqueezeNet 1.1, `HistGradientBoostingClassifier` 100 vòng, MLP một lớp ẩn 256. **[lập luận]**: đây là các lựa chọn mặc định phổ biến nhất; kết quả tái hiện lệch bài báo 0,21 điểm phần trăm ở cấu hình chính (bảng dưới). **[đo]**
+- Thêm giao thức (ii) vì bài báo dùng bản Augmented với 5-fold mà không nói có giữ nhóm theo ảnh gốc hay không; ở bước 11 đã đo được 90,6% ảnh test có file cùng ảnh gốc trong train khi chia ngẫu nhiên. **[đo]**
+- Thêm giao thức (iii) để so được với nhánh G trên cùng tập test và cùng bộ kiểm tra khó. **[lập luận]**
+- Hướng B1 giữ nguyên ý tưởng của bài báo (mạng pretrained làm bộ rút đặc trưng, bộ phân lớp riêng) nhưng thay ViT bằng CNN, là kiến thức của môn học; ResNet và SqueezeNet cũng chính là hai CNN đối chứng trong bài báo. **[lập luận]**
+
+**Phương án khác và vì sao không chọn.**
+- Tái hiện bộ phân lớp "CNN" trên vector đặc trưng của bài báo: không làm, bài báo không mô tả kiến trúc. **[lập luận]**
+- GBM cho các bộ rút đặc trưng CNN: không chạy; ViT + GBM đã mất khoảng 10 phút và kém SVM rõ (97,71% so với 99,49%). **[đo]**
+- Chạy thêm YOLO: không làm, vì không bài báo nào trong hai bài dùng YOLO. **[lập luận]**
+
+**Bằng chứng.**
+
+Giao thức (i) và (ii) trên bản Augmented (`results/E3_bai_bao/table_protocols.md`, hình `results/figures/E3_papers_protocols.png`):
+
+| Hướng | Bộ rút đặc trưng | Bộ phân lớp | Bài báo công bố: accuracy (%) | (i) Như bài báo: accuracy (%) | (i) Macro-F1 | (ii) Giữ nhóm theo ảnh gốc: accuracy (%) | (ii) Macro-F1 | Thổi phồng (i) − (ii), điểm % |
+|---|---|---|---|---|---|---|---|---|
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | SVM (RBF, C=1) | 96,69 | 99,16 ± 0,15 | 0,9900 | 98,97 ± 0,38 | 0,9881 | +0,19 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | SVM tuyến tính (C=0,01) | — | 99,15 ± 0,16 | 0,9901 | 98,85 ± 0,33 | 0,9864 | +0,30 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | MLP (1 lớp ẩn 256) | 97,76 | 98,97 ± 0,28 | 0,9881 | 98,87 ± 0,20 | 0,9868 | +0,11 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | Logistic Regression | — | 99,12 ± 0,15 | 0,9894 | 98,96 ± 0,29 | 0,9876 | +0,16 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | KNN (k=5) | — | 93,96 ± 0,47 | 0,9356 | 93,05 ± 0,75 | 0,9258 | +0,90 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | SVM (RBF, C=1) | — | 99,27 ± 0,21 | 0,9912 | 99,08 ± 0,31 | 0,9891 | +0,19 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | SVM tuyến tính (C=0,01) | — | 98,80 ± 0,34 | 0,9858 | 98,60 ± 0,39 | 0,9836 | +0,20 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | MLP (1 lớp ẩn 256) | — | 99,22 ± 0,11 | 0,9909 | 98,91 ± 0,32 | 0,9875 | +0,31 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | Logistic Regression | — | 98,68 ± 0,22 | 0,9844 | 98,50 ± 0,36 | 0,9828 | +0,18 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | KNN (k=5) | — | 96,07 ± 0,62 | 0,9572 | 95,55 ± 0,81 | 0,9516 | +0,53 |
+| B1 | SqueezeNet 1,1 (ImageNet), sau GAP, 512 chiều | SVM (RBF, C=1) | 97,63 | 98,58 ± 0,42 | 0,9836 | 98,12 ± 0,29 | 0,9783 | +0,46 |
+| B1 | SqueezeNet 1,1 (ImageNet), sau GAP, 512 chiều | SVM tuyến tính (C=0,01) | — | 98,03 ± 0,43 | 0,9772 | 97,65 ± 0,14 | 0,9726 | +0,38 |
+| B1 | SqueezeNet 1,1 (ImageNet), sau GAP, 512 chiều | MLP (1 lớp ẩn 256) | 95,88 | 98,57 ± 0,20 | 0,9837 | 98,35 ± 0,24 | 0,9815 | +0,22 |
+| B1 | SqueezeNet 1,1 (ImageNet), sau GAP, 512 chiều | Logistic Regression | — | 97,59 ± 0,41 | 0,9727 | 97,33 ± 0,40 | 0,9693 | +0,26 |
+| B1 | SqueezeNet 1,1 (ImageNet), sau GAP, 512 chiều | KNN (k=5) | — | 91,73 ± 0,33 | 0,9079 | 91,61 ± 0,70 | 0,9064 | +0,12 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | SVM (RBF, C=1) | 99,70 | 99,49 ± 0,15 | 0,9937 | 99,20 ± 0,33 | 0,9905 | +0,28 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | SVM tuyến tính (C=0,01) | — | 99,41 ± 0,19 | 0,9929 | 99,12 ± 0,37 | 0,9895 | +0,28 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | MLP (1 lớp ẩn 256) | 99,29 | 99,50 ± 0,21 | 0,9942 | 99,03 ± 0,38 | 0,9886 | +0,47 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | GBM (HistGradientBoosting) | 97,39 | 97,71 ± 0,36 | 0,9734 | 97,14 ± 0,60 | 0,9666 | +0,57 |
+
+Giao thức (iii), chấm trên test gốc và bộ kiểm tra khó (`results/E3_bai_bao/table_test.md`):
+
+| Hướng | Bộ rút đặc trưng | Bộ phân lớp | Macro-F1 5-fold (train+val) | Macro-F1 test | KTC 95% | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| B1 | ResNet50 (ImageNet) | SVM (RBF, C=1) | 0,993 ± 0,003 | 0,997 | [0,988; 1,000] | 1 | 0,824 | 0,961 | 0,928 | 0,901 | 0,964 | 0,087 | 0,778 |
+| B1 | ResNet50 (ImageNet) | SVM tuyến tính (C=0,01) | 0,994 ± 0,002 | 0,997 | [0,989; 1,000] | 1 | 0,718 | 0,969 | 0,908 | 0,977 | 0,972 | 0,502 | 0,841 |
+| B1 | ResNet50 (ImageNet) | MLP (1 lớp ẩn 256) | 0,990 ± 0,004 | 0,997 | [0,988; 1,000] | 1 | 0,849 | 0,966 | 0,938 | 0,979 | 0,968 | 0,534 | 0,873 |
+| B1 | ResNet50 (ImageNet) | Logistic Regression | 0,995 ± 0,003 | 0,997 | [0,988; 1,000] | 1 | 0,744 | 0,988 | 0,897 | 0,986 | 0,983 | 0,513 | 0,852 |
+| B1 | ResNet50 (ImageNet) | KNN (k=5) | 0,971 ± 0,008 | 0,982 | [0,966; 0,995] | 6 | 0,921 | 0,933 | 0,978 | 0,977 | 0,956 | 0,572 | 0,890 |
+| B1 | MobileNetV3-Small (ImageNet) | SVM (RBF, C=1) | 0,994 ± 0,006 | 0,990 | [0,976; 1,000] | 3 | 0,805 | 0,984 | 0,898 | 0,945 | 0,946 | 0,130 | 0,785 |
+| B1 | MobileNetV3-Small (ImageNet) | SVM tuyến tính (C=0,01) | 0,996 ± 0,003 | 0,993 | [0,982; 1,000] | 2 | 0,742 | 0,965 | 0,856 | 0,897 | 0,981 | 0,575 | 0,836 |
+| B1 | MobileNetV3-Small (ImageNet) | MLP (1 lớp ẩn 256) | 0,994 ± 0,003 | 0,993 | [0,982; 1,000] | 2 | 0,831 | 0,974 | 0,905 | 0,966 | 0,952 | 0,451 | 0,846 |
+| B1 | MobileNetV3-Small (ImageNet) | Logistic Regression | 0,995 ± 0,001 | 0,997 | [0,989; 1,000] | 1 | 0,746 | 0,969 | 0,847 | 0,933 | 0,964 | 0,367 | 0,805 |
+| B1 | MobileNetV3-Small (ImageNet) | KNN (k=5) | 0,975 ± 0,008 | 0,973 | [0,953; 0,990] | 9 | 0,887 | 0,950 | 0,956 | 0,962 | 0,958 | 0,569 | 0,880 |
+| B1 | SqueezeNet 1,1 (ImageNet) | SVM (RBF, C=1) | 0,990 ± 0,004 | 0,997 | [0,988; 1,000] | 1 | 0,680 | 0,861 | 0,885 | 0,279 | 0,984 | 0,087 | 0,629 |
+| B1 | SqueezeNet 1,1 (ImageNet) | SVM tuyến tính (C=0,01) | 0,993 ± 0,003 | 0,997 | [0,988; 1,000] | 1 | 0,647 | 0,939 | 0,827 | 0,906 | 0,986 | 0,409 | 0,786 |
+| B1 | SqueezeNet 1,1 (ImageNet) | MLP (1 lớp ẩn 256) | 0,994 ± 0,005 | 0,997 | [0,988; 1,000] | 1 | 0,727 | 0,942 | 0,880 | 0,816 | 0,980 | 0,553 | 0,816 |
+| B1 | SqueezeNet 1,1 (ImageNet) | Logistic Regression | 0,995 ± 0,003 | 0,997 | [0,988; 1,000] | 1 | 0,637 | 0,932 | 0,852 | 0,783 | 0,975 | 0,428 | 0,768 |
+| B1 | SqueezeNet 1,1 (ImageNet) | KNN (k=5) | 0,962 ± 0,006 | 0,979 | [0,962; 0,992] | 8 | 0,713 | 0,939 | 0,923 | 0,835 | 0,921 | 0,405 | 0,789 |
+| B2 | ViT-B/16 (ImageNet) | SVM (RBF, C=1) | 0,994 ± 0,004 | 0,997 | [0,989; 1,000] | 1 | 0,857 | 0,990 | 0,978 | 0,986 | 0,978 | 0,728 | 0,919 |
+| B2 | ViT-B/16 (ImageNet) | SVM tuyến tính (C=0,01) | 0,996 ± 0,004 | 1,000 | [1,000; 1,000] | 0 | 0,827 | 0,994 | 0,977 | 0,990 | 0,983 | 0,854 | 0,937 |
+| B2 | ViT-B/16 (ImageNet) | MLP (1 lớp ẩn 256) | 0,995 ± 0,004 | 0,994 | [0,984; 1,000] | 2 | 0,864 | 0,988 | 0,958 | 0,988 | 0,981 | 0,751 | 0,922 |
+| B2 | ViT-B/16 (ImageNet) | GBM (HistGradientBoosting) | 0,975 ± 0,005 | 0,972 | [0,952; 0,988] | 9 | 0,849 | 0,958 | 0,942 | 0,939 | 0,943 | 0,658 | 0,881 |
+
+Thời gian rút đặc trưng mỗi ảnh trên CPU (`results/E3_bai_bao/summary.json`; đo trong lúc máy còn chạy tác vụ khác nên chỉ có ý nghĩa tương đối): MobileNetV3-Small 4,5 ms; SqueezeNet 4,8 ms; ResNet50 27,5 ms; ViT-B/16 105,7 ms.
+
+**Kết quả và kết luận.**
+- **Tái hiện được kết quả chính của bài báo:** ViT + SVM đạt 99,49 ± 0,15% theo giao thức (i), bài báo công bố 99,70%. Thứ hạng bộ phân lớp trên đặc trưng ViT cũng khớp: SVM ≈ MLP (99,50%) > GBM (97,71%; bài báo 97,39%).
+- **Không tái hiện được khoảng cách giữa ViT và CNN mà bài báo công bố.** Bài báo: ViT + SVM hơn ResNet + SVM 3,01 điểm (99,70 so với 96,69) và hơn SqueezeNet + SVM 2,07 điểm. Đo được: ResNet50 + SVM 99,16%, MobileNetV3 + SVM 99,27%, SqueezeNet + SVM 98,58%; ViT chỉ hơn 0,22–0,90 điểm. Có thể bài báo dùng biến thể ResNet khác hoặc lấy đặc trưng ở lớp khác; bài báo không nêu. **[lập luận]**
+- **Giao thức của bài báo có rò rỉ, mức thổi phồng nhỏ nhưng nhất quán:** (i) cao hơn (ii) ở cả 19/19 tổ hợp, từ +0,11 đến +0,90 điểm phần trăm; với ViT + SVM là +0,28 (99,49 → 99,20). Mức này xấp xỉ độ lệch chuẩn giữa các fold (0,15–0,4), nên từng tổ hợp riêng lẻ chưa đủ cơ sở phân biệt; dấu nhất quán ở 19/19 tổ hợp mới là bằng chứng. Thổi phồng lớn nhất ở KNN trên đặc trưng ResNet50 (+0,90), khớp D1: KNN hưởng lợi nhiều nhất từ bản sao trong train.
+- **Theo giao thức của đồ án, phương pháp của bài báo không hơn pipeline gốc trên ảnh gốc nhưng bền hơn:** ViT + SVM (RBF) sai 1/371 ảnh (macro-F1 0,997), ViT + SVM tuyến tính đúng 371/371; nhánh G có hai cấu hình đúng 371/371. Trên bộ kiểm tra khó, đặc trưng ViT đạt điểm bền 0,919–0,937, cao hơn mọi cấu hình của nhánh G (cao nhất 0,895) dù ViT không được fine-tune. Đổi lại ViT-B/16 có 86 triệu tham số và rút đặc trưng chậm hơn MobileNetV3 khoảng 23 lần.
+- **Hướng B1 (CNN làm bộ rút đặc trưng) ngang ViT trên ảnh gốc nhưng kém bền hơn:** macro-F1 test 0,990–0,997 với SVM, LogReg, MLP; điểm bền 0,63–0,89. So với fine-tune cùng mạng ở nhánh G: MobileNetV3 đóng băng + SVM tuyến tính có điểm bền 0,836, MobileNetV3 fine-tune có tăng cường 0,875; fine-tune kèm tăng cường làm mô hình bền hơn.
+- **Ngoài dự đoán: SVM kernel RBF sập khi ảnh bị che 25%** trên đặc trưng CNN (0,087 với ResNet50 và SqueezeNet; 0,130 với MobileNetV3), trong khi SVM tuyến tính trên cùng đặc trưng giữ 0,41–0,58. Giải thích: với ảnh lệch xa phân bố huấn luyện, giá trị kernel RBF tới mọi vector hỗ trợ đều gần 0, nên quyết định chỉ còn phụ thuộc hệ số chặn và mọi ảnh rơi vào một lớp (macro-F1 0,087 đúng bằng mức "đoán một lớp" đã gặp ở C4). **[lập luận]**
+
+**Ảnh hưởng tới bước sau.** Đại diện của nhánh B trong bảng so sánh bốn nhánh: B1 là MobileNetV3 + SVM tuyến tính (chọn theo 5-fold trên train+val), B2 là ViT + SVM RBF (cấu hình chính của bài báo). Thông tin "mỗi quả chụp bốn mặt" của bài báo dữ liệu được kiểm tra ở bước 13 (ảnh mang số thứ tự liền kề).
+
 ---
 
 ## Bảng quyết định
@@ -1198,3 +1285,5 @@ T-tl — chia ngẫu nhiên theo thông lệ, chấm trên tập test của chí
 | Ba nhánh mở rộng độc lập, mỗi nhánh đổi một thứ so với G | Chồng các thay đổi lên nhau | Bước 10 | [lập luận] |
 | Nhánh T dùng cách chia không rò rỉ (T-kr) làm kết quả chính | Chia ngẫu nhiên bản Augmented (T-tl) | Bước 11, `results/E2_aug_tac_gia/table_leak_stats.md`: 90,6% ảnh test của T-tl có file cùng ảnh gốc trong train | [đo] |
 | Không thay tập train gốc bằng bản Augmented của tác giả | Dùng bản Augmented làm tập train | Bước 11, `results/so_sanh_nhanh/table_models.md`: macro-F1 trung bình 0,979 so với 0,983; điểm bền 0,769 so với 0,750 | [đo] |
+| Chấm phương pháp của bài báo theo cả ba giao thức (như bài báo; giữ nhóm; giao thức của đồ án) | Chỉ dùng giao thức của bài báo | Bước 12, `results/E3_bai_bao/table_protocols.md`: giao thức của bài báo cao hơn 0,11–0,90 điểm ở 19/19 tổ hợp | [đo] |
+| Không thay pipeline của đồ án bằng ViT + SVM | Dùng ViT làm mô hình chính | Bước 12, `results/E3_bai_bao/table_test.md`: ngang nhau trên ảnh gốc; ViT bền hơn (0,919–0,937 so với 0,895) nhưng nằm ngoài môn học và chậm hơn ~23 lần | [đo] |

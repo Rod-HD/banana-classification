@@ -1,0 +1,211 @@
+[
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "resnet50 + svm_rbf",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 2048
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "resnet50 + svm_linear",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 2048
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "resnet50 + mlp",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 2048
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "resnet50 + logreg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 2048
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "resnet50 + knn",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9819,
+    "macro_f1_std": null,
+    "accuracy": 0.9838,
+    "n_features": 2048
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "mobilenetv3 + svm_rbf",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9896,
+    "macro_f1_std": null,
+    "accuracy": 0.9919,
+    "n_features": 576
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "mobilenetv3 + svm_linear",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.993,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "n_features": 576
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "mobilenetv3 + mlp",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9931,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "n_features": 576
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "mobilenetv3 + logreg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 576
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "mobilenetv3 + knn",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9727,
+    "macro_f1_std": null,
+    "accuracy": 0.9757,
+    "n_features": 576
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "squeezenet + svm_rbf",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 512
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "squeezenet + svm_linear",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 512
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "squeezenet + mlp",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 512
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "squeezenet + logreg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 512
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B1",
+    "config": "squeezenet + knn",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9788,
+    "macro_f1_std": null,
+    "accuracy": 0.9784,
+    "n_features": 512
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B2",
+    "config": "vit_b16 + svm_rbf",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9968,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "n_features": 768
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B2",
+    "config": "vit_b16 + svm_linear",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0,
+    "n_features": 768
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B2",
+    "config": "vit_b16 + mlp",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9941,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "n_features": 768
+  },
+  {
+    "experiment": "E3",
+    "group": "Bài báo — hướng B2",
+    "config": "vit_b16 + gbm",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9716,
+    "macro_f1_std": null,
+    "accuracy": 0.9757,
+    "n_features": 768
+  }
+]

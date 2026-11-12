@@ -12,7 +12,7 @@ import pandas as pd
 from .config import RESULTS_DIR
 
 ORDER = ["D1", "M1", "M2", "M3", "M4", "M5", "M6", "C1", "C2", "C3", "C4", "C5", "P1", "P2", "P3", "P4", "P5", "P6", "select_traditional",
-         "cnn", "N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "I1", "I2", "S1", "S2", "final"]
+         "cnn", "N1", "N2", "N3", "N4", "N5", "N6", "N7", "N8", "I1", "I2", "S1", "S2", "final", "so_sanh_nhanh", "E3_bai_bao"]
 TITLE = {"D1": "Rò rỉ do tăng cường trước khi chia", "M1": "Xáo trộn lưới 4×4", "M2": "Đổi độ sáng (kênh V)", "M3": "Số bin histogram",
          "M4": "So sánh đặc trưng màu", "M5": "CCV", "M6": "Ảnh xám", "C1": "Toán tử cạnh và nhiễu", "C2": "HOG và độ sáng",
          "C3": "Tham số HOG", "C4": "Che 25%", "C5": "Ghép màu + HOG", "P1": "KNN theo k", "P2": "Độ đo và chuẩn hóa", "P3": "Bình chọn uniform/distance",
@@ -60,7 +60,16 @@ def main():
             t = ", ".join(f"[`{exp}/{n}`]({exp}/{n})" for n in tables_of(exp)) or "chưa có"
             g = ", ".join(f"[`{n}`](figures/{n})" for n in figs if n.startswith(exp + "_")) or "chưa có"
             md.append(f"| {exp} | {TITLE[exp]} | {t} | {g} |")
-    md += ["", "## 5. Số dòng trong summary.csv theo thí nghiệm", "", "| Thí nghiệm | Số cấu hình | Macro-F1 cao nhất (ảnh gốc) | Cấu hình đạt cao nhất |", "|---|---|---|---|"]
+    ext = [("so_sanh_nhanh/table_arms.md", "Cấu hình đại diện của mỗi nhánh (cùng 371 ảnh test gốc; điểm bền = trung bình macro-F1 trên 6 phép thử khó)"),
+           ("so_sanh_nhanh/table_models.md", "Từng cấu hình qua các nhánh G (gốc), X (xử lý dữ liệu), T (bản Augmented của tác giả, không rò rỉ)"),
+           ("E3_bai_bao/table_protocols.md", "Nhánh B: phương pháp của bài báo trên bản Augmented, 5-fold như bài báo so với 5-fold giữ nhóm theo ảnh gốc")]
+    if any((RESULTS_DIR / f).exists() for f, _ in ext):
+        md += ["", "## 5. Phần mở rộng: ba nhánh so sánh độc lập với pipeline gốc (mục 12 của kế hoạch)", "",
+               "Chi tiết: `results/so_sanh_nhanh/`, `results/E1_xu_ly/`, `results/E2_aug_tac_gia/`, `results/E3_bai_bao/`.", ""]
+        for f, cap in ext:
+            if (RESULTS_DIR / f).exists():
+                md += [f"**{cap}** ([`{f}`]({f})):", "", "\n".join(l for l in (RESULTS_DIR / f).read_text().splitlines() if l.startswith("|")), ""]
+    md += ["", "## 6. Số dòng trong summary.csv theo thí nghiệm", "", "| Thí nghiệm | Số cấu hình | Macro-F1 cao nhất (ảnh gốc) | Cấu hình đạt cao nhất |", "|---|---|---|---|"]
     for exp, g in df.groupby("experiment", sort=False):
         c = g[g["condition"] == "clean"]
         if len(c):

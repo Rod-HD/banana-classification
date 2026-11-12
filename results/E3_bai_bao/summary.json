@@ -1,0 +1,13 @@
+{
+  "best_by_dev_cv": {
+    "B1": "mobilenetv3|svm_linear",
+    "B2": "vit_b16|svm_linear"
+  },
+  "paper_main": "vit_b16|svm_rbf",
+  "extract_ms_per_image": {
+    "resnet50": 27.45,
+    "mobilenetv3": 4.51,
+    "squeezenet": 4.81,
+    "vit_b16": 105.73
+  }
+}

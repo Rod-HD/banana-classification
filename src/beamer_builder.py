@@ -70,9 +70,15 @@ def frame(s, slides_dir: Path) -> str:
     if s.get("layout") == "title":
         return ""
     out = []
-    if s.get("section"):
+    if s.get("section") and not s.get("toc"):
         out.append(f"\\section{{{esc(s['section'])}}}")
     out.append(f"\\begin{{frame}}{{{esc(s['title'])}}}")
+    if s.get("toc"):
+        out.append("\\tableofcontents")
+        if s.get("notes"):
+            out.append("\\note{" + esc(s["notes"]) + "}")
+        out.append("\\end{frame}")
+        return "\n".join(out)
     side = s.get("bullets") and (s.get("image") or s.get("table"))
     size = "\\small" if side or len(s.get("bullets") or []) > 6 else ""
     if side:
