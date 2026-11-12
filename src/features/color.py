@@ -32,16 +32,16 @@ def hs_hist(img, bins=(8, 8), mask=None):
 
 def color_moments(img, mask=None):
     """Moment màu trên HSV: mean, std, skewness của từng kênh (9 chiều)."""
-    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV).reshape(-1, 3).astype(np.float64)
+    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV).reshape(-1, 3)
     if mask is not None:
         hsv = hsv[mask.reshape(-1) > 0]
         if len(hsv) == 0:
             return np.zeros(9)
-    hsv = hsv / np.array([179.0, 255.0, 255.0])
-    mean = hsv.mean(0)
-    d = hsv - mean
-    std = np.sqrt((d ** 2).mean(0))
-    skew = np.cbrt((d ** 3).mean(0))
+    x = hsv.astype(np.float32) * np.array([1 / 179.0, 1 / 255.0, 1 / 255.0], np.float32)
+    mean = x.mean(0, dtype=np.float64)
+    d = x - mean.astype(np.float32)
+    std = np.sqrt((d * d).mean(0, dtype=np.float64))
+    skew = np.cbrt((d * d * d).mean(0, dtype=np.float64))
     return np.concatenate([mean, std, skew])
 
 
