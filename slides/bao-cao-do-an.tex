@@ -471,11 +471,11 @@ Embedding MobileNetV3 (ImageNet) + LogReg & 0,995 $\pm$ 0,005 & 0,964 $\pm$ 0,02
 \begin{columns}[T]
 \begin{column}{0.36\textwidth}
 \begin{itemize}\footnotesize
-\item 4 mức tiền xử lý $\times$ 3 mức tăng cường
+\item 5 mức tiền xử lý $\times$ 3 mức tăng cường, 7 phép thử trên val
 \item Không xử lý: điểm chọn 0,804
-\item \textbf{X-a} (điểm cao nhất): cân bằng trắng + nền phẳng --- 0,843
-\item \textbf{X-b} (chỉ can thiệp train): tăng cường có thay nền --- 0,843
-\item Các tổ hợp đứng đầu không phân biệt được (bootstrap)
+\item \textbf{X-a} (cao nhất): nền phẳng (không cân bằng trắng) + hình học + quang học --- 0,889 $\pm$ 0,006
+\item \textbf{X-b} (chỉ can thiệp train): hình học + quang học + thay nền ngẫu nhiên --- 0,835
+\item Cân bằng trắng theo nền làm kém đi: đưa màu nền vào màu quả (X3)
 \item Cắt theo quả làm phép che 25\% tệ hơn
 \end{itemize}
 \end{column}
@@ -483,7 +483,42 @@ Embedding MobileNetV3 (ImageNet) + LogReg & 0,995 $\pm$ 0,005 & 0,964 $\pm$ 0,02
 \begin{center}\includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{../results/figures/E1_selection.png}\end{center}
 \end{column}
 \end{columns}
-\note{Điểm chọn là trung bình macro-F1 trên val của ảnh gốc và 6 phép thử khó, với hai mô hình đại diện. Hai chiến lược đứng đầu: sửa ảnh lúc suy luận (tách nền) hoặc làm đa dạng nền lúc huấn luyện. Nhóm chạy đủ 9 cấu hình cho cả hai. Bảng: results/E1\_xu\_ly/table\_selection.md.}
+\note{Điểm chọn là trung bình macro-F1 trên val của ảnh gốc và 6 phép thử khó, với hai mô hình đại diện; sai số tính bằng bootstrap. Tách nền (nền phẳng) là bước có tác dụng lớn nhất. Cân bằng trắng theo nền bị loại: hệ số tính từ màu nền rồi nhân vào cả quả chuối, nên khi nền đổi thì màu quả lệch 12,9 đơn vị Lab. Nhóm chạy đủ pipeline cho hai biến thể X-a và X-b. Bảng: results/E1\_xu\_ly/table\_selection.md, table\_wb\_leak.md.}
+\end{frame}
+
+\begin{frame}{Nhánh X-a --- 9 cấu hình với nền phẳng + tăng cường}
+\begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.74\textheight}
+\rowcolors{2}{uitbg}{white}
+\begin{tabular}{lllllllll}\toprule
+\textbf{Mô hình} & \textbf{Macro-F1 test} & \textbf{Nền hoán đổi} & \textbf{V$\times$0,6} & \textbf{V$\times$1,4} & \textbf{Nhiễu $\sigma$=10} & \textbf{Xoay +30$^\circ$} & \textbf{Che 25\%} & \textbf{Điểm bền} \\ \midrule
+Hist HSV (8,8,8) + LogReg C=0,1 & 0,993 & 0,966 & 0,834 & 0,784 & 0,354 & 0,993 & 0,169 & 0,683 \\
+Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần & 0,842 & 0,838 & 0,799 & 0,820 & 0,792 & 0,686 & 0,381 & 0,719 \\
+HOG 64$\times$128 + LogReg C=0,1 & 0,828 & 0,836 & 0,810 & 0,831 & 0,822 & 0,629 & 0,294 & 0,704 \\
+Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần & 0,982 & 0,951 & 0,978 & 0,979 & 0,651 & 0,974 & 0,805 & 0,890 \\
+a\_lenet & 0,922 & 0,925 & 0,861 & 0,846 & 0,922 & 0,797 & 0,317 & 0,778 \\
+a\_dropout & 0,959 & 0,959 & 0,880 & 0,942 & 0,962 & 0,946 & 0,207 & 0,816 \\
+a\_vgg16 & 0,958 & 0,951 & 0,933 & 0,954 & 0,964 & 0,926 & 0,413 & 0,857 \\
+b\_mobilenetv3 & 0,995 & 0,995 & 0,943 & 0,915 & 0,988 & 0,998 & 0,450 & 0,881 \\
+b\_resnet50 & 0,997 & 0,997 & 0,983 & 0,956 & 0,985 & 0,990 & 0,397 & 0,885 \\
+\bottomrule\end{tabular}
+\end{adjustbox}\end{center}
+\note{X-a: thay nền bằng màu trắng phẳng, giữ nguyên màu quả, áp dụng cho cả ảnh train lẫn ảnh cần dự đoán; train được thêm 2 bản tăng cường mỗi ảnh. Cột nền hoán đổi gần bằng cột ảnh gốc ở mọi cấu hình: mô hình không còn dựa vào nền. Đổi lại HOG, cạnh, a\_lenet, a\_vgg16 mất điểm trên ảnh gốc, và phép che 25\% làm hỏng bước phân đoạn.}
+\end{frame}
+
+\begin{frame}{Nhánh X-b --- tăng cường có thay nền ngẫu nhiên (6 cấu hình)}
+\begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.74\textheight}
+\rowcolors{2}{uitbg}{white}
+\begin{tabular}{lllllllll}\toprule
+\textbf{Mô hình} & \textbf{Macro-F1 test} & \textbf{Nền hoán đổi} & \textbf{V$\times$0,6} & \textbf{V$\times$1,4} & \textbf{Nhiễu $\sigma$=10} & \textbf{Xoay +30$^\circ$} & \textbf{Che 25\%} & \textbf{Điểm bền} \\ \midrule
+Hist HSV (8,8,8) + LogReg C=0,1 & 0,988 & 0,963 & 0,459 & 0,714 & 0,184 & 0,982 & 0,143 & 0,574 \\
+Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần & 0,960 & 0,799 & 0,691 & 0,892 & 0,179 & 0,708 & 0,617 & 0,648 \\
+HOG 64$\times$128 + LogReg C=0,1 & 0,953 & 0,495 & 0,922 & 0,720 & 0,662 & 0,615 & 0,571 & 0,664 \\
+Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần & 0,984 & 0,853 & 0,977 & 0,930 & 0,128 & 0,908 & 0,842 & 0,773 \\
+a\_vgg16 & 0,977 & 0,907 & 0,960 & 0,953 & 0,965 & 0,943 & 0,516 & 0,874 \\
+b\_mobilenetv3 & 1,000 & 0,975 & 0,954 & 0,935 & 0,995 & 1,000 & 0,441 & 0,883 \\
+\bottomrule\end{tabular}
+\end{adjustbox}\end{center}
+\note{X-b: không đổi ảnh lúc dự đoán; mỗi ảnh train có thêm 2 bản mà quả chuối được ghép lên nền của một ảnh train bất kỳ. b\_mobilenetv3 vẫn sai 0/371 ảnh gốc và đạt 0,975 khi nền bị hoán đổi (pipeline gốc: 0,794). Đây là lựa chọn cân bằng nhất cho mô hình tốt nhất; mô hình này có trong demo.}
 \end{frame}
 
 \begin{frame}{Nhánh T --- bản Augmented của tác giả (7.413 ảnh)}
@@ -508,6 +543,7 @@ a\_vgg16 & 0,986 & 0,886 & 0,985 & 0,905 \\
 b\_mobilenetv3 & 1,000 & 0,875 & 0,998 & 0,909 \\
 b\_resnet50 & 0,997 & 0,895 & 0,997 & 0,924 \\
 \textbf{Trung bình 9 cấu hình} & \textbf{0,983} & \textbf{0,750} & \textbf{0,979} & \textbf{0,769} \\
+\textbf{Trung bình 6 cấu hình có ở mọi nhánh} & \textbf{0,989} & \textbf{0,708} & \textbf{0,981} & \textbf{0,737} \\
 \bottomrule\end{tabular}
 \end{adjustbox}\end{center}
 \note{Bản Augmented của tác giả không giúp trên ảnh gốc, giúp một ít về độ bền ở đúng các phép có trong công thức tăng cường. Chia ngẫu nhiên bộ 7.413 ảnh gây rò rỉ: 90,6\% ảnh test có anh em trong train. Bảng: results/E2\_aug\_tac\_gia/.}
@@ -537,7 +573,8 @@ b\_resnet50 & 0,997 & 0,895 & 0,997 & 0,924 \\
 \begin{tabular}{llllllllll}\toprule
 \textbf{Nhánh} & \textbf{Cấu hình đại diện} & \textbf{Ảnh gốc} & \textbf{Nền hoán đổi} & \textbf{V$\times$0,6} & \textbf{V$\times$1,4} & \textbf{Nhiễu $\sigma$=10} & \textbf{Xoay +30$^\circ$} & \textbf{Che 25\%} & \textbf{Điểm bền} \\ \midrule
 G --- pipeline gốc & b\_mobilenetv3 & 1,000 & 0,794 & 0,919 & 0,890 & 0,989 & 1,000 & 0,659 & 0,875 \\
-X-a --- xử lý dữ liệu: tiền xử lý lúc suy luận & Hist HSV + LogReg & 0,987 & 0,610 & 0,977 & 0,883 & 0,597 & 0,985 & 0,143 & 0,699 \\
+X-a --- xử lý dữ liệu: tiền xử lý lúc suy luận & b\_mobilenetv3 & 0,995 & 0,995 & 0,943 & 0,915 & 0,988 & 0,998 & 0,450 & 0,881 \\
+X-b --- xử lý dữ liệu: tăng cường có thay nền & b\_mobilenetv3 & 1,000 & 0,975 & 0,954 & 0,935 & 0,995 & 1,000 & 0,441 & 0,883 \\
 T --- Augmented của tác giả (không rò rỉ) & b\_mobilenetv3 & 0,998 & 0,867 & 0,954 & 0,904 & 0,993 & 1,000 & 0,736 & 0,909 \\
 B1 --- bài báo, trong phạm vi môn học (CNN + bộ phân lớp) & MobileNetV3-Small + SVM tuyến tính & 0,993 & 0,742 & 0,965 & 0,856 & 0,897 & 0,981 & 0,575 & 0,836 \\
 B2 --- bài báo, đúng phương pháp (ViT + SVM) & ViT-B/16 + SVM & 0,997 & 0,857 & 0,990 & 0,978 & 0,986 & 0,978 & 0,728 & 0,919 \\
@@ -560,14 +597,15 @@ B2 --- bài báo, đúng phương pháp (ViT + SVM) & ViT-B/16 + SVM & 0,997 & 0
 \item Quy trình đánh giá chặt: test dùng một lần, CV, độ lệch chuẩn, khoảng tin cậy
 \item Mô hình 11,7 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test
 \item Chạy lại toàn bộ bằng một lệnh
+\item Đối chiếu với bài báo và bản Augmented của tác giả trên cùng tập test
 \end{itemize}
 \item \textbf{Hạn chế}
 \begin{itemize}
 \item Thiên lệch theo bối cảnh chụp (S2): chỉ nhìn nền vẫn đạt 0,93--0,99
-\item Test nhỏ, các mô hình dẫn đầu không phân biệt được
-\item Chưa có nhãn mask (IoU/Dice), chưa có ảnh ngoài bối cảnh
+\item Mỗi quả chụp nhiều mặt, chia ngẫu nhiên không tách theo quả: lạc quan 0,02--0,07 (X1)
+\item Test nhỏ; bộ kiểm tra khó là biến đổi tổng hợp, chưa có ảnh thật ngoài bối cảnh
 \end{itemize}
-\item \textbf{Hướng phát triển:} ảnh cùng bối cảnh cho 4 giống; huấn luyện trên ảnh đã tách nền
+\item \textbf{Hướng phát triển:} chia dữ liệu theo quả; ảnh cùng bối cảnh cho 4 giống
 \end{itemize}
 \note{Nhóm nhấn mạnh hạn chế thiên lệch nền vì nó quyết định cách hiểu con số 100\%.}
 \end{frame}
@@ -576,9 +614,10 @@ B2 --- bài báo, đúng phương pháp (ViT + SVM) & ViT-B/16 + SVM & 0,997 & 0
 \begin{itemize}
 \item BananaImageBD, Mendeley Data v2, DOI 10.17632/ptfscwtnyz.2 (CC BY 4.0)
 \item Bài giảng CS231
+\item Ferdaus et al. 2025, Data in Brief 58, 111239; Ergün 2025, Scientific Reports 15, 10366
 \item Dalal \& Triggs 2005 (HOG); Pass et al. 1996 (CCV); Stricker \& Orengo 1995 (moment màu); Otsu 1979
 \item LeCun et al. 1998; Simonyan \& Zisserman 2015; He et al. 2016; Howard et al. 2019
-\item Srivastava et al. 2014 (Dropout); Ioffe \& Szegedy 2015 (BatchNorm); scikit-learn, TensorFlow/Keras, OpenCV
+\item Srivastava et al. 2014 (Dropout); Ioffe \& Szegedy 2015 (BatchNorm); Dosovitskiy et al. 2021 (ViT); scikit-learn, TensorFlow/Keras, OpenCV
 \end{itemize}
 \note{Danh sách đầy đủ ở mục 7 của báo cáo. Cảm ơn thầy/cô và các bạn đã lắng nghe.}
 \end{frame}

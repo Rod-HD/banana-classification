@@ -1395,6 +1395,74 @@ S2 chạy lại với mask mới (`results/S2/table_mask_v2.md`, `results/S2/tab
 
 **Ảnh hưởng tới bước sau.** Bảng so sánh bốn nhánh dùng cả X-a và X-b. Mô hình `b_mobilenetv3` của X-b được thêm vào demo như một lựa chọn bền hơn với nền ảnh. Hạn chế "mỗi quả chụp nhiều mặt" được đưa vào báo cáo.
 
+## Bước 14 — So sánh bốn nhánh; cập nhật báo cáo, slide Beamer, hỏi đáp, README (12/11/2026)
+
+**Mục tiêu.** Đặt bốn nhánh G, X, T, B cạnh nhau trên cùng tập test và bộ kiểm tra khó; đưa kết quả phần mở rộng vào các sản phẩm phải nộp; chuyển slide sang Beamer LaTeX theo style UIT.
+
+**Đã làm.**
+- `python -m src.compare_arms`: `results/so_sanh_nhanh/table_models.md` (từng cấu hình qua các nhánh), `table_arms.md` và `table_stress.md` (cấu hình đại diện mỗi nhánh), `table_occlusion_split.md`; hình `results/figures/E_compare_arms.png`, `E_compare_stress.png`.
+- Báo cáo: thêm mục 4.4 và mục 5.13 (bốn nhánh), cập nhật hạn chế, hướng phát triển và tài liệu tham khảo; `src/md2docx.py` đưa bảng từ 11 cột trở lên sang trang ngang.
+- Slide: `src/beamer_builder.py` và `slides/beamerthemeUIT.sty` (màu xanh và cam lấy từ logo chính thức của trường, trang bìa có logo, mục lục, chân trang tên trường). `python -m src.make_slides` sinh từ một danh sách slide duy nhất: `slides/bao-cao-do-an.tex` và `.pdf` (39 slide), `bao-cao-do-an-ghi-chu.pdf` (kèm trang ghi chú thuyết trình sau mỗi slide) và bản `.pptx` cùng nội dung.
+- `docs/hoi-dap-bao-ve.md`: thêm 15 câu về phần mở rộng (tổng 51 câu). `README.md`: phần mở rộng, các bước 10–14, cách cài PyTorch và LaTeX; bảng trong README được làm mới từ `results/` khi chạy `python -m src.build_report`.
+- Demo: thêm mô hình `b_mobilenetv3_thay_nen` (nhánh X-b) vào `models/`.
+- `scripts/run_all.sh`: các bước 10–14; bước 9 (demo, báo cáo, slide) chạy sau cùng.
+
+**Lý do chọn cách này.**
+- Cấu hình đại diện của mỗi nhánh chọn theo điểm lúc phát triển (macro-F1 trên val, hoặc 5-fold trên train+val với nhánh B), không theo test, như ở bước 8. **[lập luận]** Kết quả là cả bốn dòng dữ liệu (G, X-a, X-b, T) đều có đại diện là `b_mobilenetv3`, nên so được cùng một kiến trúc qua các nhánh.
+- Slide Beamer và pptx sinh từ cùng một nguồn để hai bản không lệch nhau; số trên slide đọc từ `results/`. **[lập luận]**
+- Mô hình mặc định của demo vẫn là `b_mobilenetv3` của pipeline gốc; bản X-b là lựa chọn thêm. **[đo]** Hai bản ngang nhau trên ảnh gốc (0 ảnh sai), bản X-b bền hơn với nền (0,975 so với 0,794) nhưng kém hơn khi bị che (0,441 so với 0,659); chưa có ảnh thật ngoài bối cảnh để quyết định thay hẳn (`results/so_sanh_nhanh/table_stress.md`).
+
+**Phương án khác và vì sao không chọn.**
+- Xếp hạng các nhánh bằng một con số duy nhất (điểm bền): không chọn làm kết luận chính. **[đo]** X-a, X-b và G có điểm bền gần như bằng nhau (0,881; 0,883; 0,875) dù khác nhau rõ ở từng phép thử: nền hoán đổi 0,995 / 0,975 / 0,794, che 25% 0,450 / 0,441 / 0,659 (`results/so_sanh_nhanh/table_stress.md`).
+- Chỉ giữ bản slide pptx như kế hoạch ban đầu: không; bản chính đổi sang Beamer style UIT, kế hoạch mục 8 đã sửa. **[lập luận]**
+
+**Bằng chứng.**
+
+Từng cấu hình qua các nhánh dữ liệu (`results/so_sanh_nhanh/table_models.md`, hình `results/figures/E_compare_arms.png`):
+
+| Cấu hình | G: macro-F1 test | G: số ảnh sai | G: điểm bền | X-a: macro-F1 test | X-a: số ảnh sai | X-a: điểm bền | X-b: macro-F1 test | X-b: số ảnh sai | X-b: điểm bền | T: macro-F1 test | T: số ảnh sai | T: điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Hist HSV + LogReg | 0,994 | 2 | 0,487 | 0,993 | 2 | 0,683 | 0,988 | 4 | 0,574 | 0,997 | 1 | 0,555 |
+| Cạnh Roberts + KNN | 0,964 | 12 | 0,654 | 0,842 | 56 | 0,719 | 0,960 | 14 | 0,648 | 0,948 | 18 | 0,689 |
+| HOG + LogReg | 0,990 | 3 | 0,617 | 0,828 | 63 | 0,704 | 0,953 | 16 | 0,664 | 0,972 | 8 | 0,620 |
+| Hist H-S + HOG + LogReg | 1,000 | 0 | 0,728 | 0,982 | 5 | 0,890 | 0,984 | 6 | 0,773 | 0,989 | 4 | 0,745 |
+| a_lenet | 0,978 | 7 | 0,837 | 0,922 | 26 | 0,778 | — | — | — | 0,966 | 10 | 0,780 |
+| a_dropout | 0,942 | 21 | 0,769 | 0,959 | 15 | 0,816 | — | — | — | 0,963 | 13 | 0,796 |
+| a_vgg16 | 0,986 | 4 | 0,886 | 0,958 | 16 | 0,857 | 0,977 | 8 | 0,874 | 0,985 | 5 | 0,905 |
+| b_mobilenetv3 | 1,000 | 0 | 0,875 | 0,995 | 2 | 0,881 | 1,000 | 0 | 0,883 | 0,998 | 1 | 0,909 |
+| b_resnet50 | 0,997 | 1 | 0,895 | 0,997 | 1 | 0,885 | — | — | — | 0,997 | 1 | 0,924 |
+| **Trung bình 9 cấu hình** | **0,983** | **5,6** | **0,750** | **0,942** | **20,7** | **0,801** | — | — | — | **0,979** | **6,8** | **0,769** |
+| **Trung bình 6 cấu hình có ở mọi nhánh** | **0,989** | **3,5** | **0,708** | **0,933** | **24,0** | **0,789** | **0,977** | **8,0** | **0,736** | **0,981** | **6,2** | **0,737** |
+
+Cấu hình đại diện của mỗi nhánh (`results/so_sanh_nhanh/table_arms.md`, `results/so_sanh_nhanh/table_stress.md`, hình `results/figures/E_compare_stress.png`):
+
+| Nhánh | Cấu hình đại diện | Điểm lúc chọn | Macro-F1 test | KTC 95% | Số ảnh sai / 371 | Điểm bền |
+|---|---|---|---|---|---|---|
+| G — pipeline gốc | b_mobilenetv3 | 1,000 (macro-F1 trên val) | 1,000 | [1,000; 1,000] | 0 | 0,875 |
+| X-a — xử lý dữ liệu: tiền xử lý lúc suy luận | b_mobilenetv3 | 1,000 (macro-F1 trên val) | 0,995 | [0,987; 1,000] | 2 | 0,881 |
+| X-b — xử lý dữ liệu: tăng cường có thay nền | b_mobilenetv3 | 1,000 (macro-F1 trên val) | 1,000 | [1,000; 1,000] | 0 | 0,883 |
+| T — Augmented của tác giả (không rò rỉ) | b_mobilenetv3 | 1,000 (macro-F1 trên val) | 0,998 | [0,991; 1,000] | 1 | 0,909 |
+| B1 — bài báo, trong phạm vi môn học (CNN + bộ phân lớp) | MobileNetV3-Small + SVM tuyến tính | 0,996 (5-fold trên train+val) | 0,993 | [0,982; 1,000] | 2 | 0,836 |
+| B2 — bài báo, đúng phương pháp (ViT + SVM) | ViT-B/16 + SVM | 0,994 (5-fold trên train+val) | 0,997 | [0,989; 1,000] | 1 | 0,919 |
+
+| Nhánh | Cấu hình đại diện | Ảnh gốc | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|
+| G — pipeline gốc | b_mobilenetv3 | 1,000 | 0,794 | 0,919 | 0,890 | 0,989 | 1,000 | 0,659 | 0,875 |
+| X-a — xử lý dữ liệu: tiền xử lý lúc suy luận | b_mobilenetv3 | 0,995 | 0,995 | 0,943 | 0,915 | 0,988 | 0,998 | 0,450 | 0,881 |
+| X-b — xử lý dữ liệu: tăng cường có thay nền | b_mobilenetv3 | 1,000 | 0,975 | 0,954 | 0,935 | 0,995 | 1,000 | 0,441 | 0,883 |
+| T — Augmented của tác giả (không rò rỉ) | b_mobilenetv3 | 0,998 | 0,867 | 0,954 | 0,904 | 0,993 | 1,000 | 0,736 | 0,909 |
+| B1 — bài báo, trong phạm vi môn học (CNN + bộ phân lớp) | MobileNetV3-Small + SVM tuyến tính | 0,993 | 0,742 | 0,965 | 0,856 | 0,897 | 0,981 | 0,575 | 0,836 |
+| B2 — bài báo, đúng phương pháp (ViT + SVM) | ViT-B/16 + SVM | 0,997 | 0,857 | 0,990 | 0,978 | 0,986 | 0,978 | 0,728 | 0,919 |
+
+**Kết quả và kết luận.**
+1. **Trên ảnh gốc, không nhánh nào hơn pipeline gốc.** Cấu hình đại diện của sáu dòng sai từ 0 đến 2 ảnh trên 371; khoảng tin cậy chồng lên nhau. Pipeline gốc đã ở mức trần của tập test này. Tính trung bình 9 cấu hình, G cao nhất (0,983), T gần bằng (0,979), X-a thấp hơn (0,942) vì các mô hình yếu mất phần thông tin từ nền.
+2. **Khác biệt nằm ở bộ kiểm tra khó, mỗi nhánh mạnh ở một chỗ.** Nhánh X gần như xóa được sự phụ thuộc vào nền (nền hoán đổi 0,975–0,995 so với 0,794 của G). Nhánh T tăng độ bền đều hơn ở các phép có trong công thức tăng cường của tác giả (điểm bền 0,909). Nhánh B2 (ViT + SVM) có điểm bền cao nhất (0,919) mà không cần huấn luyện mạng, đổi lại mô hình nặng và nằm ngoài môn học. Nhánh B1 (CNN đóng băng + SVM tuyến tính) kém bền nhất (0,836).
+3. **Tính trung bình 9 cấu hình, X-a có điểm bền cao nhất** (0,801; T 0,769; G 0,750), nhờ các cấu hình truyền thống được lợi nhiều từ việc tách nền (Hist H-S + HOG: 0,728 → 0,890).
+4. **Tăng cường dữ liệu chỉ có ích khi nhắm đúng loại biến đổi cần bền.** Bản Augmented của tác giả không có phép nào liên quan tới nền nên không giảm được thiên lệch nền; phép thay nền ngẫu nhiên của nhánh X thì có.
+5. **Hai nguồn lạc quan áp dụng cho mọi nhánh và cho cả số của bài báo:** thiên lệch nền (S2, bước 10) và ảnh của cùng một quả nằm ở cả hai phía khi chia ngẫu nhiên (bước 13). Riêng giao thức của bài báo còn thêm rò rỉ do chia fold trên bản Augmented (khoảng 0,3 điểm phần trăm, bước 12).
+
+**Ảnh hưởng tới bước sau.** Đồ án dừng ở đây. Việc còn lại thuộc về nhóm: điền bảng thành viên, kiểm tra nội dung trước khi nộp, và nếu có điều kiện thì chụp một tập ảnh ngoài bối cảnh để kiểm tra các kết luận về độ bền.
+
 ---
 
 ## Bảng quyết định
@@ -1442,3 +1510,6 @@ S2 chạy lại với mask mới (`results/S2/table_mask_v2.md`, `results/S2/tab
 | Tiền xử lý của X-a: nền phẳng, giữ nguyên màu quả | Cân bằng trắng theo nền; cắt theo quả | Bước 13, `results/E1_xu_ly/table_wb_leak.md` (cân bằng trắng làm màu quả lệch 12,9 Lab khi đổi nền), `table_selection.md` (0,889 so với 0,843 và 0,813) | [đo] |
 | Chạy thêm biến thể X-b (tăng cường có thay nền, không xử lý lúc suy luận) | Chỉ chạy tổ hợp điểm cao nhất | Bước 13, `results/E1_xu_ly/pipeline_b/table.md`: `b_mobilenetv3` giữ 371/371 ảnh gốc, nền hoán đổi 0,975 | [đo] |
 | Giữ cách chia ngẫu nhiên, ghi "mỗi quả chụp nhiều mặt" là hạn chế | Chia lại theo khối ảnh liên tiếp | Bước 13, `results/E1_xu_ly/table_blocked_cv.md`: chia ngẫu nhiên cao hơn 0,024–0,069 | [đo] |
+| Kết luận về các nhánh theo từng phép thử, không theo một điểm bền duy nhất | Xếp hạng bằng điểm bền | Bước 14, `results/so_sanh_nhanh/table_stress.md`: G, X-a, X-b có điểm bền 0,875–0,883 nhưng khác nhau rõ ở nền hoán đổi và che 25% | [đo] |
+| Slide chính: Beamer LaTeX style UIT, sinh cùng nguồn với bản pptx | Chỉ pptx | Bước 14; kế hoạch mục 8 | [lập luận] |
+| Demo giữ `b_mobilenetv3` của pipeline gốc làm mặc định, thêm bản X-b | Thay hẳn bằng bản X-b | Bước 14, `results/so_sanh_nhanh/table_stress.md` | [đo] |

@@ -26,6 +26,19 @@
     }
   },
   {
+    "key": "b_mobilenetv3_thay_nen",
+    "label": "CNN hướng B — MobileNetV3-Small, huấn luyện có thay nền ngẫu nhiên (nhánh X-b)",
+    "type": "keras",
+    "file": "b_mobilenetv3_thay_nen.keras",
+    "input_size": 224,
+    "run": "Xb__b_mobilenetv3",
+    "size_mb": 11.73,
+    "test": {
+      "macro_f1_test": 1.0,
+      "accuracy_test": 1.0
+    }
+  },
+  {
     "key": "trad_best",
     "label": "Truyền thống — Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
     "type": "joblib",

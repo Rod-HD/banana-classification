@@ -26,8 +26,8 @@ def refresh_readme(path="README.md"):
     """Cập nhật các bảng trong README nằm giữa cặp chú thích <!-- T:đường_dẫn --> ... <!-- /T --> bằng bảng mới nhất trong results/."""
     f = ROOT / path
     txt = f.read_text(encoding="utf-8")
-    new = re.sub(r"(<!-- T:([^ ]+) -->\n).*?(\n<!-- /T -->)", lambda m: m.group(1) + (table(m.group(2)) if (ROOT / m.group(2)).exists() else "(chưa có kết quả)") + m.group(3),
-                 txt, flags=re.S)
+    new = re.sub(r"(<!-- T:([^ ]+) -->\n).*?(<!-- /T -->)",
+                 lambda m: m.group(1) + (table(m.group(2)) if (ROOT / m.group(2)).exists() else "(chưa có kết quả)") + "\n" + m.group(3), txt, flags=re.S)
     if new != txt:
         f.write_text(new, encoding="utf-8")
     return new != txt

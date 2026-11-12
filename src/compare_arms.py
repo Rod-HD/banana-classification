@@ -117,7 +117,7 @@ def main():
                      title=f"Phép che 25%: accuracy trên test theo tỉ lệ diện tích quả chuối bị ô đen che (nhóm bị che ≥ 90% gồm {comp})"))
 
     # 3) hình
-    fig, axes = plt.subplots(2, 1, figsize=(14, 8.2))
+    fig, axes = plt.subplots(2, 1, figsize=(14, 9))
     keys = TRAD + CNN; x = np.arange(len(keys)); w = 0.8 / len(data); col = {"G": "tab:gray", "X-a": "tab:green", "X-b": "tab:olive", "T": "tab:purple"}
     for ax, field, title in [(axes[0], "macro_f1", "Macro-F1 trên test gốc (371 ảnh)"), (axes[1], "robust_score", "Điểm bền (trung bình 6 phép thử khó)")]:
         for j, a in enumerate(data):
@@ -127,16 +127,17 @@ def main():
                 if not np.isnan(val):
                     ax.text(xi, val + 0.004, f"{val:.3f}", ha="center", fontsize=6.5, rotation=90)
         ax.set_xticks(x); ax.set_xticklabels([SHORT[k].replace(" + ", "\n+ ") for k in keys], fontsize=7)
-        ax.set_ylim((0.88, 1.03) if field == "macro_f1" else (0.3, 1.1)); ax.set_title(title, fontsize=10); ax.legend(fontsize=7, loc="lower left")
+        ax.set_ylim((0.8, 1.04) if field == "macro_f1" else (0.3, 1.1)); ax.set_title(title, fontsize=10)
+        ax.legend(fontsize=8, ncol=len(data), loc="upper center", bbox_to_anchor=(0.5, -0.16), frameon=False)
     fig.suptitle("So sánh các nhánh dữ liệu (G, X-a, X-b, T) trên 9 cấu hình của pipeline gốc")
     fig.tight_layout(); fig.savefig(FIG_DIR / "E_compare_arms.png", dpi=130); plt.close(fig)
     if len(reps) > 1:
-        fig, ax = plt.subplots(figsize=(12, 4)); tests = ["clean"] + STRESS; x = np.arange(len(tests)); w = 0.8 / len(reps)
+        fig, ax = plt.subplots(figsize=(12, 4.6)); tests = ["clean"] + STRESS; x = np.arange(len(tests)); w = 0.8 / len(reps)
         for j, (name, cfg, dev, f1, ci, ne, st, rob, how) in enumerate(reps):
             v = [f1] + [st[s] for s in STRESS]
             ax.bar(x + (j - (len(reps) - 1) / 2) * w, v, w, label=f"{name.split(' — ')[0]}: {cfg}")
         ax.set_xticks(x); ax.set_xticklabels([STRESS_LABEL[t] for t in tests]); ax.set_ylabel("Macro-F1 trên test"); ax.set_ylim(0, 1.08)
-        ax.legend(fontsize=7, ncol=2, loc="lower left"); ax.set_title("Cấu hình đại diện của mỗi nhánh trên ảnh gốc và 6 phép thử khó")
+        ax.legend(fontsize=8, ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.1), frameon=False); ax.set_title("Cấu hình đại diện của mỗi nhánh trên ảnh gốc và 6 phép thử khó")
         fig.tight_layout(); fig.savefig(FIG_DIR / "E_compare_stress.png", dpi=130); plt.close(fig)
 
 

@@ -13,6 +13,7 @@ import re
 from pathlib import Path
 
 from docx import Document
+from docx.enum.section import WD_ORIENT, WD_SECTION
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
@@ -48,9 +49,22 @@ def shade(cell, color="D9E2F3"):
     tcPr.append(shd)
 
 
+def _section(doc, landscape: bool):
+    """Mở một section mới, trang ngang hoặc trang dọc (dùng cho bảng nhiều cột)."""
+    sec = doc.add_section(WD_SECTION.NEW_PAGE)
+    w, h = sec.page_width, sec.page_height
+    if landscape != (w > h):
+        sec.orientation = WD_ORIENT.LANDSCAPE if landscape else WD_ORIENT.PORTRAIT
+        sec.page_width, sec.page_height = h, w
+    return sec
+
+
 def add_table(doc, lines):
     rows = [[c.strip() for c in l.strip().strip("|").split("|")] for l in lines if not re.match(r"^\|\s*:?-{2,}", l.strip())]
     ncol = max(len(r) for r in rows)
+    wide = ncol >= 11
+    if wide:
+        _section(doc, True)
     t = doc.add_table(rows=len(rows), cols=ncol)
     t.style = "Table Grid"; t.alignment = WD_TABLE_ALIGNMENT.CENTER
     size = 9 if ncol <= 5 else 8 if ncol <= 8 else 7
@@ -63,7 +77,10 @@ def add_table(doc, lines):
                 for run in p.runs:
                     run.bold = True
                 shade(cell)
-    doc.add_paragraph()
+    if wide:
+        _section(doc, False)
+    else:
+        doc.add_paragraph()
 
 
 def convert(src: Path, dst: Path):

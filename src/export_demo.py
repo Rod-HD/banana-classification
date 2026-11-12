@@ -1,7 +1,7 @@
 """Xuất mô hình dùng cho demo vào models/ (mỗi file dưới 50 MB) và ghi models/models.json.
 
     python -m src.export_demo
-- CNN: b_mobilenetv3 (biến thể được chốt) và a_lenet, lưu dạng .keras (học trên train).
+- CNN: b_mobilenetv3 (biến thể được chốt) và a_lenet, lưu dạng .keras (học trên train); thêm b_mobilenetv3 của nhánh X-b nếu có.
 - Truyền thống: cấu hình tốt nhất (results/select_traditional/selected.json), học trên train+val, lưu dạng .joblib.
 a_vgg16 không xuất được vì file mô hình vượt 50 MB.
 """
@@ -39,6 +39,18 @@ def main():
         full_model(run).save(f)
         entries.append({"key": model, "label": label, "type": "keras", "file": f.name, "input_size": run_meta(run)["input_size"],
                         "run": run, "size_mb": round(os.path.getsize(f) / 1e6, 2), "test": test_metrics(model)})
+    # Biến thể bền hơn với nền ảnh: MobileNetV3 của nhánh X-b (tăng cường có thay nền ngẫu nhiên), nếu đã huấn luyện
+    from .config import CKPT_DIR
+    xb = CKPT_DIR / "Xb__b_mobilenetv3" / "best.keras"
+    xb_metrics = RESULTS_DIR / "E1_xu_ly" / "pipeline_b" / "b_mobilenetv3" / "metrics.json"
+    if xb.exists() and xb_metrics.exists():
+        import keras
+        f = MODELS_DIR / "b_mobilenetv3_thay_nen.keras"
+        keras.models.load_model(xb).save(f)
+        m = json.loads(xb_metrics.read_text())
+        entries.append({"key": "b_mobilenetv3_thay_nen", "label": "CNN hướng B — MobileNetV3-Small, huấn luyện có thay nền ngẫu nhiên (nhánh X-b)", "type": "keras",
+                        "file": f.name, "input_size": 224, "run": "Xb__b_mobilenetv3", "size_mb": round(os.path.getsize(f) / 1e6, 2),
+                        "test": {"macro_f1_test": round(m["macro_f1"], 4), "accuracy_test": round(m["accuracy"], 4)}})
     sel = json.loads((RESULTS_DIR / "select_traditional" / "selected.json").read_text())
     cfg = sel[sel["_best_overall"]]
     dev, _ = dev_and_test()

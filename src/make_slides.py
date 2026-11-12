@@ -51,23 +51,30 @@ def extension_slides():
                               "Chia theo khối ảnh liên tiếp thấp hơn chia ngẫu nhiên 0,02–0,07"],
                   "notes": "Pipeline gốc chỉ resize ảnh. Bước làm sạch loại ảnh gần trùng khỏi train. Phát hiện quan trọng: ảnh cùng quả hoặc cùng đợt chụp nằm ở cả hai phía khi chia ngẫu nhiên, "
                            "nên cross-validation ngẫu nhiên lạc quan hơn chia theo khối ảnh liên tiếp. Bảng: results/E1_xu_ly/table_blocked_cv.md, table_adjacent.md."})
+        from .augment import MODE_NAME
+        from .preprocess import LEVEL_NAME
+        la, lb = sel["selected"], sel.get("selected_b", sel["selected"])
         s.append({"title": "Nhánh X — chọn tiền xử lý và tăng cường trên val (X2–X4)", "image": F / "E1_selection.png",
-                  "bullets": ["4 mức tiền xử lý × 3 mức tăng cường", f"Không xử lý: điểm chọn {vn(c['none|none']['score'])}",
-                              f"**X-a** (điểm cao nhất): cân bằng trắng + nền phẳng — {vn(c[ka]['score'])}",
-                              f"**X-b** (chỉ can thiệp train): tăng cường có thay nền — {vn(c[kb]['score'])}",
-                              "Các tổ hợp đứng đầu không phân biệt được (bootstrap)", "Cắt theo quả làm phép che 25% tệ hơn"],
-                  "notes": "Điểm chọn là trung bình macro-F1 trên val của ảnh gốc và 6 phép thử khó, với hai mô hình đại diện. Hai chiến lược đứng đầu: sửa ảnh lúc suy luận (tách nền) "
-                           "hoặc làm đa dạng nền lúc huấn luyện. Nhóm chạy đủ 9 cấu hình cho cả hai. Bảng: results/E1_xu_ly/table_selection.md."})
+                  "bullets": ["5 mức tiền xử lý × 3 mức tăng cường, 7 phép thử trên val", f"Không xử lý: điểm chọn {vn(c['none|none']['score'])}",
+                              f"**X-a** (cao nhất): {LEVEL_NAME[la['level']].lower()} + {MODE_NAME[la['aug']].lower()} — {vn(c[ka]['score'])} ± {vn(c[ka]['score_boot_std'])}",
+                              f"**X-b** (chỉ can thiệp train): {MODE_NAME[lb['aug']].lower()} — {vn(c[kb]['score'])}",
+                              "Cân bằng trắng theo nền làm kém đi: đưa màu nền vào màu quả (X3)", "Cắt theo quả làm phép che 25% tệ hơn"],
+                  "notes": "Điểm chọn là trung bình macro-F1 trên val của ảnh gốc và 6 phép thử khó, với hai mô hình đại diện; sai số tính bằng bootstrap. "
+                           "Tách nền (nền phẳng) là bước có tác dụng lớn nhất. Cân bằng trắng theo nền bị loại: hệ số tính từ màu nền rồi nhân vào cả quả chuối, "
+                           "nên khi nền đổi thì màu quả lệch 12,9 đơn vị Lab. Nhóm chạy đủ pipeline cho hai biến thể X-a và X-b. Bảng: results/E1_xu_ly/table_selection.md, table_wb_leak.md."})
         if (E1 / "pipeline" / "table.md").exists():
-            s.append({"title": "Nhánh X-a — 9 cấu hình trên ảnh đã tiền xử lý", "table": E1 / "pipeline" / "table.md",
+            s.append({"title": "Nhánh X-a — 9 cấu hình với nền phẳng + tăng cường", "table": E1 / "pipeline" / "table.md",
                       "cols": ["Mô hình", "Macro-F1 test", "Nền hoán đổi", "V×0,6", "V×1,4", "Nhiễu σ=10", "Xoay +30°", "Che 25%", "Điểm bền"], "table_size": 10,
-                      "notes": "X-a: cân bằng trắng theo nền giấy và thay nền bằng màu trắng phẳng, áp dụng cho cả train lẫn ảnh cần dự đoán. Nền hoán đổi gần như không còn tác dụng, "
-                               "nhưng phép che 25% làm hỏng bước phân đoạn nên điểm ở cột đó thấp."})
+                      "notes": "X-a: thay nền bằng màu trắng phẳng, giữ nguyên màu quả, áp dụng cho cả ảnh train lẫn ảnh cần dự đoán; train được thêm 2 bản tăng cường mỗi ảnh. "
+                               "Cột nền hoán đổi gần bằng cột ảnh gốc ở mọi cấu hình: mô hình không còn dựa vào nền. Đổi lại HOG, cạnh, a_lenet, a_vgg16 mất điểm trên ảnh gốc, "
+                               "và phép che 25% làm hỏng bước phân đoạn."})
         if (E1 / "pipeline_b" / "table.md").exists():
-            s.append({"title": "Nhánh X-b — 9 cấu hình với tăng cường có thay nền", "table": E1 / "pipeline_b" / "table.md",
+            xb = j("E1_xu_ly/pipeline_b/b_mobilenetv3/metrics.json")
+            s.append({"title": "Nhánh X-b — tăng cường có thay nền ngẫu nhiên (6 cấu hình)", "table": E1 / "pipeline_b" / "table.md",
                       "cols": ["Mô hình", "Macro-F1 test", "Nền hoán đổi", "V×0,6", "V×1,4", "Nhiễu σ=10", "Xoay +30°", "Che 25%", "Điểm bền"], "table_size": 10,
-                      "notes": "X-b: không đổi ảnh lúc suy luận; tập train được thêm 2 bản tăng cường mỗi ảnh, trong đó quả chuối được ghép lên nền của một ảnh train bất kỳ, "
-                               "để màu và kết cấu nền không còn đi kèm với nhãn."})
+                      "notes": f"X-b: không đổi ảnh lúc dự đoán; mỗi ảnh train có thêm 2 bản mà quả chuối được ghép lên nền của một ảnh train bất kỳ. "
+                               f"b_mobilenetv3 vẫn sai {xb['n_errors']}/371 ảnh gốc và đạt {vn(xb['stress']['swapbg']['macro_f1'])} khi nền bị hoán đổi (pipeline gốc: 0,794). "
+                               "Đây là lựa chọn cân bằng nhất cho mô hình tốt nhất; mô hình này có trong demo."})
     if (E2 / "khong_ro_ri" / "table.md").exists() and (SS / "table_models.md").exists():
         s.append({"title": "Nhánh T — bản Augmented của tác giả (7.413 ảnh)", "table": SS / "table_models.md",
                   "cols": ["Cấu hình", "G: macro-F1 test", "G: điểm bền", "T: macro-F1 test", "T: điểm bền"], "table_size": 10,
@@ -262,16 +269,20 @@ def slides():
               "bullets": ["**Ưu điểm**", ("30 thí nghiệm, mỗi nhận định có bảng hoặc hình; ghi cả kết quả trái dự đoán", 1),
                           ("Quy trình đánh giá chặt: test dùng một lần, CV, độ lệch chuẩn, khoảng tin cậy", 1),
                           ("Mô hình 11,7 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test", 1), ("Chạy lại toàn bộ bằng một lệnh", 1),
+                          ("Đối chiếu với bài báo và bản Augmented của tác giả trên cùng tập test", 1),
                           "**Hạn chế**", ("Thiên lệch theo bối cảnh chụp (S2): chỉ nhìn nền vẫn đạt 0,93–0,99", 1),
-                          ("Test nhỏ, các mô hình dẫn đầu không phân biệt được", 1), ("Chưa có nhãn mask (IoU/Dice), chưa có ảnh ngoài bối cảnh", 1),
-                          "**Hướng phát triển:** ảnh cùng bối cảnh cho 4 giống; huấn luyện trên ảnh đã tách nền"],
+                          ("Mỗi quả chụp nhiều mặt, chia ngẫu nhiên không tách theo quả: lạc quan 0,02–0,07 (X1)", 1),
+                          ("Test nhỏ; bộ kiểm tra khó là biến đổi tổng hợp, chưa có ảnh thật ngoài bối cảnh", 1),
+                          "**Hướng phát triển:** chia dữ liệu theo quả; ảnh cùng bối cảnh cho 4 giống"],
+              "size": 17,
               "notes": "Nhóm nhấn mạnh hạn chế thiên lệch nền vì nó quyết định cách hiểu con số 100%."})
     s.append({"title": "Tài liệu tham khảo",
               "bullets": ["BananaImageBD, Mendeley Data v2, DOI 10.17632/ptfscwtnyz.2 (CC BY 4.0)", "Bài giảng CS231",
+                          "Ferdaus et al. 2025, Data in Brief 58, 111239; Ergün 2025, Scientific Reports 15, 10366",
                           "Dalal & Triggs 2005 (HOG); Pass et al. 1996 (CCV); Stricker & Orengo 1995 (moment màu); Otsu 1979",
                           "LeCun et al. 1998; Simonyan & Zisserman 2015; He et al. 2016; Howard et al. 2019",
-                          "Srivastava et al. 2014 (Dropout); Ioffe & Szegedy 2015 (BatchNorm); scikit-learn, TensorFlow/Keras, OpenCV"],
-              "size": 16, "notes": "Danh sách đầy đủ ở mục 7 của báo cáo. Cảm ơn thầy/cô và các bạn đã lắng nghe."})
+                          "Srivastava et al. 2014 (Dropout); Ioffe & Szegedy 2015 (BatchNorm); Dosovitskiy et al. 2021 (ViT); scikit-learn, TensorFlow/Keras, OpenCV"],
+              "size": 15, "notes": "Danh sách đầy đủ ở mục 7 của báo cáo. Cảm ơn thầy/cô và các bạn đã lắng nghe."})
     return s
 
 

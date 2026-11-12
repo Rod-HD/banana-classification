@@ -1,6 +1,6 @@
 # Hỏi đáp khi bảo vệ đồ án
 
-Các câu hỏi có thể gặp khi trình bày, kèm câu trả lời ngắn và bảng hoặc hình làm bằng chứng. Mọi số liệu lấy từ `results/`.
+Các câu hỏi có thể gặp khi trình bày (51 câu), kèm câu trả lời ngắn và bảng hoặc hình làm bằng chứng. Mọi số liệu lấy từ `results/`.
 
 ## A. Dữ liệu và cách đánh giá
 
@@ -146,10 +146,25 @@ Trên ảnh gốc thì ngang nhau: ViT + SVM sai 1/371 ảnh, `b_mobilenetv3` v�
 **44. Hướng "chỉ dùng tới CNN" của phương pháp bài báo cho kết quả thế nào?**
 CNN pretrained làm bộ rút đặc trưng + bộ phân lớp đã học (SVM, Logistic Regression, MLP) đạt macro-F1 0,990–0,997 trên test gốc, ngang ViT; điểm bền 0,63–0,89, thấp hơn ViT và thấp hơn fine-tune cùng mạng có tăng cường (MobileNetV3 đóng băng + SVM tuyến tính 0,836; fine-tune 0,875). → `results/E3_bai_bao/table_test.md`.
 
+**45. Pipeline gốc đã xử lý và tăng cường dữ liệu chưa? Nhánh X thêm gì?**
+Pipeline gốc chỉ resize ảnh về 256×256 và chuẩn hóa giá trị điểm ảnh; tăng cường chỉ bật lúc huấn luyện cho `a_dropout` và hai mô hình hướng B. Nhánh X thêm ba phần: làm sạch (loại 35 ảnh train gần trùng), tiền xử lý (5 mức: không; cân bằng trắng; nền phẳng; cả hai; thêm cắt theo quả) và tăng cường chỉ trên train (3 mức: không; hình học + quang học; thêm thay nền ngẫu nhiên). Tổ hợp được chọn trên val bằng 7 phép thử. → `results/E1_xu_ly/table_cleaning.md`, `results/E1_xu_ly/table_selection.md`, `results/figures/E1_preprocess_examples.png`.
+
+**46. Cách xử lý dữ liệu nào tốt nhất?**
+Trên val, "nền phẳng + tăng cường hình học/quang học" (X-a) đạt điểm chọn cao nhất, 0,889 ± 0,006, so với 0,804 khi không xử lý, và phân biệt được với mọi tổ hợp khác theo bootstrap. Khi chạy lại pipeline: X-a đưa phép nền hoán đổi của `b_mobilenetv3` từ 0,794 lên 0,995 nhưng làm HOG, cạnh, `a_lenet`, `a_vgg16` mất điểm trên ảnh gốc (trung bình 9 cấu hình 0,983 → 0,942). X-b (chỉ tăng cường có thay nền, không đổi ảnh lúc dự đoán) giữ `b_mobilenetv3` ở 371/371 ảnh gốc và đạt 0,975 ở nền hoán đổi. Trên ảnh gốc thì không cách nào hơn pipeline gốc, vì nó đã đúng 371/371. → `results/E1_xu_ly/pipeline/table.md`, `results/E1_xu_ly/pipeline_b/table.md`, `results/so_sanh_nhanh/table_models.md`.
+
+**47. Vì sao không dùng cân bằng trắng theo nền giấy trắng?**
+Vì nó chuyển thông tin của nền vào màu quả chuối. Hệ số cân bằng tính từ màu nền rồi nhân vào cả ảnh; khi nền đổi, màu quả lệch trung bình 12,9 đơn vị Lab (không cân bằng trắng: 0,0), và histogram HSV + LogReg sụt 0,351 ở phép nền hoán đổi, trong khi chỉ làm phẳng nền thì sụt 0,023. Lần chọn đầu của nhóm có bước này; nhóm phát hiện lỗi qua phép nền hoán đổi rồi sửa. → `results/E1_xu_ly/table_wb_leak.md`, nhật ký bước 13.
+
+**48. "Mỗi quả chụp bốn mặt" ảnh hưởng gì tới kết quả?**
+Bài báo mô tả dữ liệu cho biết mỗi quả được chụp từ bốn mặt. Đo được: 20,0% số ảnh có láng giềng gần nhất cùng lớp mang số thứ tự cách không quá 3 (ngẫu nhiên: 1,0%), và cross-validation chia theo khối ảnh liên tiếp thấp hơn chia ngẫu nhiên 0,024–0,069. Tức ảnh của cùng một quả nằm ở cả train lẫn test khi chia ngẫu nhiên, nên mọi con số chấm bằng cách chia ngẫu nhiên, kể cả 1,000 trên test, lạc quan hơn so với khi gặp quả chưa từng thấy. Dữ liệu không có nhãn "quả nào" nên chưa chia lại được. → `results/E1_xu_ly/table_adjacent.md`, `results/E1_xu_ly/table_blocked_cv.md`.
+
+**49. Tóm lại, trong bốn nhánh thì nhánh nào tốt nhất?**
+Trên ảnh gốc không nhánh nào hơn pipeline gốc: cấu hình đại diện của các nhánh sai từ 0 đến 2 ảnh trên 371. Khác biệt nằm ở bộ kiểm tra khó, và mỗi nhánh mạnh ở một chỗ: nhánh X gần như xóa được sự phụ thuộc vào nền (nền hoán đổi 0,975–0,995 so với 0,794); nhánh T bền đều hơn ở các phép có trong công thức tăng cường (điểm bền 0,909); ViT + SVM của bài báo có điểm bền cao nhất (0,919) nhưng nặng và nằm ngoài môn học; CNN đóng băng + SVM kém bền nhất (0,836). Điểm bền trung bình che mất sự đánh đổi: nhánh X được ở nền hoán đổi nhưng mất ở phép che 25% (0,44–0,45 so với 0,66). → `results/so_sanh_nhanh/table_arms.md`, `results/so_sanh_nhanh/table_stress.md`, `results/figures/E_compare_stress.png`.
+
 ## G. Cài đặt và chạy lại
 
 **50. Làm sao chạy lại toàn bộ kết quả?**
-`bash scripts/setup_env.sh` rồi `bash scripts/run_all.sh` (hoặc từng bước, ví dụ `bash scripts/run_all.sh 2 3`). Seed cố định, phiên bản thư viện ghi ở `results/environment.txt`. Huấn luyện CNN có checkpoint mỗi epoch và `--resume`. → `README.md`.
+`bash scripts/setup_env.sh` rồi `bash scripts/run_all.sh` (hoặc từng bước, ví dụ `bash scripts/run_all.sh 2 3`; phần mở rộng là các bước 10–14). Seed cố định, phiên bản thư viện ghi ở `results/environment.txt`. Huấn luyện CNN có checkpoint mỗi epoch và `--resume`. → `README.md`.
 
 **51. Demo chạy thế nào?**
-`python app/app.py` mở giao diện web; `python app/app.py --image <ảnh>` dự đoán trên dòng lệnh. Mô hình mặc định là `b_mobilenetv3` (11,7 MB). `a_vgg16` không đưa vào demo vì file 370 MB vượt giới hạn 50 MB. → `results/figures/demo_screenshot.png`, `models/models.json`.
+`python app/app.py` mở giao diện web; `python app/app.py --image <ảnh>` dự đoán trên dòng lệnh. Mô hình mặc định là `b_mobilenetv3` (11,7 MB); có thêm bản huấn luyện với nền thay ngẫu nhiên (nhánh X-b), bền hơn khi nền ảnh khác bộ dữ liệu. `a_vgg16` không đưa vào demo vì file 370 MB vượt giới hạn 50 MB. → `results/figures/demo_screenshot.png`, `models/models.json`.
