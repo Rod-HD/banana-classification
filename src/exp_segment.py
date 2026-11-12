@@ -130,7 +130,29 @@ def s2():
         far = cv2.dilate(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (41, 41))) == 0
         if ring.any() and far.any():
             ratios.append(float(mag[ring].mean() / max(mag[far].mean(), 1e-6)))
-    raw["_silhouette_leak_gradient_ratio"] = {"mean": float(np.mean(ratios)), "median": float(np.median(ratios))}
+    raw["_silhouette_leak_gradient_ratio"] = {"median": float(np.median(ratios)), "p25": float(np.percentile(ratios, 25)),
+                                              "p75": float(np.percentile(ratios, 75)), "n": len(ratios)}
+    # Phép thử không phụ thuộc mask: ghép 4 góc ảnh (mỗi góc 64×64) thành ảnh 128×128.
+    c = 64
+    corners = np.stack([np.vstack([np.hstack([im[:c, :c], im[:c, -c:]]), np.hstack([im[-c:, :c], im[-c:, -c:]])]) for im in I])
+    corner_fg = float(np.mean([np.concatenate([m[:c, :c].ravel(), m[:c, -c:].ravel(), m[-c:, :c].ravel(), m[-c:, -c:].ravel()]).mean() / 255 for m in Mk_dil]))
+    Xc_hog = hog_batch(corners, size=(128, 128))
+    Xc_hsv = np.stack([C.hsv_hist(im) for im in corners]).astype(np.float32)
+    raw["_corner_foreground_fraction"] = corner_fg
+    corner_rows = []
+    for cname, X, fac in [("HOG của 4 góc ảnh (128×128) + LogReg C=0.1", Xc_hog, lambda: make_clf("logreg", C=0.1)),
+                          ("Hist HSV (8,8,8) của 4 góc ảnh + LogReg C=0.1", Xc_hsv, lambda: make_clf("logreg", C=0.1))]:
+        r = cv_eval(X, y, fac); raw[cname] = strip(r)
+        corner_rows.append({"Đặc trưng + bộ phân lớp": cname, "Số chiều": X.shape[1], "Macro-F1": pm(r["macro_f1"], r["macro_f1_std"]),
+                            "Accuracy": pm(r["accuracy"], r["accuracy_std"])})
+        srows.append(summary_row("S2", cname, r))
+    print(save_table("S2", corner_rows, "table_corners",
+                     title=f"S2 — Chỉ dùng 4 góc ảnh 64×64 (không cần mask; trung bình {100 * corner_fg:.1f}% điểm ảnh ở góc thuộc vùng chuối đã nới rộng)"))
+    fig, axes = plt.subplots(1, 4, figsize=(9, 2.6))
+    for cl in range(4):
+        k = int(np.where(y == cl)[0][5]); axes[cl].imshow(corners[k]); axes[cl].set_title(CLASS_NAMES[cl], fontsize=9); axes[cl].axis("off")
+    fig.suptitle("S2 — Ảnh ghép từ 4 góc 64×64 (đầu vào của phép thử 'chỉ góc ảnh')", fontsize=10)
+    fig.tight_layout(); fig.savefig(FIG_DIR / "S2_corners.png", dpi=110); plt.close(fig)
     # Hai phép thử cực đoan: chỉ 3 con số màu nền; chỉ hình bóng (mask nhị phân)
     Xbg = np.stack([bg_color(im, cv2.bitwise_not(b)) for im, b in zip(I, Bg)]).astype(np.float32)
     Xsil = hog_batch(np.stack([np.repeat(m[..., None], 3, 2) for m in Mk]), **hogp)
@@ -153,6 +175,10 @@ def s2():
     stat_rows = [{"Lớp": k, "Nền: L trung bình ± std": f"{lab_mean[k][0]} ± {lab_std[k][0]}", "Nền: a": f"{lab_mean[k][1]} ± {lab_std[k][1]}",
                   "Nền: b": f"{lab_mean[k][2]} ± {lab_std[k][2]}", "Tỉ lệ diện tích quả chuối": f"{area[k]:.3f}"} for k in CLASS_NAMES]
     save_json(exp_dir("S2") / "metrics.json", raw); register("S2", srows)
+    lk = raw["_silhouette_leak_gradient_ratio"]
+    save_table("S2", [{"Chỉ số": "Gradient trung bình dọc viền vùng đã lấp / gradient trung bình vùng nền xa quả",
+                       "Trung vị": f"{lk['median']:.2f}", "Phân vị 25%": f"{lk['p25']:.2f}", "Phân vị 75%": f"{lk['p75']:.2f}", "Số ảnh": lk["n"]}],
+               "table_leak", title="S2 — Vết viền hình bóng còn lại trên ảnh 'chỉ vùng nền' (1 = không còn vết)")
     print(save_table("S2", rows, title="S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val)"))
     print(save_table("S2", extra, "table_extreme", title="S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng"))
     print("rò rỉ hình bóng (tỉ số gradient viền / nền xa):", raw["_silhouette_leak_gradient_ratio"])
@@ -180,7 +206,37 @@ def s2():
     fig.tight_layout(); fig.savefig(FIG_DIR / "S2_versions.png", dpi=110); plt.close(fig)
 
 
-EXPS = {"S1": s1, "S2": s2}
+def s2_cnn():
+    """S2 với CNN: mô hình đã huấn luyện trên ảnh đầy đủ (train), dự đoán trên ảnh val chỉ còn quả chuối
+    (nền tô màu trung vị) hoặc chỉ còn nền (vùng chuối nới rộng 12 px rồi inpainting)."""
+    import os
+    os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "2")
+    from sklearn.metrics import accuracy_score, f1_score
+    from .cnn.predict import Predictor
+    from .data import load_split
+    from .exp_cnn import final_run
+    va = load_split("val"); ids, y = va["idx"].values, va["label_id"].values
+    imgs = load_all_images(256); masks = all_masks()
+    kd = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))
+    full, fg, bg = [], [], []
+    for i in ids:
+        im = np.asarray(imgs[i]); m = masks[i]; md = cv2.dilate(m, kd)
+        med = np.median(im[m == 0], axis=0).astype(np.uint8)
+        a = im.copy(); a[m == 0] = med
+        full.append(im); fg.append(a); bg.append(cv2.inpaint(im, md, 7, cv2.INPAINT_TELEA))
+    rows, raw = [], {}
+    for model in ("a_vgg16", "b_mobilenetv3", "b_resnet50"):
+        run = final_run(model); P = Predictor(run); row = {"Mô hình (học trên ảnh đầy đủ)": run}
+        for name, X in [("Toàn ảnh", full), ("Chỉ vùng chuối", fg), ("Chỉ vùng nền", bg)]:
+            p = P(np.stack(X)).argmax(1)
+            f1 = float(f1_score(y, p, average="macro")); raw[f"{run}|{name}"] = {"macro_f1": f1, "accuracy": float(accuracy_score(y, p))}
+            row[name] = f"{f1:.3f}"
+        rows.append(row); print(row, flush=True)
+    save_json(exp_dir("S2") / "cnn_metrics.json", raw)
+    print(save_table("S2", rows, "table_cnn", title="S2 — CNN học trên ảnh đầy đủ, dự đoán trên ảnh val đã bỏ nền hoặc bỏ quả chuối (macro-F1, 371 ảnh)"))
+
+
+EXPS = {"S1": s1, "S2": s2, "S2CNN": s2_cnn}
 
 
 def main():

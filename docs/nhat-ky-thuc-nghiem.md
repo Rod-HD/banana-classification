@@ -765,6 +765,143 @@ Giải thích các điểm trái dự đoán:
 - I2 dùng `a_vgg16_lr1e-3` (hướng A) và `b_mobilenetv3_lr1e-4` (hướng B) làm mô hình gốc.
 - Demo dùng `b_mobilenetv3` (11,7 MB) thay cho `a_vgg16` (370 MB).
 
+## Bước 6–7 — Mất cân bằng dữ liệu (I1–I2) và phân đoạn tách nền (S1–S2) (12/11/2026)
+
+**Mục tiêu.** Kiểm chứng I1, I2 (mục 6.6) và S1, S2 (mục 6.7): accuracy có che khuất lớp ít ảnh không; các cách xử lý mất cân bằng tác động thế nào; mô hình dựa vào quả chuối hay vào nền ảnh.
+
+**Đã làm.**
+- `python -m src.exp_imbalance`: I1 trên các mô hình chưa xử lý mất cân bằng (out-of-fold 5-fold cho nhóm truyền thống, val cho CNN). I2 thử bốn cách: không xử lý, class weight, oversampling (`RandomOverSampler`, lặp ảnh lớp ít), tăng cường ảnh cho lớp ít (lật/xoay ảnh của các lớp chưa bằng lớp đông nhất). Áp dụng trên mô hình tốt nhất của nhóm truyền thống (trong từng fold, chỉ lấy mẫu lại phần huấn luyện), của hướng A (`a_vgg16_lr1e-3`) và của hướng B (`b_mobilenetv3_lr1e-4`), mỗi CNN huấn luyện lại 3 lần (`--class-weight`, `--oversample`, `--minority-aug`; lệnh ở bước 6 của `scripts/run_all.sh`).
+- `src/segmentation.py`: ngưỡng toàn cục (T = 127), Otsu trên ảnh xám, ngưỡng thích nghi (Gauss, cửa sổ 51), k-means màu Lab (k = 2), Otsu trên khoảng cách màu tới màu nền ở viền ảnh, và hậu xử lý (đóng/mở hình thái, giữ vùng liên thông lớn nhất, lấp lỗ).
+- `python -m src.exp_segment`: S1 (hình định tính và các chỉ số không cần nhãn mask trên 400 ảnh), S2 (đặc trưng trên toàn ảnh / chỉ vùng chuối / chỉ vùng nền, các phép thử chỉ dùng nền, và CNN dự đoán trên ảnh đã bỏ quả chuối).
+
+**Lý do chọn cách này.**
+- I1 thêm các mô hình yếu (KNN k = 31, moment màu, cạnh) và một bộ phân lớp "luôn đoán lớp đông nhất". Các mô hình tốt nhất có accuracy trên 0,99 nên không thể hiện được hiện tượng accuracy che khuất lớp kém. **[đo]** `results/I1/table.md`.
+- I2 thêm một cấu hình truyền thống yếu hơn (cạnh Sobel + LogReg) để minh họa. Ở mô hình tốt nhất, mọi recall đã ≥ 0,995 nên không còn chỗ cho các cách xử lý tác động. **[đo]** `results/I2/table.md`.
+- S1 chọn **Otsu trên khoảng cách màu tới nền + hậu xử lý** làm mask cho S2. **[đo]** `results/S1/table.md`: so với các phương pháp không hậu xử lý, đây là cách cho ít mảnh rời nhất (trung vị 1) và ít lỗ thủng nhất (0,010). Ngưỡng toàn cục và ngưỡng thích nghi tách cả vết thâm trên vỏ thành nền (lỗ thủng 0,085 và 0,282). Trên hình `results/figures/S1_segmentation.png`, phương pháp này giữ được cả quả chuối chín sẫm, chỗ mà Otsu trên ảnh xám bị thủng.
+- Phiên bản "chỉ vùng nền" lấy nền **bên ngoài mask đã nới rộng 12 điểm ảnh**, rồi lấp vùng chuối bằng inpainting (Telea). **[đo]** Lần chạy đầu tô vùng chuối bằng một màu phẳng; trên hình `results/figures/S2_versions.png` vẫn thấy rõ đường viền hình bóng quả, và với một ảnh Bangla Kola sẫm màu, mask chưa phủ hết quả. Sau khi sửa, gradient dọc viền vùng đã lấp chỉ bằng 1,18 lần (trung vị) gradient của vùng nền xa quả (`results/S2/table_leak.md`).
+- S2 thêm phép thử **chỉ dùng 4 góc ảnh 64×64**, không phụ thuộc mask, để loại hẳn nghi vấn còn sót hình bóng. **[đo]** `results/S2/table_corners.md`.
+
+**Phương án khác và vì sao không chọn.**
+- K-means màu (k = 2) làm mask cho S2: không chọn; còn lỗ thủng (0,027) và mảnh rời ở quả có vết thâm lớn. **[đo]** `results/S1/table.md`, `results/figures/S1_segmentation.png`.
+- Tính IoU/Dice với nhãn mask: chưa làm được, vì dữ liệu không có nhãn mask và nhóm chưa tự gán. Cột "IoU với phương pháp được chọn" trong `results/S1/table.md` chỉ đo mức giống nhau giữa các phương pháp, không phải độ chính xác. **[lập luận]**
+- Chọn một cách xử lý mất cân bằng cho cấu hình cuối: không chọn cách nào. Không cách nào cải thiện vượt độ lệch chuẩn (truyền thống) hoặc vượt 1–2 ảnh val (CNN); giữ cấu hình "không xử lý". **[đo]** `results/I2/table.md`.
+
+**Bằng chứng.**
+
+I1 (`results/I1/table.md`, hình `results/figures/I1_accuracy_vs_macro_f1.png`):
+
+| Mô hình (chưa xử lý mất cân bằng) | Chấm trên | Accuracy | Macro-F1 | Accuracy − Macro-F1 | Recall Bangla | Recall Champa | Recall Sabri | Recall Sagor | Recall thấp nhất |
+|---|---|---|---|---|---|---|---|---|---|
+| Luôn đoán lớp đông nhất (Champa Kola) | train+val | 0,402 | 0,143 | +0,259 | 0,000 | 1,000 | 0,000 | 0,000 | 0,000 (Bangla) |
+| HOG 64×128 + KNN k=31 | out-of-fold 5-fold | 0,884 | 0,871 | +0,014 | 0,899 | 1,000 | 0,988 | 0,552 | 0,552 (Sagor) |
+| Hist HSV + KNN k=31 | out-of-fold 5-fold | 0,883 | 0,868 | +0,015 | 0,870 | 0,998 | 0,986 | 0,576 | 0,576 (Sagor) |
+| Moment màu + LogReg | out-of-fold 5-fold | 0,925 | 0,908 | +0,017 | 0,870 | 0,992 | 0,986 | 0,785 | 0,785 (Sagor) |
+| Cạnh Sobel + LogReg | out-of-fold 5-fold | 0,900 | 0,894 | +0,007 | 0,822 | 0,920 | 0,977 | 0,857 | 0,822 (Bangla) |
+| Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | out-of-fold 5-fold | 0,959 | 0,955 | +0,004 | 0,950 | 0,995 | 0,988 | 0,870 | 0,870 (Sagor) |
+| HOG 64×128 + LogReg C=0,1 | out-of-fold 5-fold | 0,989 | 0,986 | +0,002 | 0,968 | 0,998 | 0,993 | 0,984 | 0,968 (Bangla) |
+| Hist HSV (8,8,8) + LogReg C=0,1 | out-of-fold 5-fold | 0,992 | 0,991 | +0,001 | 0,992 | 0,998 | 0,998 | 0,978 | 0,978 (Sagor) |
+| Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | out-of-fold 5-fold | 0,997 | 0,996 | +0,000 | 0,995 | 0,996 | 1,000 | 0,996 | 0,995 (Bangla) |
+| CNN a_lenet_frac25 | val | 0,930 | 0,924 | +0,006 | 0,879 | 0,953 | 0,961 | 0,899 | 0,879 (Bangla) |
+| CNN a_lenet | val | 0,978 | 0,973 | +0,005 | 1,000 | 0,993 | 0,987 | 0,924 | 0,924 (Sagor) |
+| CNN a_dropout | val | 0,946 | 0,940 | +0,006 | 0,924 | 0,987 | 0,987 | 0,848 | 0,848 (Sagor) |
+| CNN a_vgg16_lr1e-3 | val | 0,992 | 0,990 | +0,002 | 0,985 | 1,000 | 0,987 | 0,987 | 0,985 (Bangla) |
+| CNN b_mobilenetv3_s1 | val | 0,989 | 0,987 | +0,002 | 0,970 | 1,000 | 1,000 | 0,975 | 0,970 (Bangla) |
+| CNN b_mobilenetv3_lr1e-4 | val | 1,000 | 1,000 | +0,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 (Bangla) |
+| CNN b_resnet50_s1 | val | 0,997 | 0,996 | +0,001 | 0,985 | 1,000 | 1,000 | 1,000 | 0,985 (Bangla) |
+| CNN b_resnet50 | val | 0,997 | 0,998 | -0,000 | 1,000 | 1,000 | 1,000 | 0,987 | 0,987 (Sagor) |
+
+I2 (`results/I2/table.md`, precision/recall đủ 4 lớp ở `results/I2/table_per_class.md`, hình `results/figures/I2_imbalance.png`):
+
+| Mô hình | Cách xử lý | Chấm | Macro-F1 | Accuracy | Precision Bangla (ít nhất) | Recall Bangla (ít nhất) | Precision Champa (đông nhất) | Recall Champa (đông nhất) | Recall thấp nhất |
+|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Không xử lý | 5-fold CV | 0,996 ± 0,003 | 0,997 | 0,995 | 0,995 | 0,999 | 0,996 | 0,995 (Bangla) |
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Class weight | 5-fold CV | 0,996 ± 0,003 | 0,997 | 0,995 | 0,995 | 0,999 | 0,996 | 0,995 (Bangla) |
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Oversampling | 5-fold CV | 0,995 ± 0,005 | 0,996 | 0,992 | 0,992 | 0,999 | 0,996 | 0,992 (Bangla) |
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Tăng cường lớp ít | 5-fold CV | 0,996 ± 0,002 | 0,996 | 0,992 | 0,997 | 0,999 | 0,995 | 0,993 (Sagor) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Không xử lý | 5-fold CV | 0,894 ± 0,008 | 0,900 | 0,849 | 0,822 | 0,921 | 0,920 | 0,822 (Bangla) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Class weight | 5-fold CV | 0,888 ± 0,007 | 0,895 | 0,823 | 0,828 | 0,925 | 0,902 | 0,828 (Bangla) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Oversampling | 5-fold CV | 0,888 ± 0,005 | 0,895 | 0,821 | 0,825 | 0,926 | 0,905 | 0,825 (Bangla) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Tăng cường lớp ít | 5-fold CV | 0,884 ± 0,011 | 0,892 | 0,776 | 0,857 | 0,957 | 0,892 | 0,852 (Sagor) |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | Không xử lý | val | 0,990 | 0,992 | 0,970 | 0,985 | 1,000 | 1,000 | 0,985 (Bangla) |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | Class weight | val | 0,987 | 0,989 | 0,970 | 0,985 | 0,993 | 1,000 | 0,975 (Sagor) |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | Oversampling | val | 0,987 | 0,989 | 0,956 | 0,985 | 1,000 | 0,993 | 0,985 (Bangla) |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | Tăng cường lớp ít | val | 0,994 | 0,995 | 1,000 | 1,000 | 0,993 | 1,000 | 0,987 (Sabri) |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Không xử lý | val | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 (Bangla) |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Class weight | val | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 (Bangla) |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Oversampling | val | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 (Bangla) |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Tăng cường lớp ít | val | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 | 1,000 (Bangla) |
+
+S1 (`results/S1/table.md`, hình `results/figures/S1_segmentation.png`):
+
+| Phương pháp | Số mảnh rời (trung bình) | Số mảnh rời (trung vị) | Tỉ lệ lỗ thủng trong vật | Tỉ lệ diện tích vật | IoU với phương pháp được chọn |
+|---|---|---|---|---|---|
+| Ngưỡng toàn cục (T=127) | 11,6 | 9 | 0,085 | 0,105 | 0,689 |
+| Otsu (ảnh xám) | 2,9 | 2 | 0,052 | 0,149 | 0,799 |
+| Ngưỡng thích nghi | 16,9 | 14 | 0,282 | 0,081 | 0,561 |
+| K-means màu (k=2) | 2,5 | 1 | 0,027 | 0,140 | 0,859 |
+| Otsu trên khoảng cách màu tới nền | 2,5 | 1 | 0,010 | 0,145 | 0,971 |
+| Otsu khoảng cách màu + hậu xử lý (dùng cho S2) | 1,0 | 1 | 0,000 | 0,144 | 1,000 |
+
+S2 — đặc trưng thủ công, 5-fold CV trên train+val (`results/S2/table.md`, hình `results/figures/S2_background_bias.png`, `results/figures/S2_versions.png`):
+
+| Đặc trưng + bộ phân lớp | Phiên bản ảnh | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Hist HSV (8,8,8) + LogReg C=0,1 [màu tốt nhất] | Toàn ảnh | 0,991 ± 0,005 | 0,992 ± 0,005 |
+| HOG 64×128 + LogReg C=0,1 | Toàn ảnh | 0,986 ± 0,007 | 0,989 ± 0,006 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Toàn ảnh | 0,996 ± 0,003 | 0,997 ± 0,003 |
+| Hist HSV (8,8,8) + LogReg C=0,1 [màu tốt nhất] | Chỉ vùng chuối | 0,964 ± 0,010 | 0,967 ± 0,008 |
+| HOG 64×128 + LogReg C=0,1 | Chỉ vùng chuối | 0,884 ± 0,010 | 0,888 ± 0,009 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng chuối | 0,958 ± 0,005 | 0,961 ± 0,005 |
+| Hist HSV (8,8,8) + LogReg C=0,1 [màu tốt nhất] | Chỉ vùng nền | 0,933 ± 0,008 | 0,943 ± 0,008 |
+| HOG 64×128 + LogReg C=0,1 | Chỉ vùng nền | 0,980 ± 0,009 | 0,983 ± 0,008 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng nền | 0,986 ± 0,005 | 0,988 ± 0,005 |
+
+| Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
+|---|---|---|---|
+| HOG của 4 góc ảnh (128×128) + LogReg C=0,1 | 8100 | 0,968 ± 0,008 | 0,973 ± 0,007 |
+| Hist HSV (8,8,8) của 4 góc ảnh + LogReg C=0,1 | 512 | 0,939 ± 0,009 | 0,948 ± 0,008 |
+
+| Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Màu Lab trung bình của nền (3 số) + KNN k=5 | 3 | 0,937 ± 0,011 | 0,948 ± 0,011 |
+| Màu Lab trung bình của nền (3 số) + LogReg | 3 | 0,618 ± 0,027 | 0,693 ± 0,018 |
+| Tỉ lệ diện tích quả chuối trong ảnh (1 số) + KNN k=5 | 1 | 0,619 ± 0,022 | 0,642 ± 0,016 |
+| HOG của mask nhị phân (chỉ hình bóng) + LogReg C=0,1 | 3780 | 0,857 ± 0,017 | 0,861 ± 0,014 |
+
+| Lớp | Nền: L trung bình ± std | Nền: a | Nền: b | Tỉ lệ diện tích quả chuối |
+|---|---|---|---|---|
+| Bangla Kola | 201,1 ± 13,7 | 128,1 ± 1,1 | 128,3 ± 2,1 | 0,136 |
+| Champa Kola | 190,2 ± 11,7 | 127,2 ± 0,4 | 123,6 ± 0,9 | 0,164 |
+| Sabri Kola | 207,4 ± 12,4 | 127,3 ± 1,0 | 119,9 ± 10,4 | 0,054 |
+| Sagor Kola | 196,1 ± 20,1 | 128,2 ± 0,7 | 128,2 ± 2,3 | 0,220 |
+
+S2 — CNN (`results/S2/table_cnn.md`):
+
+| Mô hình (học trên ảnh đầy đủ) | Toàn ảnh | Chỉ vùng chuối | Chỉ vùng nền |
+|---|---|---|---|
+| a_vgg16_lr1e-3 | 0,990 | 0,952 | 0,792 |
+| b_mobilenetv3_lr1e-4 | 1,000 | 0,927 | 0,683 |
+| b_resnet50 | 0,998 | 0,926 | 0,725 |
+
+**Kết quả và kết luận.**
+
+| # | Dự đoán | Kết quả đo | Kết luận |
+|---|---|---|---|
+| I1 | Accuracy có thể cao trong khi lớp ít ảnh bị nhận kém | Đoán toàn lớp đông nhất: accuracy 0,402, macro-F1 0,143, recall 3 lớp còn lại bằng 0. KNN k = 31 trên HOG: accuracy 0,884 nhưng recall Sagor Kola chỉ 0,552. Ở mô hình tốt, accuracy − macro-F1 ≤ 0,003 | Khớp. Lớp bị nhận kém nhất thường là **Sagor Kola** (524 ảnh) chứ không phải lớp ít ảnh nhất (Bangla Kola, 444 ảnh); độ khó của lớp quan trọng hơn số lượng |
+| I2 | Mỗi cách xử lý tác động khác nhau lên precision và recall của lớp ít | Truyền thống tốt nhất: cả bốn cách trong khoảng 0,995–0,996 ± 0,002–0,005. Cạnh Sobel: tăng cường lớp ít nâng recall Bangla 0,822 → 0,857 nhưng hạ precision Bangla 0,849 → 0,776, macro-F1 giảm 0,010. `a_vgg16`: tăng cường lớp ít 0,994 so với 0,990 (khoảng 1 ảnh val). `b_mobilenetv3`: cả bốn cách đều 1,000 trên val | Khớp ở mô hình yếu: các cách xử lý đổi precision lấy recall của lớp ít. Ở các mô hình mạnh không đo được tác động. Với tỉ lệ mất cân bằng 2,2 lần, mất cân bằng không phải vấn đề chính của bộ dữ liệu này |
+| S1 | Ngưỡng toàn cục chỉ tốt khi nền và vật tách biệt về mức xám; Otsu tự chọn ngưỡng; k-means gom theo màu | Ngưỡng toàn cục: 11,6 mảnh rời mỗi ảnh, thủng ở vết thâm. Otsu xám: 2,9 mảnh, vẫn thủng ở quả sẫm. Ngưỡng thích nghi: chỉ bắt được viền và vân, 16,9 mảnh. K-means màu và Otsu trên khoảng cách màu: 2,5 mảnh, ít lỗ thủng nhất | Khớp. Nền trơn sáng nên các cách dựa trên màu tốt hơn các cách dựa trên mức xám |
+| S2 | Nếu "chỉ nền" vẫn cho kết quả cao thì dữ liệu thiên lệch theo bối cảnh chụp | Chỉ nền: Hist HSV 0,933, HOG 0,980, H-S + HOG 0,986. Chỉ 4 góc ảnh: HOG 0,968, hist HSV 0,939. Chỉ 3 con số màu nền + KNN: 0,937. CNN học trên ảnh đầy đủ, đoán trên ảnh đã xóa quả: 0,683–0,792 (mức đoán mò ≈ 0,25) | **Có thiên lệch theo bối cảnh chụp.** Mỗi lớp được chụp trong điều kiện nền, ánh sáng và khoảng cách riêng: nền Sabri Kola xanh hơn (b = 119,9 so với 123,6–128,3), quả Sabri chiếm 5,4% diện tích ảnh so với 22,0% ở Sagor. Đây là hạn chế lớn nhất của đồ án |
+
+Ý nghĩa của S2 đối với các kết quả trước:
+- Con số macro-F1 0,99–1,00 của các mô hình tốt nhất là độ chính xác **trên bộ dữ liệu này**, không phải độ chính xác nhận diện giống chuối nói chung. Khi chỉ nhìn quả chuối (nền tô màu phẳng), cấu hình truyền thống tốt nhất còn 0,958 và CNN còn 0,926–0,952. Các con số này gần với khả năng phân biệt giống bằng chính quả chuối hơn, nhưng vẫn chưa loại hết thiên lệch: kích thước quả trong ảnh còn phụ thuộc khoảng cách chụp, và kích thước một mình đã đạt 0,619.
+- Giải thích lại một số kết quả trước: HOG trên ảnh xám vẫn đạt 0,986 (M6) một phần nhờ kết cấu và độ sáng của nền; histogram H-S bền với độ sáng (M2) nhưng vẫn mang màu nền. **[lập luận]**, dựa trên số liệu S2.
+- Muốn đánh giá đúng khả năng nhận diện giống thì cần ảnh chụp trong cùng điều kiện cho cả 4 giống, hoặc một tập test chụp ở bối cảnh khác. Ghi vào phần hạn chế và hướng phát triển.
+
+**Ảnh hưởng tới bước sau.**
+- Cấu hình cuối không thêm bước xử lý mất cân bằng.
+- Đánh giá cuối báo cáo kèm cảnh báo về thiên lệch nền; phần phân tích lỗi xem các ảnh sai có liên quan tới nền hoặc kích thước quả không.
+- Demo ghi rõ mô hình chỉ đáng tin với ảnh chụp kiểu bộ dữ liệu (một quả, nền trơn).
+
 ---
 
 ## Bảng quyết định
@@ -795,3 +932,7 @@ Giải thích các điểm trái dự đoán:
 | Biến thể CNN chốt theo macro-F1 trên val | Cấu hình mặc định | Bước 4–5, `results/cnn/table_runs.md` | [đo] |
 | Giai đoạn 2 hướng B: lr 1e-4 | 1e-5, 1e-3 | Bước 4–5, `results/N4/table.md`: 1,000 / 0,993 / 0,993; lr 1e-3 dao động xuống 0,917 | [đo] |
 | Demo dùng `b_mobilenetv3` | `a_vgg16` | Bước 4–5, `results/N6/table.md`: 11,7 MB so với 370 MB (giới hạn 50 MB) | [đo] |
+| Không thêm bước xử lý mất cân bằng vào cấu hình cuối | Class weight, oversampling, tăng cường lớp ít | Bước 6–7, `results/I2/table.md`: không cách nào cải thiện vượt độ lệch chuẩn ở mô hình mạnh | [đo] |
+| Mask cho S2: Otsu trên khoảng cách màu tới nền + hậu xử lý | Ngưỡng toàn cục, Otsu xám, ngưỡng thích nghi, k-means | Bước 6–7, `results/S1/table.md` | [đo] |
+| Bản "chỉ nền" dùng mask nới rộng 12 px + inpainting | Tô vùng chuối bằng màu phẳng | Bước 6–7, `results/S2/table_leak.md`, `results/figures/S2_versions.png` | [đo] |
+| Ghi thiên lệch bối cảnh chụp là hạn chế chính | — | Bước 6–7, `results/S2/table_corners.md`, `results/S2/table_cnn.md` | [đo] |

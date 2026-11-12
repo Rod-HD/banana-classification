@@ -75,10 +75,10 @@ if want 6; then   # Bước 6: mất cân bằng (I1–I2). Run gốc của I2 l
     train b_mobilenetv3_lr1e-4_$m  --model b_mobilenetv3 --stage 2 --lr 1e-4 --augment $flag --tag lr1e-4_$m
   done
   run src.exp_imbalance
-  python -m src.exp_cnn --only N4BN N6 N8 2>&1 | tee logs/src_exp_cnn_N6.log   # đo lại thời gian khi máy không chạy tác vụ khác
+  python -m src.exp_cnn --only RUNS N4BN N6 N8 2>&1 | tee logs/src_exp_cnn_N6.log   # đo lại thời gian khi máy không chạy tác vụ khác
 fi
-if want 7; then   # Bước 7: phân đoạn tách nền (S1–S2)
-  run src.exp_segment
+if want 7; then   # Bước 7: phân đoạn tách nền (S1–S2); S2CNN cần các mô hình CNN của bước 5
+  run src.exp_segment --only S1 S2 S2CNN
 fi
 if want 8; then   # Bước 8: đánh giá cuối trên test, tổng hợp
   run src.final_eval

@@ -8,6 +8,6 @@
 | Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng chuối | 0.964 ± 0.010 | 0.967 ± 0.008 |
 | HOG 64×128 + LogReg C=0.1 | Chỉ vùng chuối | 0.884 ± 0.010 | 0.888 ± 0.009 |
 | Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng chuối | 0.958 ± 0.005 | 0.961 ± 0.005 |
-| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng nền | 0.957 ± 0.009 | 0.963 ± 0.009 |
-| HOG 64×128 + LogReg C=0.1 | Chỉ vùng nền | 0.983 ± 0.006 | 0.985 ± 0.005 |
-| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng nền | 0.989 ± 0.009 | 0.990 ± 0.007 |
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng nền | 0.933 ± 0.008 | 0.943 ± 0.008 |
+| HOG 64×128 + LogReg C=0.1 | Chỉ vùng nền | 0.980 ± 0.009 | 0.983 ± 0.008 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng nền | 0.986 ± 0.005 | 0.988 ± 0.005 |
