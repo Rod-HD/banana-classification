@@ -164,8 +164,12 @@ def fit_loop(model, Xtr, ytr, Xva, yva, run, lr, epochs, patience, batch=32, res
              train_eval=None):
     ckpt = CKPT_DIR / run; ckpt.mkdir(parents=True, exist_ok=True)
     state = {"epoch": 0, "best_f1": -1.0, "best_epoch": 0, "wait": 0, "history": [], "train_time_s": 0.0, "done": False}
-    if resume and (ckpt / "state.json").exists() and (ckpt / "last.keras").exists():
-        state = json.loads((ckpt / "state.json").read_text())
+    saved = json.loads((ckpt / "state.json").read_text()) if resume and (ckpt / "state.json").exists() else None
+    if saved and saved.get("done") and (ckpt / "best.weights.h5").exists():
+        state = saved          # run đã xong: không huấn luyện lại, chỉ nạp trọng số tốt nhất
+        print(f"run đã hoàn tất ({state['epoch']} epoch, best {state['best_f1']:.4f}); dùng lại trọng số đã lưu", flush=True)
+    elif saved and (ckpt / "last.keras").exists():
+        state = saved
         model = keras.models.load_model(ckpt / "last.keras")
         print(f"tiếp tục từ epoch {state['epoch']} (best {state['best_f1']:.4f})", flush=True)
     else:
@@ -179,6 +183,8 @@ def fit_loop(model, Xtr, ytr, Xva, yva, run, lr, epochs, patience, batch=32, res
     (ckpt / "state.json").write_text(json.dumps(state))
     model.load_weights(ckpt / "best.weights.h5")
     model.save(ckpt / "best.keras")
+    if (ckpt / "last.keras").exists():      # checkpoint để --resume chỉ cần khi run còn dang dở
+        (ckpt / "last.keras").unlink()
     return model, state
 
 

@@ -1,0 +1,74 @@
+{
+  "accuracy": 0.9928057553956835,
+  "macro_f1": 0.9911515664337867,
+  "macro_precision": 0.9914175069559492,
+  "macro_recall": 0.9908886277847679,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.985,
+      "recall": 0.985,
+      "f1": 0.985,
+      "support": 200
+    },
+    "Champa Kola": {
+      "precision": 0.9977678571428571,
+      "recall": 1.0,
+      "f1": 0.9988826815642458,
+      "support": 447
+    },
+    "Sabri Kola": {
+      "precision": 0.9956140350877193,
+      "recall": 0.9912663755458515,
+      "f1": 0.9934354485776805,
+      "support": 229
+    },
+    "Sagor Kola": {
+      "precision": 0.9872881355932204,
+      "recall": 0.9872881355932204,
+      "f1": 0.9872881355932204,
+      "support": 236
+    }
+  },
+  "confusion_matrix": [
+    [
+      197,
+      0,
+      1,
+      2
+    ],
+    [
+      0,
+      447,
+      0,
+      0
+    ],
+    [
+      1,
+      0,
+      227,
+      1
+    ],
+    [
+      2,
+      1,
+      0,
+      233
+    ]
+  ],
+  "arm": "T-tl",
+  "config": "Hist HSV (8,8,8) + LogReg C=0.1",
+  "group": "Truyền thống (màu)",
+  "n_train": 5189,
+  "n_test": 1112,
+  "val": {
+    "macro_f1": 0.980350959367683,
+    "accuracy": 0.9838129496402878
+  },
+  "macro_f1_ci95": [
+    0.9844517706632258,
+    0.9966825539235972
+  ],
+  "n_errors": 8,
+  "stress": {},
+  "robust_score": null
+}

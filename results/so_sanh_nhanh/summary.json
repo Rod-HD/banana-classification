@@ -1,0 +1,18 @@
+{
+  "representatives": [
+    {
+      "arm": "G — pipeline gốc",
+      "config": "b_mobilenetv3",
+      "test_macro_f1": 1.0,
+      "n_errors": 0,
+      "robust": 0.8752501396552894
+    },
+    {
+      "arm": "T — Augmented của tác giả (không rò rỉ)",
+      "config": "b_mobilenetv3",
+      "test_macro_f1": 0.997565892470351,
+      "n_errors": 1,
+      "robust": 0.9091245933672978
+    }
+  ]
+}

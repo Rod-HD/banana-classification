@@ -1,0 +1,92 @@
+% Theme Beamer theo nhận diện của Trường Đại học Công nghệ Thông tin (UIT), ĐHQG-HCM.
+% Màu lấy từ logo chính thức của trường (slides/figures/uit-logo.png): xanh dương và cam.
+\ProvidesPackage{beamerthemeUIT}[2026/11/12 UIT style]
+\RequirePackage{graphicx}
+\RequirePackage{tikz}
+
+\definecolor{uitblue}{HTML}{1E489F}
+\definecolor{uitlightblue}{HTML}{1769B4}
+\definecolor{uitorange}{HTML}{F68921}
+\definecolor{uitgray}{HTML}{4A4A4A}
+\definecolor{uitbg}{HTML}{F4F7FB}
+
+\mode<presentation>
+\useinnertheme{rectangles}
+\setbeamertemplate{navigation symbols}{}
+\setbeamersize{text margin left=7mm,text margin right=7mm}
+
+\setbeamercolor{normal text}{fg=black,bg=white}
+\setbeamercolor{structure}{fg=uitblue}
+\setbeamercolor{frametitle}{fg=white,bg=uitblue}
+\setbeamercolor{title}{fg=uitblue}
+\setbeamercolor{subtitle}{fg=uitgray}
+\setbeamercolor{author}{fg=uitgray}
+\setbeamercolor{institute}{fg=uitgray}
+\setbeamercolor{date}{fg=uitgray}
+\setbeamercolor{itemize item}{fg=uitorange}
+\setbeamercolor{itemize subitem}{fg=uitlightblue}
+\setbeamercolor{enumerate item}{fg=uitblue}
+\setbeamercolor{block title}{fg=white,bg=uitblue}
+\setbeamercolor{block body}{fg=black,bg=uitbg}
+\setbeamercolor{alerted text}{fg=uitorange}
+\setbeamercolor{footline}{fg=white,bg=uitblue}
+\setbeamercolor{section in head/foot}{fg=white,bg=uitlightblue}
+
+\setbeamerfont{title}{size=\LARGE,series=\bfseries}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamerfont{footline}{size=\tiny}
+
+% Thanh tiêu đề: nền xanh, vạch cam bên dưới
+\setbeamertemplate{frametitle}{%
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=4.2ex,dp=1.6ex,leftskip=7mm,rightskip=7mm]{frametitle}%
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{beamercolorbox}%
+  \nointerlineskip
+  {\color{uitorange}\hrule height 1.2pt width \paperwidth}%
+  \vspace{1mm}%
+}
+
+% Chân trang: tên trường | tiêu đề ngắn | số trang
+\setbeamertemplate{footline}{%
+  \leavevmode%
+  \hbox{%
+    \begin{beamercolorbox}[wd=.40\paperwidth,ht=2.4ex,dp=1ex,leftskip=4mm]{footline}%
+      \usebeamerfont{footline}Trường ĐH Công nghệ Thông tin -- ĐHQG-HCM
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.46\paperwidth,ht=2.4ex,dp=1ex,center]{section in head/foot}%
+      \usebeamerfont{footline}\insertshorttitle
+    \end{beamercolorbox}%
+    \begin{beamercolorbox}[wd=.14\paperwidth,ht=2.4ex,dp=1ex,rightskip=4mm]{footline}%
+      \usebeamerfont{footline}\hfill\insertframenumber{} / \inserttotalframenumber
+    \end{beamercolorbox}}%
+  \vskip0pt%
+}
+
+% Trang bìa: logo trường, tiêu đề, thông tin môn học
+\setbeamertemplate{title page}{%
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[uitblue] (current page.south west) rectangle ([yshift=9mm]current page.south east);
+    \fill[uitorange] ([yshift=9mm]current page.south west) rectangle ([yshift=10.2mm]current page.south east);
+  \end{tikzpicture}%
+  \vspace{2mm}
+  \begin{center}
+    \IfFileExists{figures/uit-logo.png}{\includegraphics[width=.86\textwidth]{figures/uit-logo.png}}{%
+      {\color{uitblue}\bfseries ĐẠI HỌC QUỐC GIA THÀNH PHỐ HỒ CHÍ MINH\\ TRƯỜNG ĐẠI HỌC CÔNG NGHỆ THÔNG TIN}}\par
+    \vspace{7mm}
+    {\usebeamerfont{title}\usebeamercolor[fg]{title}\inserttitle\par}
+    \vspace{3mm}
+    {\usebeamerfont{subtitle}\usebeamercolor[fg]{subtitle}\insertsubtitle\par}
+    \vspace{6mm}
+    {\small\usebeamercolor[fg]{author}\insertauthor\par}
+    \vspace{1.5mm}
+    {\small\usebeamercolor[fg]{institute}\insertinstitute\par}
+    \vspace{1.5mm}
+    {\footnotesize\usebeamercolor[fg]{date}\insertdate\par}
+  \end{center}
+}
+
+\setbeamertemplate{itemize item}{\rule[0.25ex]{0.9ex}{0.9ex}}
+\setbeamertemplate{itemize subitem}{\rule[0.3ex]{0.7ex}{0.7ex}}
+\setbeamertemplate{caption}[numbered]
+\mode<all>

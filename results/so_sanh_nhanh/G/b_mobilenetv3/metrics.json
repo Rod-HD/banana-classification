@@ -1,0 +1,99 @@
+{
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "macro_precision": 1.0,
+  "macro_recall": 1.0,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 67
+    },
+    "Champa Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 149
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 77
+    },
+    "Sagor Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 78
+    }
+  },
+  "confusion_matrix": [
+    [
+      67,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      149,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      77,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      78
+    ]
+  ],
+  "arm": "G",
+  "config": "b_mobilenetv3",
+  "group": "CNN hướng B",
+  "n_train": 1729,
+  "n_test": 371,
+  "val": {
+    "macro_f1": 1.0,
+    "accuracy": 1.0
+  },
+  "macro_f1_ci95": [
+    1.0,
+    1.0
+  ],
+  "n_errors": 0,
+  "stress": {
+    "swapbg": {
+      "macro_f1": 0.7939321270839348,
+      "accuracy": 0.7735849056603774
+    },
+    "v0.6": {
+      "macro_f1": 0.9193941097088517,
+      "accuracy": 0.9299191374663073
+    },
+    "v1.4": {
+      "macro_f1": 0.890399726645293,
+      "accuracy": 0.8867924528301887
+    },
+    "noise10": {
+      "macro_f1": 0.9890040864667144,
+      "accuracy": 0.9892183288409704
+    },
+    "rot30": {
+      "macro_f1": 1.0,
+      "accuracy": 1.0
+    },
+    "occlude25": {
+      "macro_f1": 0.6587707880269431,
+      "accuracy": 0.6684636118598383
+    }
+  },
+  "robust_score": 0.8752501396552894
+}

@@ -6,6 +6,9 @@
 #   bash scripts/run_all.sh 2 3        # chỉ chạy bước 2 và 3
 # Các bước: 1 dữ liệu + D1 | 2 màu, bộ phân lớp | 3 cạnh, HOG, chốt cấu hình | 4 CNN hướng A | 5 CNN hướng B + N1–N8
 #           6 mất cân bằng | 7 phân đoạn | 8 đánh giá cuối trên test | 9 demo, báo cáo, slide
+# Phần mở rộng (mục 12 của kế hoạch), cần kết quả của bước 1–8:
+#           10 bộ kiểm tra khó + nhánh G | 11 nhánh T (bản Augmented của tác giả) | 12 nhánh B (phương pháp của bài báo)
+#           13 nhánh X (xử lý dữ liệu) | 14 so sánh bốn nhánh, tổng hợp, rồi dựng lại báo cáo và slide
 #   FRESH=1 bash scripts/run_all.sh    # xóa data/cache/ trước (rút lại toàn bộ đặc trưng)
 #
 # Yêu cầu: đã cài thư viện (bash scripts/setup_env.sh) và có ảnh trong data/raw/
@@ -87,7 +90,27 @@ if want 8; then   # Bước 8: đánh giá cuối trên test, tổng hợp
   run src.error_analysis
   run src.summarize
 fi
-if want 9; then   # Bước 9: mô hình cho demo, ví dụ tính tay, báo cáo (md + docx), slide
+if want 10; then  # Bước 10: bộ kiểm tra khó; nhánh G (pipeline gốc) chấm trên test và bộ kiểm tra khó
+  run src.stress
+  run src.pipeline
+fi
+if want 11; then  # Bước 11: nhánh T: 9 cấu hình với bản Augmented của tác giả (tự tải nếu chưa có)
+  [ -d data/aug_author/bangla_kola ] || bash scripts/download_data.sh augmented
+  run src.exp_arm_t
+fi
+if want 12; then  # Bước 12: nhánh B: phương pháp của bài báo (CNN hoặc ViT làm bộ rút đặc trưng + SVM/MLP/GBM); cần PyTorch
+  [ -d data/aug_author/bangla_kola ] || bash scripts/download_data.sh augmented
+  run src.exp_papers
+fi
+if want 13; then  # Bước 13: nhánh X: làm sạch, tiền xử lý, tăng cường, chạy lại 9 cấu hình; kiểm tra lại S2 bằng mask mới
+  run src.exp_arm_x
+  run src.exp_segment --only S2V2
+fi
+if want 14; then  # Bước 14: so sánh bốn nhánh, tổng hợp
+  run src.compare_arms
+  run src.summarize
+fi
+if want 9 || want 14; then   # Bước 9 (chạy lại sau bước 14): mô hình cho demo, ví dụ tính tay, báo cáo (md + docx), slide
   run src.export_demo
   run src.hand_calc
   run src.build_report

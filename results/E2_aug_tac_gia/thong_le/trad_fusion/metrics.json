@@ -1,0 +1,74 @@
+{
+  "accuracy": 0.9784172661870504,
+  "macro_f1": 0.9756791455338509,
+  "macro_precision": 0.9769226351799414,
+  "macro_recall": 0.9746048811499521,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.979381443298969,
+      "recall": 0.95,
+      "f1": 0.9644670050761421,
+      "support": 200
+    },
+    "Champa Kola": {
+      "precision": 0.9866369710467706,
+      "recall": 0.9910514541387024,
+      "f1": 0.9888392857142857,
+      "support": 447
+    },
+    "Sabri Kola": {
+      "precision": 0.9956140350877193,
+      "recall": 0.9912663755458515,
+      "f1": 0.9934354485776805,
+      "support": 229
+    },
+    "Sagor Kola": {
+      "precision": 0.946058091286307,
+      "recall": 0.9661016949152542,
+      "f1": 0.9559748427672956,
+      "support": 236
+    }
+  },
+  "confusion_matrix": [
+    [
+      190,
+      1,
+      1,
+      8
+    ],
+    [
+      0,
+      443,
+      0,
+      4
+    ],
+    [
+      0,
+      1,
+      227,
+      1
+    ],
+    [
+      4,
+      4,
+      0,
+      228
+    ]
+  ],
+  "arm": "T-tl",
+  "config": "Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
+  "group": "Truyền thống (ghép)",
+  "n_train": 5189,
+  "n_test": 1112,
+  "val": {
+    "macro_f1": 0.9777635656952672,
+    "accuracy": 0.9802158273381295
+  },
+  "macro_f1_ci95": [
+    0.96550004397849,
+    0.9847666686274671
+  ],
+  "n_errors": 24,
+  "stress": {},
+  "robust_score": null
+}

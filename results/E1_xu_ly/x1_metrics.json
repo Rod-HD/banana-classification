@@ -1,0 +1,118 @@
+{
+  "cleaning": [
+    {
+      "Kiểm tra": "File không đọc được",
+      "Kết quả": 0
+    },
+    {
+      "Kiểm tra": "Ảnh không phải 256×256 (được resize khi đọc)",
+      "Kết quả": 2
+    },
+    {
+      "Kiểm tra": "File trùng tuyệt đối (md5)",
+      "Kết quả": 0
+    },
+    {
+      "Kiểm tra": "Ảnh train gần trùng (pHash, Hamming ≤ 2) với ảnh val hoặc test → loại khỏi train",
+      "Kết quả": 15
+    },
+    {
+      "Kiểm tra": "Bản lặp gần trùng trong nội bộ train → giữ 1 ảnh mỗi nhóm, loại",
+      "Kết quả": 20
+    },
+    {
+      "Kiểm tra": "Số ảnh train sau khi làm sạch",
+      "Kết quả": "1694 / 1729"
+    },
+    {
+      "Kiểm tra": "Độ nét (phương sai Laplacian): phân vị 5% / trung vị / phân vị 95%",
+      "Kết quả": "56 / 153 / 280"
+    },
+    {
+      "Kiểm tra": "Ảnh có độ nét dưới 1/4 trung vị (nghi mờ; giữ lại, chỉ liệt kê)",
+      "Kết quả": 18
+    },
+    {
+      "Kiểm tra": "Mask của bước S1 lớn hơn mask mới từ 1,5 lần (mask cũ tràn ra nền)",
+      "Kết quả": "129 / 2471 (5.2%)"
+    }
+  ],
+  "adjacent": [
+    {
+      "Chỉ số": "Ảnh có láng giềng gần nhất cùng lớp (embedding MobileNetV3) mang số thứ tự cách ≤ 3",
+      "Đo được": "20.0%",
+      "Nếu ngẫu nhiên": "1.0%"
+    },
+    {
+      "Chỉ số": "… cách đúng 1",
+      "Đo được": "10.1%",
+      "Nếu ngẫu nhiên": "0.3%"
+    }
+  ],
+  "blocked_cv": [
+    {
+      "Mô hình": "Hist HSV (8,8,8) + LogReg C=0.1",
+      "5-fold ngẫu nhiên phân tầng": "0.991 ± 0.005",
+      "5-fold theo khối ảnh liên tiếp": "0.922 ± 0.042",
+      "Chênh": "+0.069"
+    },
+    {
+      "Mô hình": "HOG 64×128 + LogReg C=0.1",
+      "5-fold ngẫu nhiên phân tầng": "0.986 ± 0.007",
+      "5-fold theo khối ảnh liên tiếp": "0.933 ± 0.062",
+      "Chênh": "+0.053"
+    },
+    {
+      "Mô hình": "Hist H-S + HOG + LogReg C=100",
+      "5-fold ngẫu nhiên phân tầng": "0.996 ± 0.003",
+      "5-fold theo khối ảnh liên tiếp": "0.973 ± 0.017",
+      "Chênh": "+0.024"
+    },
+    {
+      "Mô hình": "Embedding MobileNetV3 (ImageNet) + LogReg",
+      "5-fold ngẫu nhiên phân tầng": "0.995 ± 0.005",
+      "5-fold theo khối ảnh liên tiếp": "0.964 ± 0.025",
+      "Chênh": "+0.031"
+    }
+  ],
+  "n_suspect_labels": 0,
+  "dropped_cross": [
+    118,
+    202,
+    342,
+    364,
+    365,
+    1404,
+    1456,
+    1526,
+    1547,
+    1555,
+    1571,
+    1628,
+    1753,
+    1772,
+    1868
+  ],
+  "dropped_within": [
+    60,
+    168,
+    210,
+    419,
+    432,
+    1462,
+    1488,
+    1512,
+    1516,
+    1561,
+    1593,
+    1611,
+    1634,
+    1639,
+    1646,
+    1726,
+    1731,
+    1797,
+    1827,
+    1926
+  ]
+}

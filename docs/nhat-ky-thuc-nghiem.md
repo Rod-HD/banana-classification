@@ -1028,6 +1028,135 @@ Phân tích lỗi (`results/final/table_error_pairs.md`, `results/final/table_er
 
 **Ảnh hưởng tới bước sau.** Khi thêm thí nghiệm mới, sửa `report/report_template.md` và `src/make_slides.py` rồi chạy lại bước 9 của `scripts/run_all.sh`.
 
+## Bước 10 — Chuẩn bị phần mở rộng: ba nhánh độc lập, bộ kiểm tra khó, nhánh G (12/11/2026)
+
+**Mục tiêu.** Thêm ba nhánh so sánh độc lập với pipeline gốc (mục 12 của kế hoạch): X — xử lý dữ liệu do nhóm thiết kế; T — bản Augmented của tác giả bộ dữ liệu; B — phương pháp của bài báo đã công bố trên bộ dữ liệu này. Bước này dựng phần dùng chung để bốn nhánh (kể cả nhánh gốc G) so được với nhau.
+
+**Đã làm.**
+- Sửa kế hoạch trước khi viết code: thêm mục 12 (ba nhánh, quy tắc chung, bộ kiểm tra khó) và sửa mục 8 (slide chính là Beamer LaTeX style UIT).
+- `src/stress.py`: bộ kiểm tra khó gồm 6 phiên bản biến đổi của tập chấm: nền hoán đổi, V×0,6, V×1,4, nhiễu Gauss σ = 10, xoay +30°, che 25%. Hình minh họa: `results/figures/E_stress_examples.png` (`python -m src.stress`).
+- `src/pipeline.py`: chạy 9 cấu hình đã chốt của bước 8 trên một bộ dữ liệu bất kỳ (ảnh train/val/test dạng mảng), cùng siêu tham số; ghi `results/<nhánh>/<mô hình>/` và `table.md`. `python -m src.pipeline` chấm lại nhánh G trên test và bộ kiểm tra khó (dùng lại các CNN đã huấn luyện ở bước 4–5).
+- `src/segmentation.py`: thêm mask theo **mô hình nền bậc hai** (`banana_mask_v2`): khớp một mặt bậc hai theo (x, y) cho từng kênh Lab của nền, bắt đầu từ vành ngoài ảnh, rồi tách ngưỡng Otsu trên khoảng cách màu tới mặt đó.
+- `scripts/download_data.sh augmented`: tải bản Augmented của tác giả (kiểm tra SHA-256), không commit vào repo (`data/aug_author/` nằm trong `.gitignore`).
+
+**Lý do chọn cách này.**
+- Cần bộ kiểm tra khó vì trên ảnh gốc, hai cấu hình của nhánh G đã đúng 371/371 ảnh test; điểm trên ảnh gốc không còn chỗ để một nhánh khác thể hiện tốt hơn hay kém hơn. **[đo]** `results/final/table.md`.
+- Phép thử "nền hoán đổi" (ghép quả chuối lên nền lấy từ ảnh của một lớp khác) đo trực tiếp điều S2 đã phát hiện: mô hình dựa vào nền tới mức nào. **[đo]** bảng dưới: mọi cấu hình của nhánh G đều tụt, cấu hình truyền thống tốt nhất từ 1,000 xuống 0,410.
+- Mỗi nhánh chỉ đổi một thứ so với G và chấm trên cùng 371 ảnh test gốc, để chênh lệch đo được quy về đúng thứ đã đổi. **[lập luận]**
+- Phải thay mask của bước S1. **[đo]** Mask "Otsu trên khoảng cách màu tới một màu nền" tràn ra nền ở những ảnh có vệt sáng của đèn quanh quả: ở 129/2.471 ảnh (5,2%), diện tích mask cũ lớn hơn mask mới từ 1,5 lần (`results/E1_xu_ly/table_cleaning.md`, đo ở bước 13). Hai chỉ số không cần nhãn của S1 (số mảnh rời, tỉ lệ lỗ thủng) không phát hiện được lỗi này, vì vùng tràn là một mảnh liền, không thủng.
+
+**Phương án khác và vì sao không chọn.**
+- So sánh các nhánh chỉ bằng điểm trên ảnh test gốc: không chọn, lý do ở trên. **[đo]**
+- Tạo tập test mới ngoài bối cảnh chụp của bộ dữ liệu: không làm được, đồ án không có ảnh như vậy; bộ kiểm tra khó là phép thay thế bằng biến đổi tổng hợp và không thay được ảnh thật. **[lập luận]**
+- Gộp ba yêu cầu thành một pipeline chồng lên nhau (ví dụ dùng bản Augmented của tác giả rồi mới xử lý): không chọn; khi đó không tách được đóng góp của từng thay đổi. **[lập luận]**
+
+**Bằng chứng.** Nhánh G trên test gốc và bộ kiểm tra khó (`results/so_sanh_nhanh/G/table.md`; điểm bền = trung bình 6 cột phép thử):
+
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0,1 | 0,997 | 0,994 | [0,984; 1,000] | 0,995 | 2 | 0,726 | 0,304 | 0,673 | 0,086 | 0,983 | 0,150 | 0,487 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,957 | 0,964 | [0,944; 0,982] | 0,968 | 12 | 0,759 | 0,691 | 0,901 | 0,085 | 0,730 | 0,755 | 0,654 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0,1 | 0,983 | 0,990 | [0,977; 1,000] | 0,992 | 3 | 0,145 | 0,987 | 0,776 | 0,484 | 0,505 | 0,805 | 0,617 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,998 | 1,000 | [1,000; 1,000] | 1,000 | 0 | 0,410 | 0,997 | 0,856 | 0,172 | 0,972 | 0,959 | 0,728 |
+| CNN hướng A | a_lenet | 0,973 | 0,978 | [0,960; 0,993] | 0,981 | 7 | 0,744 | 0,979 | 0,977 | 0,978 | 0,874 | 0,469 | 0,837 |
+| CNN hướng A | a_dropout | 0,948 | 0,942 | [0,917; 0,965] | 0,943 | 21 | 0,855 | 0,864 | 0,932 | 0,940 | 0,925 | 0,100 | 0,769 |
+| CNN hướng A | a_vgg16 | 0,990 | 0,986 | [0,971; 0,997] | 0,989 | 4 | 0,657 | 0,979 | 0,963 | 0,984 | 0,887 | 0,843 | 0,886 |
+| CNN hướng B | b_mobilenetv3 | 1,000 | 1,000 | [1,000; 1,000] | 1,000 | 0 | 0,794 | 0,919 | 0,890 | 0,989 | 1,000 | 0,659 | 0,875 |
+| CNN hướng B | b_resnet50 | 0,998 | 0,997 | [0,988; 1,000] | 0,997 | 1 | 0,792 | 0,916 | 0,966 | 0,990 | 0,993 | 0,714 | 0,895 |
+
+**Kết quả và kết luận.**
+- Điểm bền của nhánh G nằm trong khoảng 0,49–0,90, trong khi macro-F1 trên ảnh gốc là 0,94–1,00. Thứ hạng cũng đổi: `b_resnet50` (0,895) và `a_vgg16` (0,886) bền hơn `b_mobilenetv3` (0,875), dù `b_mobilenetv3` đúng 371/371 ảnh gốc.
+- Nền hoán đổi làm mọi cấu hình tụt: HOG còn 0,145, Hist H-S + HOG còn 0,410, các CNN còn 0,66–0,86. HOG tụt sâu nhất vì nó mô tả cả kết cấu và độ sáng không đều của nền. Đây là xác nhận thứ hai, bằng một phép đo khác, cho kết luận của S2.
+- Nhóm truyền thống gần như mất hết với nhiễu σ = 10 (0,09–0,48), còn CNN giữ 0,94–0,99; khớp N8.
+
+**Ảnh hưởng tới bước sau.** Ba nhánh X, T, B dùng chung `src/pipeline.py`, bộ kiểm tra khó và mask mới. Kết quả từng nhánh nằm ở `results/E1_xu_ly/`, `results/E2_aug_tac_gia/`, `results/E3_bai_bao/`; bảng so sánh ở `results/so_sanh_nhanh/`.
+
+## Bước 11 — Nhánh T: chạy pipeline với bản Augmented của tác giả bộ dữ liệu (12/11/2026)
+
+**Mục tiêu.** Chạy 9 cấu hình của pipeline gốc với bản "Augmented Banana Classification Dataset" (7.413 ảnh) do tác giả bộ dữ liệu công bố, và so với nhánh G.
+
+**Đã làm.**
+- Tải bản Augmented từ Mendeley Data (SHA-256 `e56e2f87…240ea2`). Đây là bản xuất từ Roboflow: 7.413 file, tên dạng `<tên ảnh gốc>_jpg.rf.<mã>.jpg`. Ánh xạ được 7.413/7.413 file về ảnh gốc; mỗi ảnh gốc có đúng 3 file: 1 bản gần như nguyên gốc và 2 bản tăng cường (lật, xoay bội số 90°, xoay nhỏ có góc đen, đổi sáng, làm mờ, nhiễu muối tiêu).
+- `python -m src.exp_arm_t`:
+  - **T-kr (không rò rỉ):** train = 3 file của mỗi ảnh gốc thuộc tập train của G (5.187 ảnh); val và test = ảnh gốc của G. Chạy đủ 9 cấu hình, chấm trên test gốc và bộ kiểm tra khó.
+  - **T-tl (theo thông lệ):** gộp 7.413 file, chia ngẫu nhiên phân tầng 70/15/15 (seed 42) không quan tâm ảnh gốc: 5.189 / 1.112 / 1.112. Chạy 7 cấu hình.
+
+**Lý do chọn cách này.**
+- Chạy cả hai cách dùng. T-kr trả lời "bản tăng cường của tác giả có giúp mô hình không" trên cùng tập test với G. T-tl là cách dùng trực tiếp nhất (lấy bộ 7.413 ảnh rồi chia), cũng là cách bài báo của Ergün dùng (bước 12), nên cần biết nó cho ra con số gì. **[lập luận]**
+- T-tl bỏ `a_dropout` và `b_resnet50` (hai mô hình huấn luyện lâu nhất trên 5.189 ảnh). T-tl chỉ để đo mức rò rỉ, không dùng cho bảng so sánh bốn nhánh. **[lập luận]** (giới hạn thời gian trên CPU; lệnh chạy đủ có trong `python -m src.exp_arm_t --help`).
+
+**Phương án khác và vì sao không chọn.**
+- Chấm T-tl trên tập test gốc của G để so trực tiếp: không làm được một cách có nghĩa, vì tập train của T-tl chứa bản tăng cường (và một phần bản gốc) của chính các ảnh test đó. **[đo]** bảng mức trùng nguồn bên dưới.
+- Commit bản Augmented vào repo: không; 67 MB, tải lại được bằng một lệnh có kiểm tra mã băm. **[lập luận]**
+
+**Bằng chứng.**
+
+T-kr — 9 cấu hình, chấm trên test gốc (`results/E2_aug_tac_gia/khong_ro_ri/table.md`):
+
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0,1 | 0,993 | 0,997 | [0,989; 1,000] | 0,997 | 1 | 0,637 | 0,350 | 0,628 | 0,086 | 0,994 | 0,637 | 0,555 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,933 | 0,948 | [0,924; 0,969] | 0,951 | 18 | 0,825 | 0,659 | 0,890 | 0,340 | 0,736 | 0,682 | 0,689 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0,1 | 0,950 | 0,972 | [0,952; 0,990] | 0,978 | 8 | 0,254 | 0,950 | 0,731 | 0,492 | 0,688 | 0,606 | 0,620 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,993 | 0,989 | [0,976; 0,998] | 0,989 | 4 | 0,255 | 0,989 | 0,971 | 0,313 | 0,982 | 0,963 | 0,745 |
+| CNN hướng A | a_lenet | 0,959 | 0,966 | [0,944; 0,986] | 0,973 | 10 | 0,616 | 0,693 | 0,962 | 0,964 | 0,944 | 0,501 | 0,780 |
+| CNN hướng A | a_dropout | 0,982 | 0,963 | [0,941; 0,982] | 0,965 | 13 | 0,910 | 0,750 | 0,721 | 0,963 | 0,949 | 0,483 | 0,796 |
+| CNN hướng A | a_vgg16 | 0,994 | 0,985 | [0,970; 0,997] | 0,987 | 5 | 0,807 | 0,979 | 0,959 | 0,982 | 0,942 | 0,762 | 0,905 |
+| CNN hướng B | b_mobilenetv3 | 1,000 | 0,998 | [0,991; 1,000] | 0,997 | 1 | 0,867 | 0,954 | 0,904 | 0,993 | 1,000 | 0,736 | 0,909 |
+| CNN hướng B | b_resnet50 | 1,000 | 0,997 | [0,989; 1,000] | 0,997 | 1 | 0,817 | 0,925 | 0,971 | 0,991 | 0,997 | 0,844 | 0,924 |
+
+So với nhánh G trên cùng tập test (`results/so_sanh_nhanh/table_models.md`, cột G và T):
+
+| Cấu hình | G: macro-F1 test | G: điểm bền | T-kr: macro-F1 test | T-kr: điểm bền |
+|---|---|---|---|---|
+| Hist HSV + LogReg | 0,994 | 0,487 | 0,997 | 0,555 |
+| Cạnh Roberts + KNN | 0,964 | 0,654 | 0,948 | 0,689 |
+| HOG + LogReg | 0,990 | 0,617 | 0,972 | 0,620 |
+| Hist H-S + HOG + LogReg | 1,000 | 0,728 | 0,989 | 0,745 |
+| a_lenet | 0,978 | 0,837 | 0,966 | 0,780 |
+| a_dropout | 0,942 | 0,769 | 0,963 | 0,796 |
+| a_vgg16 | 0,986 | 0,886 | 0,985 | 0,905 |
+| b_mobilenetv3 | 1,000 | 0,875 | 0,998 | 0,909 |
+| b_resnet50 | 0,997 | 0,895 | 0,997 | 0,924 |
+| Trung bình 9 cấu hình | 0,983 | 0,750 | 0,979 | 0,769 |
+
+T-tl — chia ngẫu nhiên theo thông lệ, chấm trên tập test của chính cách chia này (`results/E2_aug_tac_gia/thong_le/table.md`):
+
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 1112 |
+|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0,1 | 0,980 | 0,991 | [0,984; 0,997] | 0,993 | 8 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,590 | 0,620 | [0,589; 0,650] | 0,640 | 400 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0,1 | 0,817 | 0,847 | [0,825; 0,868] | 0,854 | 162 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,978 | 0,976 | [0,966; 0,985] | 0,978 | 24 |
+| CNN hướng A | a_lenet | 0,964 | 0,952 | [0,937; 0,965] | 0,960 | 44 |
+| CNN hướng A | a_vgg16 | 0,971 | 0,967 | [0,956; 0,978] | 0,970 | 33 |
+| CNN hướng B | b_mobilenetv3 | 0,999 | 0,995 | [0,990; 0,999] | 0,996 | 5 |
+
+| Chỉ số | Giá trị |
+|---|---|
+| Số ảnh test | 1112 |
+| Ảnh test có ít nhất 1 file cùng ảnh gốc trong train | 1008 (90,6%) |
+| … có đúng 2 file cùng ảnh gốc trong train | 546 (49,1%) |
+| Ảnh test không có file cùng ảnh gốc trong train | 104 |
+
+| Mô hình | Accuracy (ảnh test có anh em trong train) | Số ảnh | Accuracy (ảnh test không có) | Số ảnh  |
+|---|---|---|---|---|
+| Hist HSV (8,8,8) + LogReg C=0,1 | 0,993 | 1008 | 0,990 | 104 |
+| Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,640 | 1008 | 0,644 | 104 |
+| HOG 64×128 + LogReg C=0,1 | 0,859 | 1008 | 0,808 | 104 |
+| Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,976 | 1008 | 1,000 | 104 |
+| a_lenet | 0,959 | 1008 | 0,971 | 104 |
+| a_vgg16 | 0,970 | 1008 | 0,971 | 104 |
+| b_mobilenetv3 | 0,997 | 1008 | 0,981 | 104 |
+
+**Kết quả và kết luận.**
+- **Trên ảnh gốc, bản Augmented của tác giả không cải thiện kết quả:** trung bình 9 cấu hình 0,979 so với 0,983 của G. Khác biệt lớn nhất là ở các mô hình nhạy với hướng và vị trí: HOG + LogReg giảm từ 0,990 xuống 0,972 (8 ảnh sai so với 3), Hist H-S + HOG từ 1,000 xuống 0,989, `a_lenet` từ 0,978 xuống 0,966. Ảnh xoay 90° và lật làm tăng độ đa dạng mà các mô hình này không biểu diễn được, trong khi ảnh test gốc không bị xoay. `a_dropout` tăng (0,942 → 0,963), khớp N5: mô hình học từ đầu quá khớp thì được lợi từ tăng cường. Hai mô hình hướng B gần như không đổi (0,998 và 0,997; chênh 1 ảnh).
+- **Trên bộ kiểm tra khó, bản Augmented giúp một ít:** điểm bền trung bình 0,769 so với 0,750; các mô hình pretrained tăng 0,02–0,03 (`b_resnet50` 0,924 so với 0,895). Phần tăng đến đúng từ những phép có trong công thức tăng cường: HOG với xoay +30° từ 0,505 lên 0,688, nhiễu σ = 10 ở cạnh Roberts từ 0,085 lên 0,340. Phép không có trong công thức thì không cải thiện: nền hoán đổi của Hist H-S + HOG còn 0,255 (G: 0,410).
+- **T-tl trái với suy đoán thông thường:** điểm của cách chia ngẫu nhiên không cao hơn mà **thấp hơn** T-kr ở phần lớn mô hình (HOG 0,847; cạnh 0,620; `a_vgg16` 0,967). Lý do là tập test của T-tl gồm cả ảnh đã xoay, lật, thêm nhiễu nên khó hơn tập test gốc; hai con số không cùng thước đo. Mức rò rỉ phải đọc ở bảng tách nhóm: 90,6% ảnh test có file cùng ảnh gốc trong train. Trên nhóm đó, HOG đúng 0,859 so với 0,808 ở nhóm không có (+0,051) và `b_mobilenetv3` đúng 0,997 so với 0,981; histogram màu gần như không chênh (0,993 so với 0,990); `a_lenet` và Hist H-S + HOG thì ngược chiều. Nhóm "không có" chỉ có 104 ảnh nên các chênh lệch này có sai số lớn (1 ảnh ≈ 1%).
+- Kết luận về rò rỉ khớp D1 ở chỗ mức thổi phồng phụ thuộc mô hình, nhưng nhỏ hơn dự đoán. Bước 12 đo lại bằng 5-fold trên cùng bộ ảnh (có và không giữ nhóm), là phép đo chặt hơn.
+
+**Ảnh hưởng tới bước sau.** Nhánh T trong bảng so sánh bốn nhánh là T-kr. Bước 12 dùng lại cách ánh xạ file → ảnh gốc để chia fold theo nhóm.
+
 ---
 
 ## Bảng quyết định
@@ -1064,3 +1193,8 @@ Phân tích lỗi (`results/final/table_error_pairs.md`, `results/final/table_er
 | Ghi thiên lệch bối cảnh chụp là hạn chế chính | — | Bước 6–7, `results/S2/table_corners.md`, `results/S2/table_cnn.md` | [đo] |
 | Đại diện mỗi nhóm chọn theo điểm CV/val | Chọn theo điểm test | Bước 8 | [lập luận] |
 | Báo cáo KTC 95% bootstrap trên test | Chỉ báo cáo điểm | Bước 8, `results/final/table.md` | [lập luận] |
+| So sánh các nhánh bằng cả ảnh gốc lẫn bộ kiểm tra khó (điểm bền) | Chỉ dùng điểm trên ảnh test gốc | Bước 10, `results/so_sanh_nhanh/G/table.md`: hai cấu hình đã đúng 371/371 ảnh gốc | [đo] |
+| Mask theo mô hình nền bậc hai cho phần mở rộng | Mask của bước S1 | Bước 10 và 13, `results/E1_xu_ly/table_cleaning.md`: mask cũ tràn nền ở 5,2% ảnh | [đo] |
+| Ba nhánh mở rộng độc lập, mỗi nhánh đổi một thứ so với G | Chồng các thay đổi lên nhau | Bước 10 | [lập luận] |
+| Nhánh T dùng cách chia không rò rỉ (T-kr) làm kết quả chính | Chia ngẫu nhiên bản Augmented (T-tl) | Bước 11, `results/E2_aug_tac_gia/table_leak_stats.md`: 90,6% ảnh test của T-tl có file cùng ảnh gốc trong train | [đo] |
+| Không thay tập train gốc bằng bản Augmented của tác giả | Dùng bản Augmented làm tập train | Bước 11, `results/so_sanh_nhanh/table_models.md`: macro-F1 trung bình 0,979 so với 0,983; điểm bền 0,769 so với 0,750 | [đo] |

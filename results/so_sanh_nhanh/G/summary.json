@@ -1,0 +1,7 @@
+{
+  "arm": "G",
+  "note": "pipeline gốc, ảnh gốc resize 256×256",
+  "n_train": 1729,
+  "n_val": 371,
+  "n_test": 371
+}

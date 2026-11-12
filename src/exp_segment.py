@@ -79,9 +79,22 @@ def all_masks():
     return np.load(f)
 
 
-def s2():
+def all_masks_v2():
+    """Mask theo mô hình nền bậc hai (segmentation.banana_mask_v2) cho toàn bộ ảnh; dùng ở phần mở rộng."""
+    f = CACHE_DIR / "masks_v2_256.npy"
+    if not f.exists():
+        imgs = load_all_images(256)
+        ms = Parallel(n_jobs=4)(delayed(lambda a, b: np.stack([S.banana_mask_v2(np.asarray(imgs[i])) for i in range(a, b)]))(a, min(a + 100, len(imgs)))
+                                for a in range(0, len(imgs), 100))
+        np.save(f, np.concatenate(ms))
+    return np.load(f)
+
+
+def s2(mask_fn=None, sfx: str = ""):
+    """sfx rỗng: mask của bước S1 (kết quả gốc của S2). sfx khác rỗng: chạy lại với mask khác (ví dụ mask mô hình nền bậc hai)
+    và ghi vào các file có hậu tố sfx, không ghi đè kết quả gốc."""
     ids, y = dev_set()
-    imgs = load_all_images(256); masks = all_masks()
+    imgs = load_all_images(256); masks = (mask_fn or all_masks)()
     I = [np.asarray(imgs[i]) for i in ids]; Mk = [masks[i] for i in ids]
     # Vùng nền lấy từ mask đã nới rộng 12 điểm ảnh, để phần mép quả và bóng đổ sát quả
     # (chỗ phân đoạn hay sai) không bị tính là nền.
@@ -146,13 +159,13 @@ def s2():
         corner_rows.append({"Đặc trưng + bộ phân lớp": cname, "Số chiều": X.shape[1], "Macro-F1": pm(r["macro_f1"], r["macro_f1_std"]),
                             "Accuracy": pm(r["accuracy"], r["accuracy_std"])})
         srows.append(summary_row("S2", cname, r))
-    print(save_table("S2", corner_rows, "table_corners",
+    print(save_table("S2", corner_rows, "table_corners" + sfx,
                      title=f"S2 — Chỉ dùng 4 góc ảnh 64×64 (không cần mask; trung bình {100 * corner_fg:.1f}% điểm ảnh ở góc thuộc vùng chuối đã nới rộng)"))
     fig, axes = plt.subplots(1, 4, figsize=(9, 2.6))
     for cl in range(4):
         k = int(np.where(y == cl)[0][5]); axes[cl].imshow(corners[k]); axes[cl].set_title(CLASS_NAMES[cl], fontsize=9); axes[cl].axis("off")
     fig.suptitle("S2 — Ảnh ghép từ 4 góc 64×64 (đầu vào của phép thử 'chỉ góc ảnh')", fontsize=10)
-    fig.tight_layout(); fig.savefig(FIG_DIR / "S2_corners.png", dpi=110); plt.close(fig)
+    fig.tight_layout(); fig.savefig(FIG_DIR / f"S2_corners{sfx}.png", dpi=110); plt.close(fig)
     # Hai phép thử cực đoan: chỉ 3 con số màu nền; chỉ hình bóng (mask nhị phân)
     Xbg = np.stack([bg_color(im, cv2.bitwise_not(b)) for im, b in zip(I, Bg)]).astype(np.float32)
     Xsil = hog_batch(np.stack([np.repeat(m[..., None], 3, 2) for m in Mk]), **hogp)
@@ -174,15 +187,17 @@ def s2():
     raw["_background_lab_mean"] = lab_mean; raw["_background_lab_std"] = lab_std; raw["_banana_area_fraction"] = area
     stat_rows = [{"Lớp": k, "Nền: L trung bình ± std": f"{lab_mean[k][0]} ± {lab_std[k][0]}", "Nền: a": f"{lab_mean[k][1]} ± {lab_std[k][1]}",
                   "Nền: b": f"{lab_mean[k][2]} ± {lab_std[k][2]}", "Tỉ lệ diện tích quả chuối": f"{area[k]:.3f}"} for k in CLASS_NAMES]
-    save_json(exp_dir("S2") / "metrics.json", raw); register("S2", srows)
+    save_json(exp_dir("S2") / f"metrics{sfx}.json", raw)
+    if not sfx:
+        register("S2", srows)
     lk = raw["_silhouette_leak_gradient_ratio"]
     save_table("S2", [{"Chỉ số": "Gradient trung bình dọc viền vùng đã lấp / gradient trung bình vùng nền xa quả",
                        "Trung vị": f"{lk['median']:.2f}", "Phân vị 25%": f"{lk['p25']:.2f}", "Phân vị 75%": f"{lk['p75']:.2f}", "Số ảnh": lk["n"]}],
-               "table_leak", title="S2 — Vết viền hình bóng còn lại trên ảnh 'chỉ vùng nền' (1 = không còn vết)")
-    print(save_table("S2", rows, title="S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val)"))
-    print(save_table("S2", extra, "table_extreme", title="S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng"))
+               "table_leak" + sfx, title="S2 — Vết viền hình bóng còn lại trên ảnh 'chỉ vùng nền' (1 = không còn vết)")
+    print(save_table("S2", rows, "table" + sfx, title="S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val)" + (" — mask mô hình nền bậc hai" if sfx else "")))
+    print(save_table("S2", extra, "table_extreme" + sfx, title="S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng"))
     print("rò rỉ hình bóng (tỉ số gradient viền / nền xa):", raw["_silhouette_leak_gradient_ratio"])
-    print(save_table("S2", stat_rows, "table_background_stats", title="S2 — Màu nền (Lab của OpenCV, thang 0–255) và kích thước quả theo lớp (train+val)"))
+    print(save_table("S2", stat_rows, "table_background_stats" + sfx, title="S2 — Màu nền (Lab của OpenCV, thang 0–255) và kích thước quả theo lớp (train+val)"))
 
     fig, ax = plt.subplots(figsize=(11, 4))
     cn = [c for c, _, _ in confs]; x = np.arange(len(cn)); w = 0.26
@@ -193,7 +208,7 @@ def s2():
             ax.text(xi, val + e + 0.004, f"{val:.3f}", ha="center", fontsize=8)
     ax.set_xticks(x); ax.set_xticklabels([c.replace(" [", "\n[") for c in cn], fontsize=8); ax.set_ylim(0.6, 1.04)
     ax.set_ylabel("Macro-F1 (5-fold)"); ax.set_title("S2 — Mô hình dựa vào quả chuối hay vào nền?"); ax.legend(fontsize=8, loc="lower right")
-    fig.tight_layout(); fig.savefig(FIG_DIR / "S2_background_bias.png", dpi=130); plt.close(fig)
+    fig.tight_layout(); fig.savefig(FIG_DIR / f"S2_background_bias{sfx}.png", dpi=130); plt.close(fig)
     # Hình: ba phiên bản ảnh của một mẫu mỗi lớp
     fig, axes = plt.subplots(3, 4, figsize=(9, 6.8))
     for c in range(4):
@@ -203,10 +218,10 @@ def s2():
             if c == 0: axes[r, c].set_ylabel(v)
         axes[0, c].set_title(CLASS_NAMES[c], fontsize=9)
     fig.suptitle("S2 — Ba phiên bản ảnh (chỉ chuối: nền tô màu trung vị; chỉ nền: vùng chuối nới rộng 12 px rồi inpainting)")
-    fig.tight_layout(); fig.savefig(FIG_DIR / "S2_versions.png", dpi=110); plt.close(fig)
+    fig.tight_layout(); fig.savefig(FIG_DIR / f"S2_versions{sfx}.png", dpi=110); plt.close(fig)
 
 
-def s2_cnn():
+def s2_cnn(mask_fn=None, sfx: str = ""):
     """S2 với CNN: mô hình đã huấn luyện trên ảnh đầy đủ (train), dự đoán trên ảnh val chỉ còn quả chuối
     (nền tô màu trung vị) hoặc chỉ còn nền (vùng chuối nới rộng 12 px rồi inpainting)."""
     import os
@@ -216,7 +231,7 @@ def s2_cnn():
     from .data import load_split
     from .exp_cnn import final_run
     va = load_split("val"); ids, y = va["idx"].values, va["label_id"].values
-    imgs = load_all_images(256); masks = all_masks()
+    imgs = load_all_images(256); masks = (mask_fn or all_masks)()
     kd = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))
     full, fg, bg = [], [], []
     for i in ids:
@@ -232,11 +247,16 @@ def s2_cnn():
             f1 = float(f1_score(y, p, average="macro")); raw[f"{run}|{name}"] = {"macro_f1": f1, "accuracy": float(accuracy_score(y, p))}
             row[name] = f"{f1:.3f}"
         rows.append(row); print(row, flush=True)
-    save_json(exp_dir("S2") / "cnn_metrics.json", raw)
-    print(save_table("S2", rows, "table_cnn", title="S2 — CNN học trên ảnh đầy đủ, dự đoán trên ảnh val đã bỏ nền hoặc bỏ quả chuối (macro-F1, 371 ảnh)"))
+    save_json(exp_dir("S2") / f"cnn_metrics{sfx}.json", raw)
+    print(save_table("S2", rows, "table_cnn" + sfx, title="S2 — CNN học trên ảnh đầy đủ, dự đoán trên ảnh val đã bỏ nền hoặc bỏ quả chuối (macro-F1, 371 ảnh)" + (" — mask mô hình nền bậc hai" if sfx else "")))
 
 
-EXPS = {"S1": s1, "S2": s2, "S2CNN": s2_cnn}
+def s2_recheck():
+    """Chạy lại S2 (đặc trưng thủ công và CNN) với mask mô hình nền bậc hai của phần mở rộng."""
+    s2(all_masks_v2, "_mask_v2"); s2_cnn(all_masks_v2, "_mask_v2")
+
+
+EXPS = {"S1": s1, "S2": s2, "S2CNN": s2_cnn, "S2V2": s2_recheck}
 
 
 def main():

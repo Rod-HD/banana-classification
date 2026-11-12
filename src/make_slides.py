@@ -1,4 +1,6 @@
-"""Dựng slide trình bày slides/bao-cao-do-an.pptx (có ghi chú thuyết trình cho từng slide).
+"""Dựng slide trình bày (có ghi chú thuyết trình cho từng slide) từ một danh sách slide duy nhất:
+  slides/bao-cao-do-an.tex + .pdf   bản chính: Beamer LaTeX, style UIT (kèm bản -ghi-chu.pdf có trang ghi chú)
+  slides/bao-cao-do-an.pptx         bản PowerPoint cùng nội dung
 
     python -m src.make_slides
 Bảng trên slide được đọc trực tiếp từ results/; hình lấy từ results/figures/.
@@ -193,10 +195,18 @@ def slides():
 
 
 def main():
-    argparse.ArgumentParser(description=__doc__).parse_args()
+    argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter).parse_args()
+    from .beamer_builder import build_tex, compile_pdf
+    sl = slides()
     out = ROOT / "slides" / "bao-cao-do-an.pptx"; out.parent.mkdir(exist_ok=True)
-    build(slides(), out, "Nhận diện giống chuối từ ảnh — Đồ án CS231")
+    build(sl, out, "Nhận diện giống chuối từ ảnh — Đồ án CS231")
     print("đã ghi", out.relative_to(ROOT))
+    tex = ROOT / "slides" / "bao-cao-do-an.tex"
+    build_tex(sl, tex, title="Nhận diện giống chuối từ ảnh", subtitle="Đồ án môn CS231 — Nhập môn Thị giác máy tính",
+              author="Nhóm thực hiện: ....................", institute="Giảng viên: ....................", date="")
+    print("đã ghi", tex.relative_to(ROOT))
+    for f in compile_pdf(tex):
+        print("đã ghi", f.relative_to(ROOT))
 
 
 if __name__ == "__main__":

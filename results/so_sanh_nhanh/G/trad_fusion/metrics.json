@@ -1,0 +1,99 @@
+{
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "macro_precision": 1.0,
+  "macro_recall": 1.0,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 67
+    },
+    "Champa Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 149
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 77
+    },
+    "Sagor Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 78
+    }
+  },
+  "confusion_matrix": [
+    [
+      67,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      149,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      77,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      78
+    ]
+  ],
+  "arm": "G",
+  "config": "Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
+  "group": "Truyền thống (ghép)",
+  "n_train": 1729,
+  "n_test": 371,
+  "val": {
+    "macro_f1": 0.997591552554637,
+    "accuracy": 0.9973045822102425
+  },
+  "macro_f1_ci95": [
+    1.0,
+    1.0
+  ],
+  "n_errors": 0,
+  "stress": {
+    "swapbg": {
+      "macro_f1": 0.4099086481292552,
+      "accuracy": 0.39892183288409705
+    },
+    "v0.6": {
+      "macro_f1": 0.9972841803505419,
+      "accuracy": 0.9973045822102425
+    },
+    "v1.4": {
+      "macro_f1": 0.8562485711985832,
+      "accuracy": 0.8867924528301887
+    },
+    "noise10": {
+      "macro_f1": 0.17163776233214117,
+      "accuracy": 0.21293800539083557
+    },
+    "rot30": {
+      "macro_f1": 0.9715766882832613,
+      "accuracy": 0.9757412398921833
+    },
+    "occlude25": {
+      "macro_f1": 0.9587047637237166,
+      "accuracy": 0.9649595687331537
+    }
+  },
+  "robust_score": 0.7275601023362498
+}

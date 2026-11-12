@@ -1,0 +1,7 @@
+{
+  "arm": "T-kr",
+  "note": "bản Augmented của tác giả, chia theo ảnh gốc (không rò rỉ)",
+  "n_train": 5187,
+  "n_val": 371,
+  "n_test": 371
+}

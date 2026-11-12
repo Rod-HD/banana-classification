@@ -15,3 +15,14 @@ logs/*.log
 .DS_Store
 .vscode/
 .idea/
+
+# bản Augmented của tác giả (tải bằng scripts/download_data.sh augmented)
+data/aug_author/
+# file trung gian của LaTeX
+slides/*.aux
+slides/*.log
+slides/*.nav
+slides/*.out
+slides/*.snm
+slides/*.toc
+slides/*.vrb

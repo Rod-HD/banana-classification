@@ -168,7 +168,7 @@ Phần "Phương pháp" và "Kết quả thực nghiệm" của báo cáo đư�
 - `models/`: mô hình dùng cho demo (mỗi file dưới 50 MB).
 - `app/app.py`: demo tải ảnh lên và nhận giống chuối dự đoán cùng xác suất 4 lớp. `app/variety_info.json` chỉ ghi thông tin có nguồn dẫn; chỗ chưa có nguồn để `"TODO"`.
 - `report/`: báo cáo `report.md` và bản `.docx` theo đúng các mục ở phần 3. Bảng thành viên và mức độ hoàn thành để trống cho nhóm tự điền.
-- `slides/`: slide trình bày `.pptx` theo các mục ở phần 3, có ghi chú thuyết trình cho từng slide.
+- `slides/`: slide trình bày theo các mục ở phần 3, có ghi chú thuyết trình cho từng slide. Bản chính là Beamer LaTeX theo style UIT (`.tex` và `.pdf`); bản `.pptx` cùng nội dung được sinh từ cùng một nguồn.
 - `docs/nhat-ky-thuc-nghiem.md`: nhật ký theo mục 7.
 - `docs/hoi-dap-bao-ve.md`: các câu hỏi có thể gặp khi trình bày, mỗi câu trả lời dẫn tới một bảng hoặc hình cụ thể của đồ án.
 - `README.md`: cách cài đặt, cách chạy lại toàn bộ thí nghiệm và demo, bảng kết quả chính.
@@ -198,3 +198,58 @@ Phần "Phương pháp" và "Kết quả thực nghiệm" của báo cáo đư�
 7. Phân đoạn tách nền (mục 6.7).
 8. Đánh giá cuối trên test, phân tích lỗi, tổng hợp bảng và hình.
 9. Demo, báo cáo, slide, tài liệu hỏi đáp, README.
+10. Phần mở rộng (mục 12): ba nhánh so sánh độc lập với pipeline gốc.
+
+## 12. Phần mở rộng: ba nhánh so sánh độc lập
+
+Sau khi hoàn tất mục 1–11, đồ án thêm ba nhánh. Mỗi nhánh chỉ đổi **một thứ** so với pipeline gốc và được so sánh độc lập với nhau và với pipeline gốc; các nhánh không chồng lên nhau.
+
+| Nhánh | Thay đổi so với pipeline gốc | Giữ nguyên |
+|---|---|---|
+| **G** — gốc | (mốc so sánh: ảnh gốc resize 256×256, 9 cấu hình đã chốt ở bước 8) | — |
+| **X** — xử lý dữ liệu | Thêm làm sạch, tiền xử lý và tăng cường dữ liệu do nhóm thiết kế | 9 cấu hình và siêu tham số của G; cách chia tập |
+| **T** — bản Augmented của tác giả | Tập huấn luyện lấy từ bản "Augmented Banana Classification Dataset" (7.413 ảnh) của tác giả bộ dữ liệu | 9 cấu hình và siêu tham số của G |
+| **B** — phương pháp của bài báo | Phương pháp phân loại lấy từ bài báo đã công bố trên chính bộ dữ liệu này | Dữ liệu và cách chia tập của G |
+
+### 12.1 Quy tắc chung
+
+- **Cùng một tập chấm.** Mọi nhánh báo cáo kết quả trên 371 ảnh test gốc của mục 5 (nhánh X chấm trên chính các ảnh đó sau khi qua bước tiền xử lý của nhánh). Mọi lựa chọn bên trong một nhánh chỉ dựa trên train và val.
+- **Bộ kiểm tra khó.** Vì các mô hình tốt nhất của nhánh G đã đúng gần hết tập test, điểm trên ảnh gốc không đủ để phân biệt các nhánh. Mỗi mô hình được chấm thêm trên 6 phiên bản biến đổi của tập chấm: nền hoán đổi (quả chuối được ghép lên nền lấy từ ảnh của một lớp khác), V×0,6, V×1,4, nhiễu Gauss σ = 10, xoay +30°, che 25%. Phép biến đổi áp lên ảnh thô, trước mọi bước tiền xử lý của nhánh. **Điểm bền** là trung bình macro-F1 trên 6 phiên bản này.
+- Chỉ số: macro-F1 (chính), Accuracy, số ảnh sai, khoảng tin cậy bootstrap trên test, điểm bền.
+- Kết quả từng nhánh nằm ở `results/E1_xu_ly/`, `results/E2_aug_tac_gia/`, `results/E3_bai_bao/`; bảng so sánh bốn nhánh ở `results/so_sanh_nhanh/`.
+
+### 12.2 Nhánh X — xử lý dữ liệu (E1)
+
+| # | Tính chất | Thí nghiệm |
+|---|---|---|
+| X1 | Làm sạch: ảnh gần trùng vắt qua các tập làm kết quả lạc quan; ảnh mờ và nhãn sai làm nhiễu việc học. | Thống kê ảnh lỗi, ảnh gần trùng, độ nét, ảnh nghi sai nhãn. Loại khỏi train các ảnh gần trùng (pHash, Hamming ≤ 2) với ảnh val/test và các bản lặp trong train. Kiểm tra thêm: mỗi quả được chụp nhiều mặt (theo bài báo dữ liệu), nên so cross-validation chia ngẫu nhiên với cross-validation chia theo khối ảnh liên tiếp. |
+| X2 | Tiền xử lý: cân bằng trắng theo nền giấy trắng khử sai khác ánh sáng; tách nền khử thiên lệch bối cảnh đo được ở S2; cắt theo quả khử khác biệt khoảng cách chụp. | Bốn mức: không xử lý; cân bằng trắng; cân bằng trắng + nền phẳng; cân bằng trắng + nền phẳng + cắt theo quả. |
+| X3 | Tăng cường dữ liệu chỉ trên train làm mô hình bền hơn với đúng loại biến đổi được tăng cường. | Ba mức: không; hình học + quang học (lật, xoay 90°, xoay ±15°, độ sáng ±15%, làm mờ, nhiễu — cùng loại phép với công thức của tác giả, 2 bản mỗi ảnh); thêm thay nền ngẫu nhiên. |
+| X4 | Tổ hợp tốt nhất được chọn trên val theo điểm bền (ảnh gốc cũng tính là một phép thử), bằng hai mô hình đại diện: cấu hình truyền thống tốt nhất và embedding MobileNetV3 đóng băng + Logistic Regression. | Bảng tổ hợp × phép thử. Sau đó chạy lại cả 9 cấu hình của G trên dữ liệu đã xử lý theo tổ hợp được chọn. |
+
+### 12.3 Nhánh T — bản Augmented của tác giả (E2)
+
+Bản Augmented là bản xuất từ Roboflow: mỗi ảnh gốc có 3 file (1 bản gần như nguyên gốc và 2 bản tăng cường), tên file giữ tên ảnh gốc nên ánh xạ được về ảnh gốc.
+
+| # | Cách dùng | Thí nghiệm |
+|---|---|---|
+| T-kr | **Không rò rỉ:** train = 3 file của mỗi ảnh gốc thuộc tập train của G; val và test = ảnh gốc của G. | Chạy 9 cấu hình; so trực tiếp với G trên cùng tập test. |
+| T-tl | **Theo thông lệ:** gộp 7.413 file, chia ngẫu nhiên phân tầng 70/15/15 (seed 42), không quan tâm ảnh gốc. | Chạy 9 cấu hình; báo cáo trên tập test của chính cách chia này, kèm tỉ lệ ảnh test có "anh em" cùng ảnh gốc nằm trong train. Chênh lệch với T-kr là mức thổi phồng (đối chiếu D1). |
+
+### 12.4 Nhánh B — phương pháp của bài báo (E3)
+
+Hai bài báo trên bộ dữ liệu này:
+
+- Ferdaus và cộng sự (2025), *Data in Brief* 58, 111239: bài báo mô tả dữ liệu; không huấn luyện mô hình và không công bố kết quả phân loại. Phần "phương pháp" là quy trình xử lý và tăng cường dữ liệu, đã được kiểm chứng ở nhánh T.
+- Ergün (2025), *Scientific Reports* 15, 10366: rút đặc trưng bằng Vision Transformer (ViT) pretrained rồi phân lớp bằng SVM; so với đặc trưng ResNet, SqueezeNet và các bộ phân lớp GBM, MLP, CNN. Dùng bản Augmented, 5-fold cross-validation. Kết quả công bố trên BananaImageBD: ViT + SVM đạt accuracy 99,70%, F1 0,9965.
+
+Hai hướng:
+
+| Hướng | Nội dung |
+|---|---|
+| **B1 — trong phạm vi môn học (tới mức CNN)** | Giữ ý tưởng "mạng pretrained làm bộ rút đặc trưng + bộ phân lớp", nhưng bộ rút đặc trưng là CNN: ResNet50, MobileNetV3-Small (đã dùng ở hướng B của mục 6.5), SqueezeNet (CNN đối chứng của bài báo). Bộ phân lớp: SVM, Logistic Regression, KNN, MLP (các lớp Dense). |
+| **B2 — đúng như bài báo** | ViT-B/16 pretrained ImageNet làm bộ rút đặc trưng (vector 768 chiều của token phân lớp) + SVM; thêm GBM và MLP như bài báo. ViT nằm ngoài nội dung môn học; hướng này chỉ để đối chiếu. |
+
+Mỗi hướng chấm theo ba giao thức: (i) như bài báo: bản Augmented, 5-fold phân tầng, không giữ nhóm; (ii) cùng dữ liệu nhưng 5-fold giữ các file cùng ảnh gốc trong một fold; (iii) giao thức của đồ án: học trên train+val gốc, chấm trên test gốc và bộ kiểm tra khó. (i) để so với số bài báo công bố; (i) − (ii) là mức thổi phồng do rò rỉ; (iii) để so với nhánh G.
+
+Bài báo không nêu tên checkpoint ViT, kernel và siêu tham số của SVM, kiến trúc của bộ phân lớp "CNN"; đồ án ghi rõ lựa chọn của mình cho từng chỗ thiếu và không tái hiện bộ phân lớp "CNN" trên đặc trưng vì không có mô tả. Cả hai bài báo đều không dùng YOLO.

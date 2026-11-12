@@ -1,0 +1,7 @@
+{
+  "arm": "T-tl",
+  "note": "bản Augmented của tác giả, chia ngẫu nhiên 70/15/15 không quan tâm ảnh gốc",
+  "n_train": 5189,
+  "n_val": 1112,
+  "n_test": 1112
+}

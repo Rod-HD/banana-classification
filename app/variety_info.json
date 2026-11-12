@@ -1,14 +1,15 @@
 {
   "_ghi_chu": "Chỉ ghi thông tin có nguồn dẫn. Chỗ chưa có nguồn để \"TODO\" cho nhóm bổ sung kèm nguồn.",
   "_nguon_du_lieu": {
-    "ten": "BananaImageBD: An Extensive Image Dataset of Common Bangladeshi Banana Varieties with Different Ripeness Levels",
+    "ten": "BananaImageBD: A Comprehensive Image Dataset of Common Banana Varieties with Different Ripeness Stages in Bangladesh",
     "phien_ban": "Version 2, công bố 16/09/2024",
     "doi": "10.17632/ptfscwtnyz.2",
     "url": "https://data.mendeley.com/datasets/ptfscwtnyz/2",
     "don_vi": "East West University (Bangladesh)",
     "giay_phep": "CC BY 4.0",
-    "cach_thu_thap": "Ảnh chụp bằng camera điện thoại thông minh tại các chợ đầu mối chuối và cửa hàng trái cây bán lẻ ở Bangladesh; ảnh JPEG 256×256.",
-    "mo_ta_chung": "Bốn giống trong bộ dữ liệu được tác giả mô tả là bốn giống chuối phổ biến nhất ở Bangladesh."
+    "cach_thu_thap": "Chuối mua ở chợ đầu mối và cửa hàng bán lẻ tại Dhaka và Rangpur (Bangladesh); mỗi quả được tách khỏi nải, đặt trên giấy trắng dưới đèn LED trắng và chụp từ bốn mặt bằng camera sau của iPhone 13 Pro Max; ảnh được resize về 256×256 (theo bài báo mô tả dữ liệu).",
+    "mo_ta_chung": "Bốn giống trong bộ dữ liệu được tác giả mô tả là bốn giống chuối phổ biến nhất ở Bangladesh.",
+    "bai_bao_mo_ta": "Ferdaus, M. H. và cộng sự (2025). BananaImageBD: A comprehensive banana image dataset for classification of banana varieties and detection of ripeness stages in Bangladesh. Data in Brief, 58, 111239. DOI: 10.1016/j.dib.2024.111239"
   },
   "Bangla Kola": {
     "so_anh_goc_trong_bo_du_lieu": 444,

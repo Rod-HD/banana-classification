@@ -1,0 +1,74 @@
+{
+  "accuracy": 0.6402877697841727,
+  "macro_f1": 0.6198641361444817,
+  "macro_precision": 0.6310949597816484,
+  "macro_recall": 0.6131820888092344,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.5337078651685393,
+      "recall": 0.475,
+      "f1": 0.5026455026455027,
+      "support": 200
+    },
+    "Champa Kola": {
+      "precision": 0.6489151873767258,
+      "recall": 0.7360178970917226,
+      "f1": 0.689727463312369,
+      "support": 447
+    },
+    "Sabri Kola": {
+      "precision": 0.717391304347826,
+      "recall": 0.7205240174672489,
+      "f1": 0.7189542483660131,
+      "support": 229
+    },
+    "Sagor Kola": {
+      "precision": 0.6243654822335025,
+      "recall": 0.5211864406779662,
+      "f1": 0.5681293302540416,
+      "support": 236
+    }
+  },
+  "confusion_matrix": [
+    [
+      95,
+      65,
+      32,
+      8
+    ],
+    [
+      36,
+      329,
+      21,
+      61
+    ],
+    [
+      31,
+      28,
+      165,
+      5
+    ],
+    [
+      16,
+      85,
+      12,
+      123
+    ]
+  ],
+  "arm": "T-tl",
+  "config": "Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần",
+  "group": "Truyền thống (cạnh)",
+  "n_train": 5189,
+  "n_test": 1112,
+  "val": {
+    "macro_f1": 0.5898541865935052,
+    "accuracy": 0.6160071942446043
+  },
+  "macro_f1_ci95": [
+    0.588724934667653,
+    0.6495869391249424
+  ],
+  "n_errors": 400,
+  "stress": {},
+  "robust_score": null
+}
