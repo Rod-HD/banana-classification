@@ -1,0 +1,74 @@
+{
+  "accuracy": 1.0,
+  "macro_f1": 1.0,
+  "macro_precision": 1.0,
+  "macro_recall": 1.0,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 67
+    },
+    "Champa Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 149
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 77
+    },
+    "Sagor Kola": {
+      "precision": 1.0,
+      "recall": 1.0,
+      "f1": 1.0,
+      "support": 78
+    }
+  },
+  "confusion_matrix": [
+    [
+      67,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      149,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      77,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      78
+    ]
+  ],
+  "config": "Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
+  "group": "Truyền thống (ghép)",
+  "eval_set": "test (371 ảnh)",
+  "macro_f1_ci95": [
+    1.0,
+    1.0
+  ],
+  "accuracy_ci95": [
+    1.0,
+    1.0
+  ],
+  "n_errors": 0,
+  "dev_score": "0.996 ± 0.003",
+  "dev_score_kind": "Macro-F1 lúc chọn (5-fold CV hoặc val)",
+  "fit_time_s_train_plus_val": 2.5874175209992245,
+  "n_train": 2100
+}

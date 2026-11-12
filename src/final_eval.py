@@ -85,8 +85,10 @@ def main():
     print(save_table("final", rows, title="Đánh giá cuối trên tập test (371 ảnh; mỗi ảnh sai tương ứng 0,27% accuracy)"))
 
     # --- so sánh từng cặp: số ảnh chỉ mô hình này sai / chỉ mô hình kia sai
-    best = {g: max([k for k in keys if (k.startswith(pref))], key=lambda k: (f1_score(yte, preds[k], average="macro"), -keys.index(k)))
-            for g, pref in [("truyền thống", "trad_"), ("hướng A", "a_"), ("hướng B", "b_")]}
+    # Mô hình đại diện mỗi nhóm được chọn theo điểm lúc phát triển (CV hoặc val), không theo test.
+    from .exp_cnn import best_run
+    fa = {final_run(m): m for m in A_RUNS}; fb = {final_run(m): m for m in B_RUNS}
+    best = {"truyền thống": sel["_best_overall"], "hướng A": fa[best_run(list(fa))], "hướng B": fb[best_run(list(fb))]}
     pair_rows = []
     bk = list(best.values())
     for i in range(len(bk)):

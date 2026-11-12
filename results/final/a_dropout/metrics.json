@@ -1,0 +1,74 @@
+{
+  "accuracy": 0.9433962264150944,
+  "macro_f1": 0.9419266791345883,
+  "macro_precision": 0.9496457489878543,
+  "macro_recall": 0.935602495604499,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 1.0,
+      "recall": 0.9104477611940298,
+      "f1": 0.953125,
+      "support": 67
+    },
+    "Champa Kola": {
+      "precision": 0.9294871794871795,
+      "recall": 0.9731543624161074,
+      "f1": 0.9508196721311475,
+      "support": 149
+    },
+    "Sabri Kola": {
+      "precision": 0.9743589743589743,
+      "recall": 0.987012987012987,
+      "f1": 0.9806451612903225,
+      "support": 77
+    },
+    "Sagor Kola": {
+      "precision": 0.8947368421052632,
+      "recall": 0.8717948717948718,
+      "f1": 0.8831168831168831,
+      "support": 78
+    }
+  },
+  "confusion_matrix": [
+    [
+      61,
+      1,
+      2,
+      3
+    ],
+    [
+      0,
+      145,
+      0,
+      4
+    ],
+    [
+      0,
+      0,
+      76,
+      1
+    ],
+    [
+      0,
+      10,
+      0,
+      68
+    ]
+  ],
+  "config": "a_dropout (biến thể: a_dropout_aug)",
+  "group": "CNN hướng A",
+  "eval_set": "test (371 ảnh)",
+  "macro_f1_ci95": [
+    0.9174427847504163,
+    0.9653819162539999
+  ],
+  "accuracy_ci95": [
+    0.9191374663072777,
+    0.9650269541778973
+  ],
+  "n_errors": 21,
+  "dev_score": "0.948",
+  "dev_score_kind": "Macro-F1 lúc chọn (5-fold CV hoặc val)",
+  "run": "a_dropout_aug",
+  "n_train": 1729
+}

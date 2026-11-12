@@ -82,6 +82,7 @@ if want 7; then   # Bước 7: phân đoạn tách nền (S1–S2); S2CNN cần 
 fi
 if want 8; then   # Bước 8: đánh giá cuối trên test, tổng hợp
   run src.final_eval
+  run src.error_analysis
   run src.summarize
 fi
 if want 9; then   # Bước 9: xuất mô hình cho demo

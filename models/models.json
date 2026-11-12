@@ -1,0 +1,40 @@
+[
+  {
+    "key": "b_mobilenetv3",
+    "label": "CNN hướng B — MobileNetV3-Small fine-tune",
+    "type": "keras",
+    "file": "b_mobilenetv3.keras",
+    "input_size": 224,
+    "run": "b_mobilenetv3_lr1e-4",
+    "size_mb": 11.73,
+    "test": {
+      "macro_f1_test": 1.0,
+      "accuracy_test": 1.0
+    }
+  },
+  {
+    "key": "a_lenet",
+    "label": "CNN hướng A — LeNet huấn luyện từ đầu",
+    "type": "keras",
+    "file": "a_lenet.keras",
+    "input_size": 64,
+    "run": "a_lenet",
+    "size_mb": 4.1,
+    "test": {
+      "macro_f1_test": 0.9777,
+      "accuracy_test": 0.9811
+    }
+  },
+  {
+    "key": "trad_best",
+    "label": "Truyền thống — Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
+    "type": "joblib",
+    "file": "trad_best.joblib",
+    "input_size": 256,
+    "size_mb": 0.15,
+    "test": {
+      "macro_f1_test": 1.0,
+      "accuracy_test": 1.0
+    }
+  }
+]

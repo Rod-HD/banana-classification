@@ -1,0 +1,74 @@
+{
+  "accuracy": 0.967654986522911,
+  "macro_f1": 0.9640627736622731,
+  "macro_precision": 0.9661574062236313,
+  "macro_recall": 0.9645513882091064,
+  "per_class": {
+    "Bangla Kola": {
+      "precision": 0.9054054054054054,
+      "recall": 1.0,
+      "f1": 0.950354609929078,
+      "support": 67
+    },
+    "Champa Kola": {
+      "precision": 0.9735099337748344,
+      "recall": 0.9865771812080537,
+      "f1": 0.98,
+      "support": 149
+    },
+    "Sabri Kola": {
+      "precision": 1.0,
+      "recall": 0.987012987012987,
+      "f1": 0.9934640522875817,
+      "support": 77
+    },
+    "Sagor Kola": {
+      "precision": 0.9857142857142858,
+      "recall": 0.8846153846153846,
+      "f1": 0.9324324324324325,
+      "support": 78
+    }
+  },
+  "confusion_matrix": [
+    [
+      67,
+      0,
+      0,
+      0
+    ],
+    [
+      2,
+      147,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      76,
+      1
+    ],
+    [
+      5,
+      4,
+      0,
+      69
+    ]
+  ],
+  "config": "Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần",
+  "group": "Truyền thống (cạnh)",
+  "eval_set": "test (371 ảnh)",
+  "macro_f1_ci95": [
+    0.9437097788017657,
+    0.9824303504198355
+  ],
+  "accuracy_ci95": [
+    0.9487870619946092,
+    0.9838274932614556
+  ],
+  "n_errors": 12,
+  "dev_score": "0.955 ± 0.015",
+  "dev_score_kind": "Macro-F1 lúc chọn (5-fold CV hoặc val)",
+  "fit_time_s_train_plus_val": 0.015124548999665421,
+  "n_train": 2100
+}

@@ -902,6 +902,97 @@ S2 — CNN (`results/S2/table_cnn.md`):
 - Đánh giá cuối báo cáo kèm cảnh báo về thiên lệch nền; phần phân tích lỗi xem các ảnh sai có liên quan tới nền hoặc kích thước quả không.
 - Demo ghi rõ mô hình chỉ đáng tin với ảnh chụp kiểu bộ dữ liệu (một quả, nền trơn).
 
+## Bước 8 — Đánh giá cuối trên tập test, phân tích lỗi, tổng hợp (12/11/2026)
+
+**Mục tiêu.** Dùng tập test (371 ảnh) đúng một lần cho các cấu hình đã chốt; phân tích ảnh bị đoán sai; gom mọi kết quả vào `results/summary.csv` và `results/summary.md`; xuất mô hình cho demo.
+
+**Đã làm.**
+- `python -m src.final_eval`: 4 cấu hình truyền thống (`results/select_traditional/selected.json`, học lại trên train+val) và 5 CNN (biến thể chốt ở bước 4–5, học trên train) dự đoán trên test. Mỗi mô hình có `results/final/<tên>/` (metrics.json, classification_report.txt, confusion matrix) kèm khoảng tin cậy 95% bằng bootstrap (2.000 lần lấy mẫu lại ảnh test). Dự đoán lưu ở `results/final/test_predictions.npz`.
+- `python -m src.error_analysis`: phân tích lỗi từ dự đoán đã lưu, không chạy lại mô hình.
+- `python -m src.summarize`: `results/summary.csv` (718 dòng, mọi cấu hình và điều kiện của 30 thí nghiệm) và `results/summary.md`.
+- `python -m src.export_demo`: `models/b_mobilenetv3.keras` (11,7 MB), `models/a_lenet.keras` (4,1 MB), `models/trad_best.joblib` (0,15 MB) và `models/models.json`. Demo `app/app.py` chạy được cả trên dòng lệnh lẫn giao diện web (ảnh chụp `results/figures/demo_screenshot.png`).
+
+**Lý do chọn cách này.**
+- Mô hình đại diện mỗi nhóm (dùng để so sánh từng cặp và phân tích lỗi) được chọn theo điểm lúc phát triển (5-fold CV hoặc val), không theo điểm test. **[lập luận]**: chọn theo test thì phần so sánh sẽ thiên lệch. Đại diện: `trad_fusion`, `a_vgg16`, `b_mobilenetv3`.
+- Báo cáo khoảng tin cậy bootstrap vì test chỉ có 371 ảnh: một ảnh sai ứng với 0,27% accuracy. **[lập luận]**
+
+**Phương án khác và vì sao không chọn.**
+- Chạy lại mọi phép biến đổi kiểm chứng (M1, M2, N8…) trên test: không làm; các thí nghiệm đó đã chấm trên fold giữ lại và val như quyết định ở bước 1, nên test chỉ dùng cho kết quả chính. **[lập luận]**
+
+**Bằng chứng.**
+
+Kết quả chính trên test (`results/final/table.md`, hình `results/figures/final_test_macro_f1.png`):
+
+| Nhóm | Mô hình | Macro-F1 test | KTC 95% (bootstrap) | Accuracy test | Số ảnh sai / 371 | Recall thấp nhất | Macro-F1 lúc chọn (5-fold CV hoặc val) |
+|---|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0,1 | 0,994 | [0,984; 1,000] | 0,995 | 2 | 0,985 (Bangla) | 0,991 ± 0,005 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,964 | [0,944; 0,982] | 0,968 | 12 | 0,885 (Sagor) | 0,955 ± 0,015 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0,1 | 0,990 | [0,977; 1,000] | 0,992 | 3 | 0,985 (Bangla) | 0,986 ± 0,007 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 1,000 | [1,000; 1,000] | 1,000 | 0 | 1,000 (Bangla) | 0,996 ± 0,003 |
+| CNN hướng A | a_lenet (biến thể: a_lenet) | 0,978 | [0,960; 0,993] | 0,981 | 7 | 0,955 (Bangla) | 0,973 |
+| CNN hướng A | a_dropout (biến thể: a_dropout_aug) | 0,942 | [0,917; 0,965] | 0,943 | 21 | 0,872 (Sagor) | 0,948 |
+| CNN hướng A | a_vgg16 (biến thể: a_vgg16_lr1e-3) | 0,986 | [0,971; 0,997] | 0,989 | 4 | 0,970 (Bangla) | 0,990 |
+| CNN hướng B | b_mobilenetv3 (biến thể: b_mobilenetv3_lr1e-4) | 1,000 | [1,000; 1,000] | 1,000 | 0 | 1,000 (Bangla) | 1,000 |
+| CNN hướng B | b_resnet50 (biến thể: b_resnet50) | 0,997 | [0,988; 1,000] | 0,997 | 1 | 0,987 (Sabri) | 0,998 |
+
+So sánh từng cặp giữa đại diện các nhóm (`results/final/table_pairs.md`):
+
+| Mô hình 1 | Mô hình 2 | Cả hai sai | Chỉ mô hình 1 sai | Chỉ mô hình 2 sai | Cả hai đúng |
+|---|---|---|---|---|---|
+| trad_fusion | a_vgg16 | 0 | 0 | 4 | 367 |
+| trad_fusion | b_mobilenetv3 | 0 | 0 | 0 | 371 |
+| a_vgg16 | b_mobilenetv3 | 0 | 4 | 0 | 367 |
+
+Ảnh gần trùng và kết quả trên test (`results/final/table_near_duplicates.md`):
+
+| Ngưỡng Hamming | Mô hình | Ảnh test có ảnh gần trùng trong train+val | Accuracy trên nhóm đó | Ảnh test không có | Accuracy trên nhóm không có |
+|---|---|---|---|---|---|
+| ≤ 2 | trad_fusion | 9 | 1,000 | 362 | 1,000 |
+| ≤ 2 | a_vgg16 | 9 | 1,000 | 362 | 0,989 |
+| ≤ 2 | b_mobilenetv3 | 9 | 1,000 | 362 | 1,000 |
+| ≤ 4 | trad_fusion | 50 | 1,000 | 321 | 1,000 |
+| ≤ 4 | a_vgg16 | 50 | 1,000 | 321 | 0,988 |
+| ≤ 4 | b_mobilenetv3 | 50 | 1,000 | 321 | 1,000 |
+
+Phân tích lỗi (`results/final/table_error_pairs.md`, `results/final/table_error_context.md`, `results/final/table_hard_images.md`, `results/final/errors.csv`, hình `results/figures/final_errors_all.png`, `results/figures/final_errors_a_vgg16.png`):
+
+| Thực tế | Đoán thành | Số lượt sai (cộng trên 9 mô hình) |
+|---|---|---|
+| Sagor Kola | Champa Kola | 16 |
+| Bangla Kola | Sagor Kola | 8 |
+| Sagor Kola | Bangla Kola | 7 |
+| Champa Kola | Sagor Kola | 5 |
+| Bangla Kola | Sabri Kola | 4 |
+| Sabri Kola | Bangla Kola | 4 |
+| Sabri Kola | Sagor Kola | 3 |
+| Champa Kola | Bangla Kola | 2 |
+| Bangla Kola | Champa Kola | 1 |
+
+| Lớp | Số ảnh test | Ảnh bị ≥ 1 mô hình đoán sai | Diện tích quả TB (ảnh đúng hết) | Diện tích quả TB (ảnh bị sai) |
+|---|---|---|---|---|
+| Bangla Kola | 67 | 9 | 0,127 | 0,142 |
+| Champa Kola | 149 | 7 | 0,166 | 0,153 |
+| Sabri Kola | 77 | 2 | 0,054 | 0,099 |
+| Sagor Kola | 78 | 23 | 0,244 | 0,181 |
+
+| Ảnh | Lớp đúng | Số mô hình sai / 9 | Các mô hình sai → lớp đoán |
+|---|---|---|---|
+| data/raw/sabri_kola/Sabri_Kola_5.jpg | Sabri Kola | 6 | trad_edge→Sagor; trad_hog→Sagor; a_lenet→Bangla; a_dropout→Sagor; a_vgg16→Bangla; b_resnet50→Bangla |
+| data/raw/bangla_kola/Bangla_Kola_189.jpg | Bangla Kola | 3 | a_lenet→Sagor; a_dropout→Sagor; a_vgg16→Sagor |
+| data/raw/bangla_kola/Bangla_Kola_422.jpg | Bangla Kola | 2 | trad_hog→Sagor; a_dropout→Sagor |
+| data/raw/bangla_kola/Bangla_Kola_195.jpg | Bangla Kola | 2 | a_lenet→Sagor; a_dropout→Sagor |
+
+**Kết quả và kết luận.**
+- Hai cấu hình đạt 371/371 ảnh test: **Hist H-S + HOG + LogReg** (truyền thống) và **`b_mobilenetv3`** (hướng B). Khoảng tin cậy bootstrap của cả hai là [1,000; 1,000]. Theo quy tắc ba, tỉ lệ lỗi thật khi 0/371 ảnh sai có cận trên 95% xấp xỉ 3/371 ≈ 0,8%. **[lập luận]**
+- Hai mô hình này không phân biệt được bằng tập test. Khoảng tin cậy của `b_resnet50` (0,997), Hist HSV + LogReg (0,994), HOG + LogReg (0,990) và `a_vgg16` (0,986) cũng chồng lên nhau. Chỉ kết luận được rằng `a_dropout` (0,942), cạnh Roberts + KNN (0,964) và `a_lenet` (0,978) kém hơn nhóm dẫn đầu.
+- Điểm trên test bằng hoặc cao hơn một chút so với lúc chọn (CV/val) ở hầu hết cấu hình: không thấy dấu hiệu quá khớp vào tập chọn siêu tham số. Ngoại lệ là `a_dropout` (0,948 → 0,942), `a_vgg16` (0,990 → 0,986) và `b_resnet50` (0,998 → 0,997), cả ba đều giảm trong khoảng 1–2 ảnh.
+- Ảnh gần trùng không làm phồng kết quả: trên 321 ảnh test không có bản gần trùng (Hamming ≤ 4) trong train+val, hai mô hình dẫn đầu vẫn đúng 100%.
+- Lỗi tập trung ở **Sagor Kola** (23/78 ảnh test bị ít nhất 1 mô hình đoán sai) và chủ yếu bị nhầm thành Champa Kola. Ảnh Sagor bị sai có quả nhỏ hơn trung bình của lớp (diện tích 0,181 so với 0,244). Ảnh bị nhiều mô hình sai nhất (`Sabri_Kola_5.jpg`, 6/9 mô hình) là một quả Sabri to trên nền trắng, không giống ảnh Sabri điển hình (quả nhỏ, nền xanh nhạt). Cả hai quan sát khớp với thiên lệch theo kích thước quả và nền đã đo ở S2.
+
+**Ảnh hưởng tới bước sau.**
+- Báo cáo, slide và README dùng `results/final/table.md` làm bảng kết quả chính, luôn kèm cảnh báo của S2: điểm gần tuyệt đối có một phần đến từ bối cảnh chụp.
+- Demo dùng `b_mobilenetv3` làm mặc định; có thêm `a_lenet` và cấu hình truyền thống tốt nhất để so sánh.
+
 ---
 
 ## Bảng quyết định
@@ -936,3 +1027,5 @@ S2 — CNN (`results/S2/table_cnn.md`):
 | Mask cho S2: Otsu trên khoảng cách màu tới nền + hậu xử lý | Ngưỡng toàn cục, Otsu xám, ngưỡng thích nghi, k-means | Bước 6–7, `results/S1/table.md` | [đo] |
 | Bản "chỉ nền" dùng mask nới rộng 12 px + inpainting | Tô vùng chuối bằng màu phẳng | Bước 6–7, `results/S2/table_leak.md`, `results/figures/S2_versions.png` | [đo] |
 | Ghi thiên lệch bối cảnh chụp là hạn chế chính | — | Bước 6–7, `results/S2/table_corners.md`, `results/S2/table_cnn.md` | [đo] |
+| Đại diện mỗi nhóm chọn theo điểm CV/val | Chọn theo điểm test | Bước 8 | [lập luận] |
+| Báo cáo KTC 95% bootstrap trên test | Chỉ báo cáo điểm | Bước 8, `results/final/table.md` | [lập luận] |

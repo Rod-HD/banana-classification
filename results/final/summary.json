@@ -1,0 +1,21 @@
+{
+  "best_per_group": {
+    "truyền thống": "trad_fusion",
+    "hướng A": "a_vgg16",
+    "hướng B": "b_mobilenetv3"
+  },
+  "n_test": 371,
+  "n_images_wrong_by_at_least_one_model": 41,
+  "n_images_wrong_by_all_models": 0,
+  "models": [
+    "trad_color",
+    "trad_edge",
+    "trad_hog",
+    "trad_fusion",
+    "a_lenet",
+    "a_dropout",
+    "a_vgg16",
+    "b_mobilenetv3",
+    "b_resnet50"
+  ]
+}

@@ -1,0 +1,110 @@
+[
+  {
+    "experiment": "final",
+    "group": "Truyền thống (màu)",
+    "config": "Hist HSV (8,8,8) + LogReg C=0.1",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9941,
+    "macro_f1_std": null,
+    "accuracy": 0.9946,
+    "macro_f1_ci95_low": 0.9844,
+    "macro_f1_ci95_high": 1.0
+  },
+  {
+    "experiment": "final",
+    "group": "Truyền thống (cạnh)",
+    "config": "Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9641,
+    "macro_f1_std": null,
+    "accuracy": 0.9677,
+    "macro_f1_ci95_low": 0.9437,
+    "macro_f1_ci95_high": 0.9824
+  },
+  {
+    "experiment": "final",
+    "group": "Truyền thống (HOG)",
+    "config": "HOG 64×128 + LogReg C=0.1",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9899,
+    "macro_f1_std": null,
+    "accuracy": 0.9919,
+    "macro_f1_ci95_low": 0.9765,
+    "macro_f1_ci95_high": 1.0
+  },
+  {
+    "experiment": "final",
+    "group": "Truyền thống (ghép)",
+    "config": "Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0,
+    "macro_f1_ci95_low": 1.0,
+    "macro_f1_ci95_high": 1.0
+  },
+  {
+    "experiment": "final",
+    "group": "CNN hướng A",
+    "config": "a_lenet (biến thể: a_lenet)",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9777,
+    "macro_f1_std": null,
+    "accuracy": 0.9811,
+    "macro_f1_ci95_low": 0.9597,
+    "macro_f1_ci95_high": 0.993
+  },
+  {
+    "experiment": "final",
+    "group": "CNN hướng A",
+    "config": "a_dropout (biến thể: a_dropout_aug)",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9419,
+    "macro_f1_std": null,
+    "accuracy": 0.9434,
+    "macro_f1_ci95_low": 0.9174,
+    "macro_f1_ci95_high": 0.9654
+  },
+  {
+    "experiment": "final",
+    "group": "CNN hướng A",
+    "config": "a_vgg16 (biến thể: a_vgg16_lr1e-3)",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9861,
+    "macro_f1_std": null,
+    "accuracy": 0.9892,
+    "macro_f1_ci95_low": 0.9712,
+    "macro_f1_ci95_high": 0.9968
+  },
+  {
+    "experiment": "final",
+    "group": "CNN hướng B",
+    "config": "b_mobilenetv3 (biến thể: b_mobilenetv3_lr1e-4)",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0,
+    "macro_f1_ci95_low": 1.0,
+    "macro_f1_ci95_high": 1.0
+  },
+  {
+    "experiment": "final",
+    "group": "CNN hướng B",
+    "config": "b_resnet50 (biến thể: b_resnet50)",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9965,
+    "macro_f1_std": null,
+    "accuracy": 0.9973,
+    "macro_f1_ci95_low": 0.9884,
+    "macro_f1_ci95_high": 1.0
+  }
+]
