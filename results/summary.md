@@ -1,6 +1,6 @@
 # Tổng hợp kết quả
 
-File này do `python -m src.summarize` sinh ra từ các file trong `results/`. Bảng đầy đủ mọi cấu hình: [`summary.csv`](summary.csv) (863 dòng). Số trong bảng dùng dấu chấm thập phân.
+File này do `python -m src.summarize` sinh ra từ các file trong `results/`. Bảng đầy đủ mọi cấu hình: [`summary.csv`](summary.csv) (968 dòng). Số trong bảng dùng dấu chấm thập phân.
 
 ## 1. Kết quả chính: đánh giá cuối trên tập test
 
@@ -98,7 +98,7 @@ Chi tiết từng mô hình (classification report, confusion matrix): `results/
 | I1 | Accuracy và macro-F1 | [`I1/table.md`](I1/table.md) | [`I1_accuracy_vs_macro_f1.png`](figures/I1_accuracy_vs_macro_f1.png) |
 | I2 | Xử lý mất cân bằng | [`I2/table.md`](I2/table.md), [`I2/table_per_class.md`](I2/table_per_class.md) | [`I2_imbalance.png`](figures/I2_imbalance.png) |
 | S1 | Phương pháp phân đoạn | [`S1/table.md`](S1/table.md) | [`S1_segmentation.png`](figures/S1_segmentation.png) |
-| S2 | Thiên lệch nền | [`S2/table.md`](S2/table.md), [`S2/table_background_stats.md`](S2/table_background_stats.md), [`S2/table_cnn.md`](S2/table_cnn.md), [`S2/table_corners.md`](S2/table_corners.md), [`S2/table_extreme.md`](S2/table_extreme.md), [`S2/table_leak.md`](S2/table_leak.md) | [`S2_background_bias.png`](figures/S2_background_bias.png), [`S2_corners.png`](figures/S2_corners.png), [`S2_versions.png`](figures/S2_versions.png) |
+| S2 | Thiên lệch nền | [`S2/table.md`](S2/table.md), [`S2/table_background_stats.md`](S2/table_background_stats.md), [`S2/table_background_stats_mask_v2.md`](S2/table_background_stats_mask_v2.md), [`S2/table_cnn.md`](S2/table_cnn.md), [`S2/table_cnn_mask_v2.md`](S2/table_cnn_mask_v2.md), [`S2/table_corners.md`](S2/table_corners.md), [`S2/table_corners_mask_v2.md`](S2/table_corners_mask_v2.md), [`S2/table_extreme.md`](S2/table_extreme.md), [`S2/table_extreme_mask_v2.md`](S2/table_extreme_mask_v2.md), [`S2/table_leak.md`](S2/table_leak.md), [`S2/table_leak_mask_v2.md`](S2/table_leak_mask_v2.md), [`S2/table_mask_v2.md`](S2/table_mask_v2.md) | [`S2_background_bias.png`](figures/S2_background_bias.png), [`S2_background_bias_mask_v2.png`](figures/S2_background_bias_mask_v2.png), [`S2_corners.png`](figures/S2_corners.png), [`S2_corners_mask_v2.png`](figures/S2_corners_mask_v2.png), [`S2_versions.png`](figures/S2_versions.png), [`S2_versions_mask_v2.png`](figures/S2_versions_mask_v2.png) |
 
 ## 5. Phần mở rộng: ba nhánh so sánh độc lập với pipeline gốc (mục 12 của kế hoạch)
 
@@ -109,22 +109,27 @@ Chi tiết: `results/so_sanh_nhanh/`, `results/E1_xu_ly/`, `results/E2_aug_tac_g
 | Nhánh | Cấu hình đại diện | Điểm lúc chọn | Macro-F1 test | KTC 95% | Số ảnh sai / 371 | Điểm bền |
 |---|---|---|---|---|---|---|
 | G — pipeline gốc | b_mobilenetv3 | 1.000 (macro-F1 trên val) | 1.000 | [1.000; 1.000] | 0 | 0.875 |
+| X-a — xử lý dữ liệu: tiền xử lý lúc suy luận | b_mobilenetv3 | 1.000 (macro-F1 trên val) | 0.995 | [0.987; 1.000] | 2 | 0.881 |
+| X-b — xử lý dữ liệu: tăng cường có thay nền | b_mobilenetv3 | 1.000 (macro-F1 trên val) | 1.000 | [1.000; 1.000] | 0 | 0.883 |
 | T — Augmented của tác giả (không rò rỉ) | b_mobilenetv3 | 1.000 (macro-F1 trên val) | 0.998 | [0.991; 1.000] | 1 | 0.909 |
+| B1 — bài báo, trong phạm vi môn học (CNN + bộ phân lớp) | MobileNetV3-Small + SVM tuyến tính | 0.996 (5-fold trên train+val) | 0.993 | [0.982; 1.000] | 2 | 0.836 |
+| B2 — bài báo, đúng phương pháp (ViT + SVM) | ViT-B/16 + SVM | 0.994 (5-fold trên train+val) | 0.997 | [0.989; 1.000] | 1 | 0.919 |
 
 **Từng cấu hình qua các nhánh G (gốc), X (xử lý dữ liệu), T (bản Augmented của tác giả, không rò rỉ)** ([`so_sanh_nhanh/table_models.md`](so_sanh_nhanh/table_models.md)):
 
-| Cấu hình | G: macro-F1 test | G: số ảnh sai | G: điểm bền | T: macro-F1 test | T: số ảnh sai | T: điểm bền |
-|---|---|---|---|---|---|---|
-| Hist HSV + LogReg | 0.994 | 2 | 0.487 | 0.997 | 1 | 0.555 |
-| Cạnh Roberts + KNN | 0.964 | 12 | 0.654 | 0.948 | 18 | 0.689 |
-| HOG + LogReg | 0.990 | 3 | 0.617 | 0.972 | 8 | 0.620 |
-| Hist H-S + HOG + LogReg | 1.000 | 0 | 0.728 | 0.989 | 4 | 0.745 |
-| a_lenet | 0.978 | 7 | 0.837 | 0.966 | 10 | 0.780 |
-| a_dropout | 0.942 | 21 | 0.769 | 0.963 | 13 | 0.796 |
-| a_vgg16 | 0.986 | 4 | 0.886 | 0.985 | 5 | 0.905 |
-| b_mobilenetv3 | 1.000 | 0 | 0.875 | 0.998 | 1 | 0.909 |
-| b_resnet50 | 0.997 | 1 | 0.895 | 0.997 | 1 | 0.924 |
-| **Trung bình 9 cấu hình** | **0.983** | **5.6** | **0.750** | **0.979** | **6.8** | **0.769** |
+| Cấu hình | G: macro-F1 test | G: số ảnh sai | G: điểm bền | X-a: macro-F1 test | X-a: số ảnh sai | X-a: điểm bền | X-b: macro-F1 test | X-b: số ảnh sai | X-b: điểm bền | T: macro-F1 test | T: số ảnh sai | T: điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Hist HSV + LogReg | 0.994 | 2 | 0.487 | 0.993 | 2 | 0.683 | 0.988 | 4 | 0.574 | 0.997 | 1 | 0.555 |
+| Cạnh Roberts + KNN | 0.964 | 12 | 0.654 | 0.842 | 56 | 0.719 | 0.960 | 14 | 0.648 | 0.948 | 18 | 0.689 |
+| HOG + LogReg | 0.990 | 3 | 0.617 | 0.828 | 63 | 0.704 | 0.953 | 16 | 0.664 | 0.972 | 8 | 0.620 |
+| Hist H-S + HOG + LogReg | 1.000 | 0 | 0.728 | 0.982 | 5 | 0.890 | 0.984 | 6 | 0.773 | 0.989 | 4 | 0.745 |
+| a_lenet | 0.978 | 7 | 0.837 | 0.922 | 26 | 0.778 | — | — | — | 0.966 | 10 | 0.780 |
+| a_dropout | 0.942 | 21 | 0.769 | 0.959 | 15 | 0.816 | — | — | — | 0.963 | 13 | 0.796 |
+| a_vgg16 | 0.986 | 4 | 0.886 | 0.958 | 16 | 0.857 | 0.977 | 8 | 0.874 | 0.985 | 5 | 0.905 |
+| b_mobilenetv3 | 1.000 | 0 | 0.875 | 0.995 | 2 | 0.881 | 1.000 | 0 | 0.883 | 0.998 | 1 | 0.909 |
+| b_resnet50 | 0.997 | 1 | 0.895 | 0.997 | 1 | 0.885 | — | — | — | 0.997 | 1 | 0.924 |
+| **Trung bình 9 cấu hình** | **0.983** | **5.6** | **0.750** | **0.942** | **20.7** | **0.801** | — | — | — | **0.979** | **6.8** | **0.769** |
+| **Trung bình 6 cấu hình có ở mọi nhánh** | **0.989** | **3.5** | **0.708** | **0.933** | **24.0** | **0.789** | **0.977** | **8.0** | **0.736** | **0.981** | **6.2** | **0.737** |
 
 **Nhánh B: phương pháp của bài báo trên bản Augmented, 5-fold như bài báo so với 5-fold giữ nhóm theo ảnh gốc** ([`E3_bai_bao/table_protocols.md`](E3_bai_bao/table_protocols.md)):
 
@@ -182,5 +187,5 @@ Chi tiết: `results/so_sanh_nhanh/`, `results/E1_xu_ly/`, `results/E2_aug_tac_g
 | I2 | 16 | 1.000 | Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | Không xử lý (val) |
 | S2 | 15 | 0.996 | Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Toàn ảnh (5-fold CV (train+val)) |
 | final | 9 | 1.000 | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần (test) |
-| so_sanh_nhanh | 126 | 1.000 | Hist H-S + HOG + LogReg (test) |
+| so_sanh_nhanh | 231 | 1.000 | Hist H-S + HOG + LogReg (test) |
 | E3 | 19 | 1.000 | vit_b16 + svm_linear (test) |

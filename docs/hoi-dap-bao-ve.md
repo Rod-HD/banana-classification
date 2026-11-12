@@ -114,10 +114,42 @@ Cấu hình truyền thống tốt nhất 0,958 (5-fold CV); CNN học trên ả
 **34. Muốn cải thiện thì làm gì tiếp?**
 Thu ảnh của cả 4 giống trong cùng một bối cảnh chụp, hoặc một tập test ở bối cảnh khác, để đo đúng khả năng nhận diện giống; huấn luyện trên ảnh đã tách nền hoặc thay nền ngẫu nhiên; gán nhãn mask để đánh giá phân đoạn bằng IoU/Dice. → Báo cáo mục 6.3.
 
-## F. Cài đặt và chạy lại
+## F. Phần mở rộng: ba nhánh so sánh với pipeline gốc
 
-**35. Làm sao chạy lại toàn bộ kết quả?**
+**35. Phần mở rộng gồm những gì và so sánh thế nào?**
+Ba nhánh độc lập, mỗi nhánh đổi một thứ so với pipeline gốc (nhánh G): X đổi cách xử lý dữ liệu; T đổi tập huấn luyện sang bản Augmented của tác giả; B đổi phương pháp sang phương pháp của bài báo. Cả bốn nhánh chấm trên cùng 371 ảnh test gốc và cùng bộ kiểm tra khó. → `docs/ke-hoach-thuc-nghiem.md` mục 12, `results/so_sanh_nhanh/table_arms.md`.
+
+**36. Vì sao phải thêm "bộ kiểm tra khó"? Điểm bền là gì?**
+Trên ảnh gốc, hai cấu hình của pipeline gốc đã đúng 371/371 ảnh nên không còn chỗ để một nhánh khác thể hiện hơn kém. Bộ kiểm tra khó gồm 6 phiên bản biến đổi của tập test: nền hoán đổi, V×0,6, V×1,4, nhiễu σ = 10, xoay +30°, che 25%. Điểm bền là trung bình macro-F1 trên 6 phiên bản đó. Với pipeline gốc, macro-F1 trên ảnh gốc là 0,94–1,00 nhưng điểm bền chỉ 0,49–0,90. → `results/so_sanh_nhanh/G/table.md`, `results/figures/E_stress_examples.png`.
+
+**37. "Nền hoán đổi" đo điều gì?**
+Quả chuối của mỗi ảnh test được ghép lên nền lấy từ ảnh của một lớp khác. Nếu mô hình nhìn quả chuối thì kết quả không đổi; nếu nhìn nền thì kết quả tụt. Với pipeline gốc: HOG còn 0,145, cấu hình truyền thống tốt nhất còn 0,410, `b_mobilenetv3` còn 0,794. Đây là xác nhận thứ hai cho kết luận của S2. → `results/so_sanh_nhanh/G/table.md`.
+
+**38. Dùng bản Augmented của tác giả thì kết quả có tốt hơn không?**
+Trên ảnh gốc thì không: trung bình 9 cấu hình 0,979 so với 0,983 của pipeline gốc; HOG giảm từ 0,990 xuống 0,972 vì ảnh xoay 90° và lật không giống ảnh test. Về độ bền thì tăng nhẹ: điểm bền trung bình 0,769 so với 0,750, và phần tăng nằm đúng ở các phép có trong công thức tăng cường (HOG với xoay +30°: 0,505 → 0,688). → `results/E2_aug_tac_gia/khong_ro_ri/table.md`, `results/so_sanh_nhanh/table_models.md`.
+
+**39. Lấy bộ 7.413 ảnh Augmented rồi chia ngẫu nhiên thì có vấn đề gì?**
+Bản Augmented là bản xuất Roboflow, mỗi ảnh gốc có 3 file (1 gần nguyên gốc, 2 tăng cường). Chia ngẫu nhiên thì 90,6% ảnh test có file cùng ảnh gốc nằm trong train. Trên nhóm đó HOG đúng 0,859, trên nhóm còn lại 0,808. Lưu ý điểm của cách chia này không cao hơn cách chia theo ảnh gốc, vì tập test của nó gồm cả ảnh đã xoay, lật, thêm nhiễu nên khó hơn; hai con số không cùng thước đo. → `results/E2_aug_tac_gia/table_leak_stats.md`, `results/E2_aug_tac_gia/table_leak_accuracy.md`.
+
+**40. Bài báo trên bộ dữ liệu này làm gì và đạt bao nhiêu?**
+Ferdaus và cộng sự (2025, *Data in Brief*) mô tả dữ liệu, không huấn luyện mô hình. Ergün (2025, *Scientific Reports*) rút đặc trưng bằng ViT pretrained rồi phân lớp bằng SVM, chấm bằng 5-fold trên bản Augmented, công bố accuracy 99,70%. Không bài nào dùng YOLO. → `docs/nhat-ky-thuc-nghiem.md` bước 12.
+
+**41. Nhóm có tái hiện được kết quả của bài báo không?**
+Có, ở cấu hình chính: ViT-B/16 + SVM đạt 99,49 ± 0,15% theo đúng giao thức của bài báo (bài báo: 99,70%). Nhưng khoảng cách giữa ViT và CNN thì không tái hiện được: bài báo công bố ViT hơn ResNet + SVM 3,01 điểm, nhóm đo được chỉ 0,22–0,90 điểm (ResNet50 + SVM 99,16%, MobileNetV3 + SVM 99,27%). → `results/E3_bai_bao/table_protocols.md`, `results/figures/E3_papers_protocols.png`.
+
+**42. Con số 99,70% của bài báo có đáng tin không?**
+Về cơ bản là có, nhưng hơi lạc quan. Giao thức của bài báo (5-fold trên bản Augmented, không giữ nhóm) để các file cùng ảnh gốc rơi vào cả hai phía. Khi giữ nhóm theo ảnh gốc, ViT + SVM còn 99,20% (thấp hơn 0,28 điểm). Mức thổi phồng dương ở cả 19/19 tổ hợp đã thử, từ +0,11 đến +0,90 điểm. → `results/E3_bai_bao/table_protocols.md`.
+
+**43. ViT có tốt hơn CNN của đồ án không? Sao không dùng ViT làm mô hình chính?**
+Trên ảnh gốc thì ngang nhau: ViT + SVM sai 1/371 ảnh, `b_mobilenetv3` và cấu hình truyền thống tốt nhất sai 0/371. Trên bộ kiểm tra khó thì đặc trưng ViT bền hơn: điểm bền 0,919–0,937 so với cao nhất 0,895 của pipeline gốc. Nhóm không dùng ViT làm mô hình chính vì ViT nằm ngoài nội dung môn học, có khoảng 86 triệu tham số và rút đặc trưng chậm hơn MobileNetV3 khoảng 23 lần trên CPU. → `results/E3_bai_bao/table_test.md`, `results/E3_bai_bao/summary.json`.
+
+**44. Hướng "chỉ dùng tới CNN" của phương pháp bài báo cho kết quả thế nào?**
+CNN pretrained làm bộ rút đặc trưng + bộ phân lớp đã học (SVM, Logistic Regression, MLP) đạt macro-F1 0,990–0,997 trên test gốc, ngang ViT; điểm bền 0,63–0,89, thấp hơn ViT và thấp hơn fine-tune cùng mạng có tăng cường (MobileNetV3 đóng băng + SVM tuyến tính 0,836; fine-tune 0,875). → `results/E3_bai_bao/table_test.md`.
+
+## G. Cài đặt và chạy lại
+
+**50. Làm sao chạy lại toàn bộ kết quả?**
 `bash scripts/setup_env.sh` rồi `bash scripts/run_all.sh` (hoặc từng bước, ví dụ `bash scripts/run_all.sh 2 3`). Seed cố định, phiên bản thư viện ghi ở `results/environment.txt`. Huấn luyện CNN có checkpoint mỗi epoch và `--resume`. → `README.md`.
 
-**36. Demo chạy thế nào?**
+**51. Demo chạy thế nào?**
 `python app/app.py` mở giao diện web; `python app/app.py --image <ảnh>` dự đoán trên dòng lệnh. Mô hình mặc định là `b_mobilenetv3` (11,7 MB). `a_vgg16` không đưa vào demo vì file 370 MB vượt giới hạn 50 MB. → `results/figures/demo_screenshot.png`, `models/models.json`.

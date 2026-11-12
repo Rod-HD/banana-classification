@@ -1,0 +1,7 @@
+{
+  "arm": "Xb",
+  "note": "làm sạch; tiền xử lý: không xử lý; tăng cường train: hình học + quang học + thay nền ngẫu nhiên",
+  "n_train": 5082,
+  "n_val": 371,
+  "n_test": 371
+}

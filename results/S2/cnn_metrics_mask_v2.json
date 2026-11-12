@@ -1,0 +1,38 @@
+{
+  "a_vgg16_lr1e-3|Toàn ảnh": {
+    "macro_f1": 0.9895407161545409,
+    "accuracy": 0.9919137466307277
+  },
+  "a_vgg16_lr1e-3|Chỉ vùng chuối": {
+    "macro_f1": 0.9486639678671618,
+    "accuracy": 0.954177897574124
+  },
+  "a_vgg16_lr1e-3|Chỉ vùng nền": {
+    "macro_f1": 0.798559755775973,
+    "accuracy": 0.8247978436657682
+  },
+  "b_mobilenetv3_lr1e-4|Toàn ảnh": {
+    "macro_f1": 1.0,
+    "accuracy": 1.0
+  },
+  "b_mobilenetv3_lr1e-4|Chỉ vùng chuối": {
+    "macro_f1": 0.9672899168427227,
+    "accuracy": 0.967654986522911
+  },
+  "b_mobilenetv3_lr1e-4|Chỉ vùng nền": {
+    "macro_f1": 0.6762645328473061,
+    "accuracy": 0.738544474393531
+  },
+  "b_resnet50|Toàn ảnh": {
+    "macro_f1": 0.9975770785280487,
+    "accuracy": 0.9973045822102425
+  },
+  "b_resnet50|Chỉ vùng chuối": {
+    "macro_f1": 0.9240310319523348,
+    "accuracy": 0.9272237196765498
+  },
+  "b_resnet50|Chỉ vùng nền": {
+    "macro_f1": 0.7211141403126136,
+    "accuracy": 0.7439353099730458
+  }
+}

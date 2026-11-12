@@ -91,6 +91,156 @@
   },
   {
     "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.993,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.8415,
+    "macro_f1_std": null,
+    "accuracy": 0.8491
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.8279,
+    "macro_f1_std": null,
+    "accuracy": 0.8302
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9824,
+    "macro_f1_std": null,
+    "accuracy": 0.9865
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9224,
+    "macro_f1_std": null,
+    "accuracy": 0.9299
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9586,
+    "macro_f1_std": null,
+    "accuracy": 0.9596
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9578,
+    "macro_f1_std": null,
+    "accuracy": 0.9569
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9951,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9968,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9881,
+    "macro_f1_std": null,
+    "accuracy": 0.9892
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9598,
+    "macro_f1_std": null,
+    "accuracy": 0.9623
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9534,
+    "macro_f1_std": null,
+    "accuracy": 0.9569
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9839,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 0.9766,
+    "macro_f1_std": null,
+    "accuracy": 0.9784
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "clean",
+    "eval_set": "test",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "so_sanh_nhanh",
     "group": "Nhánh T",
     "config": "Hist HSV + LogReg",
     "condition": "clean",
@@ -718,6 +868,906 @@
     "macro_f1": 0.7138,
     "macro_f1_std": null,
     "accuracy": 0.6954
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9661,
+    "macro_f1_std": null,
+    "accuracy": 0.9704
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.8344,
+    "macro_f1_std": null,
+    "accuracy": 0.8518
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.7842,
+    "macro_f1_std": null,
+    "accuracy": 0.7898
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.354,
+    "macro_f1_std": null,
+    "accuracy": 0.3827
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9931,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist HSV + LogReg",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.169,
+    "macro_f1_std": null,
+    "accuracy": 0.4124
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.8379,
+    "macro_f1_std": null,
+    "accuracy": 0.8464
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.7989,
+    "macro_f1_std": null,
+    "accuracy": 0.8167
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.8199,
+    "macro_f1_std": null,
+    "accuracy": 0.8194
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.7924,
+    "macro_f1_std": null,
+    "accuracy": 0.7951
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.686,
+    "macro_f1_std": null,
+    "accuracy": 0.7062
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.3805,
+    "macro_f1_std": null,
+    "accuracy": 0.4906
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.8361,
+    "macro_f1_std": null,
+    "accuracy": 0.8356
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.8099,
+    "macro_f1_std": null,
+    "accuracy": 0.814
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.8315,
+    "macro_f1_std": null,
+    "accuracy": 0.8302
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.8222,
+    "macro_f1_std": null,
+    "accuracy": 0.8248
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.6288,
+    "macro_f1_std": null,
+    "accuracy": 0.6388
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "HOG + LogReg",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.294,
+    "macro_f1_std": null,
+    "accuracy": 0.3154
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9511,
+    "macro_f1_std": null,
+    "accuracy": 0.9542
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9779,
+    "macro_f1_std": null,
+    "accuracy": 0.9811
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9789,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.6507,
+    "macro_f1_std": null,
+    "accuracy": 0.628
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9741,
+    "macro_f1_std": null,
+    "accuracy": 0.9784
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.8048,
+    "macro_f1_std": null,
+    "accuracy": 0.8383
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.925,
+    "macro_f1_std": null,
+    "accuracy": 0.9326
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.861,
+    "macro_f1_std": null,
+    "accuracy": 0.8652
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.8465,
+    "macro_f1_std": null,
+    "accuracy": 0.8518
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9224,
+    "macro_f1_std": null,
+    "accuracy": 0.9299
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.7969,
+    "macro_f1_std": null,
+    "accuracy": 0.8275
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_lenet",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.3174,
+    "macro_f1_std": null,
+    "accuracy": 0.3396
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9586,
+    "macro_f1_std": null,
+    "accuracy": 0.9596
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.8795,
+    "macro_f1_std": null,
+    "accuracy": 0.8787
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9425,
+    "macro_f1_std": null,
+    "accuracy": 0.9407
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9623,
+    "macro_f1_std": null,
+    "accuracy": 0.9623
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9461,
+    "macro_f1_std": null,
+    "accuracy": 0.9488
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_dropout",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.2071,
+    "macro_f1_std": null,
+    "accuracy": 0.2911
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9514,
+    "macro_f1_std": null,
+    "accuracy": 0.9515
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9327,
+    "macro_f1_std": null,
+    "accuracy": 0.9326
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.954,
+    "macro_f1_std": null,
+    "accuracy": 0.9542
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9638,
+    "macro_f1_std": null,
+    "accuracy": 0.9623
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9257,
+    "macro_f1_std": null,
+    "accuracy": 0.9245
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "a_vgg16",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.4129,
+    "macro_f1_std": null,
+    "accuracy": 0.4717
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9951,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9426,
+    "macro_f1_std": null,
+    "accuracy": 0.9434
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9154,
+    "macro_f1_std": null,
+    "accuracy": 0.9084
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9879,
+    "macro_f1_std": null,
+    "accuracy": 0.9865
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9976,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_mobilenetv3",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.4497,
+    "macro_f1_std": null,
+    "accuracy": 0.442
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9968,
+    "macro_f1_std": null,
+    "accuracy": 0.9973
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9834,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9559,
+    "macro_f1_std": null,
+    "accuracy": 0.9542
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9849,
+    "macro_f1_std": null,
+    "accuracy": 0.9865
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9903,
+    "macro_f1_std": null,
+    "accuracy": 0.9919
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-a",
+    "config": "b_resnet50",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.3973,
+    "macro_f1_std": null,
+    "accuracy": 0.3854
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9627,
+    "macro_f1_std": null,
+    "accuracy": 0.965
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.4589,
+    "macro_f1_std": null,
+    "accuracy": 0.4906
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.7137,
+    "macro_f1_std": null,
+    "accuracy": 0.6927
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.184,
+    "macro_f1_std": null,
+    "accuracy": 0.248
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9822,
+    "macro_f1_std": null,
+    "accuracy": 0.9838
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist HSV + LogReg",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.1434,
+    "macro_f1_std": null,
+    "accuracy": 0.2318
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.7988,
+    "macro_f1_std": null,
+    "accuracy": 0.8113
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.6911,
+    "macro_f1_std": null,
+    "accuracy": 0.7197
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.8925,
+    "macro_f1_std": null,
+    "accuracy": 0.8949
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.179,
+    "macro_f1_std": null,
+    "accuracy": 0.2938
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.7085,
+    "macro_f1_std": null,
+    "accuracy": 0.7143
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Cạnh Roberts + KNN",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.6173,
+    "macro_f1_std": null,
+    "accuracy": 0.6577
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.4946,
+    "macro_f1_std": null,
+    "accuracy": 0.4852
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9217,
+    "macro_f1_std": null,
+    "accuracy": 0.9272
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.7202,
+    "macro_f1_std": null,
+    "accuracy": 0.7278
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.6625,
+    "macro_f1_std": null,
+    "accuracy": 0.6577
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.6152,
+    "macro_f1_std": null,
+    "accuracy": 0.6199
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "HOG + LogReg",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.5707,
+    "macro_f1_std": null,
+    "accuracy": 0.6253
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.8527,
+    "macro_f1_std": null,
+    "accuracy": 0.8571
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9769,
+    "macro_f1_std": null,
+    "accuracy": 0.9784
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9299,
+    "macro_f1_std": null,
+    "accuracy": 0.938
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.1279,
+    "macro_f1_std": null,
+    "accuracy": 0.2183
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9077,
+    "macro_f1_std": null,
+    "accuracy": 0.9191
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "Hist H-S + HOG + LogReg",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.8423,
+    "macro_f1_std": null,
+    "accuracy": 0.8464
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9075,
+    "macro_f1_std": null,
+    "accuracy": 0.9057
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9602,
+    "macro_f1_std": null,
+    "accuracy": 0.9623
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9535,
+    "macro_f1_std": null,
+    "accuracy": 0.9542
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9648,
+    "macro_f1_std": null,
+    "accuracy": 0.965
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 0.9432,
+    "macro_f1_std": null,
+    "accuracy": 0.9407
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "a_vgg16",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.5162,
+    "macro_f1_std": null,
+    "accuracy": 0.5633
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "swapbg",
+    "eval_set": "test",
+    "macro_f1": 0.9751,
+    "macro_f1_std": null,
+    "accuracy": 0.973
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "v0.6",
+    "eval_set": "test",
+    "macro_f1": 0.9537,
+    "macro_f1_std": null,
+    "accuracy": 0.9569
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "v1.4",
+    "eval_set": "test",
+    "macro_f1": 0.9349,
+    "macro_f1_std": null,
+    "accuracy": 0.9272
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "noise10",
+    "eval_set": "test",
+    "macro_f1": 0.9949,
+    "macro_f1_std": null,
+    "accuracy": 0.9946
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "rot30",
+    "eval_set": "test",
+    "macro_f1": 1.0,
+    "macro_f1_std": null,
+    "accuracy": 1.0
+  },
+  {
+    "experiment": "so_sanh_nhanh",
+    "group": "Nhánh X-b",
+    "config": "b_mobilenetv3",
+    "condition": "occlude25",
+    "eval_set": "test",
+    "macro_f1": 0.4411,
+    "macro_f1_std": null,
+    "accuracy": 0.4582
   },
   {
     "experiment": "so_sanh_nhanh",

@@ -3,6 +3,7 @@
 
     python -m src.exp_arm_x --only X1     # thống kê làm sạch, kiểm tra "một quả chụp nhiều mặt"
     python -m src.exp_arm_x --only X2     # chọn tổ hợp tiền xử lý × tăng cường trên val (X2–X4)
+    python -m src.exp_arm_x --only X3     # kiểm tra: cân bằng trắng theo nền có đưa thông tin nền vào màu quả không
     python -m src.exp_arm_x --only RUN    # chạy 9 cấu hình với tổ hợp được chọn
     python -m src.exp_arm_x               # tất cả
 """
@@ -174,7 +175,7 @@ def x2():
     sel = json.loads((RESULTS_DIR / "select_traditional" / "selected.json").read_text()); cfg = sel["trad_fusion"]
     va = load_split("val"); yva = va["label_id"].values
     raw_val = {"clean": np.stack([load_all_images(256)[i] for i in va["idx"].values]), **stress_sets("val")}
-    raw, rows = {}, []
+    raw, rows, preds = {}, [], {}
     val_cache = {}
     for level, aug in combos():
         if level not in val_cache:                      # ảnh val (gốc + 6 phép thử) sau tiền xử lý của mức này
@@ -184,8 +185,10 @@ def x2():
         X, y, _ = build_sets(level, aug)
         Ft, dims = _feats(cfg, X); clf_t = build_clf(cfg, dims).fit(Ft, y)
         clf_e = make_clf("logreg").fit(emb(X), y)
-        sc_t = {t: float(f1_score(yva, clf_t.predict(Fv[t]), average="macro")) for t in TESTS}
-        sc_e = {t: float(f1_score(yva, clf_e.predict(Ev[t]), average="macro")) for t in TESTS}
+        pt = {t: clf_t.predict(Fv[t]) for t in TESTS}; pe = {t: clf_e.predict(Ev[t]) for t in TESTS}
+        preds[f"{level}|{aug}"] = np.stack([pt[t] for t in TESTS] + [pe[t] for t in TESTS])      # (14, số ảnh val)
+        sc_t = {t: float(f1_score(yva, pt[t], average="macro")) for t in TESTS}
+        sc_e = {t: float(f1_score(yva, pe[t], average="macro")) for t in TESTS}
         mean_t, mean_e = float(np.mean(list(sc_t.values()))), float(np.mean(list(sc_e.values())))
         raw[f"{level}|{aug}"] = {"trad": sc_t, "cnn_embedding": sc_e, "mean_trad": mean_t, "mean_cnn": mean_e, "score": (mean_t + mean_e) / 2, "n_train": int(len(y))}
         row = {"Tiền xử lý": LEVEL_NAME[level], "Tăng cường (train)": MODE_NAME[aug], "Số ảnh train": len(y)}
@@ -194,10 +197,36 @@ def x2():
         rows.append(row); print(row, flush=True)
     best = max(raw, key=lambda k: raw[k]["score"])
     level, aug = best.split("|")
-    save_json(OUT / "selection.json", {"selected": {"level": level, "aug": aug}, "combos": raw,
-                                        "rule": "trung bình macro-F1 trên val của 7 phép thử (ảnh gốc + 6 phép của bộ kiểm tra khó), lấy trung bình hai mô hình đại diện"})
-    print(save_table(EXP, rows, "table_selection", title="X2–X4 — Chọn tổ hợp tiền xử lý × tăng cường trên val (macro-F1; TT = Hist H-S + HOG + LogReg, CNN = embedding MobileNetV3 đóng băng + LogReg)"))
-    print("Tổ hợp được chọn:", LEVEL_NAME[level], "+", MODE_NAME[aug])
+    # Sai số của điểm chọn: bootstrap 1000 lần trên ảnh val (lấy mẫu lại cùng chỉ số ảnh cho mọi tổ hợp, nên so được từng cặp)
+    rng = np.random.default_rng(SEED); n = len(yva)
+
+    def score(P, idx):
+        return float(np.mean([f1_score(yva[idx], P[j][idx], average="macro", labels=range(4), zero_division=0) for j in range(P.shape[0])]))
+
+    boots = {k: [] for k in preds}
+    for _ in range(1000):
+        idx = rng.integers(0, n, n)
+        for k in preds:
+            boots[k].append(score(preds[k], idx))
+    boots = {k: np.array(v) for k, v in boots.items()}
+    for k, row in zip(raw, rows):
+        d = boots[best] - boots[k]
+        raw[k]["score_boot_std"] = float(boots[k].std()); raw[k]["diff_to_top"] = float(raw[best]["score"] - raw[k]["score"])
+        raw[k]["diff_to_top_ci95"] = [float(np.percentile(d, 2.5)), float(np.percentile(d, 97.5))]
+        raw[k]["tied_with_top"] = bool(np.percentile(d, 2.5) <= 0)
+        row["Điểm chọn"] = f"{raw[k]['score']:.3f} ± {raw[k]['score_boot_std']:.3f}"
+        row["Kém tổ hợp đứng đầu (KTC 95%)"] = "—" if k == best else f"{raw[k]['diff_to_top']:.3f} [{raw[k]['diff_to_top_ci95'][0]:+.3f}; {raw[k]['diff_to_top_ci95'][1]:+.3f}]"
+        row["Phân biệt được với tổ hợp đứng đầu"] = "—" if k == best else ("không" if raw[k]["tied_with_top"] else "có")
+    # Hai biến thể vào chạy đủ 9 cấu hình:
+    #   X-a: tổ hợp có điểm chọn cao nhất;
+    #   X-b: tổ hợp có điểm chọn cao nhất trong các tổ hợp không xử lý ảnh lúc suy luận (mức "none"), tức chỉ can thiệp vào tập train.
+    best_b = max([k for k in raw if k.startswith("none|")], key=lambda k: raw[k]["score"])
+    lb, ab = best_b.split("|")
+    save_json(OUT / "selection.json", {"selected": {"level": level, "aug": aug}, "selected_b": {"level": lb, "aug": ab}, "combos": raw,
+                                        "rule": "điểm chọn = trung bình macro-F1 trên val của 7 phép thử (ảnh gốc + 6 phép của bộ kiểm tra khó), lấy trung bình hai mô hình đại diện; "
+                                                "X-a = điểm cao nhất; X-b = điểm cao nhất trong các tổ hợp không xử lý ảnh lúc suy luận"})
+    print(save_table(EXP, rows, "table_selection", title="X2–X4 — Chọn tổ hợp tiền xử lý × tăng cường trên val (macro-F1; TT = Hist H-S + HOG + LogReg, CNN = embedding MobileNetV3 đóng băng + LogReg; ± là độ lệch chuẩn bootstrap)"))
+    print("X-a:", LEVEL_NAME[level], "+", MODE_NAME[aug], "| X-b:", LEVEL_NAME[lb], "+", MODE_NAME[ab])
     # hình
     keys = list(raw); M = np.array([[(raw[k]["trad"][t] + raw[k]["cnn_embedding"][t]) / 2 for t in TESTS] + [raw[k]["score"]] for k in keys])
     fig, ax = plt.subplots(figsize=(12, 5))
@@ -209,6 +238,31 @@ def x2():
     ax.set_yticks(range(len(keys))); ax.set_yticklabels([f"{LEVEL_NAME[k.split('|')[0]]} | {MODE_NAME[k.split('|')[1]]}" for k in keys], fontsize=7); ax.grid(False)
     ax.set_title("X2–X4 — Macro-F1 trên val theo tổ hợp xử lý dữ liệu (trung bình hai mô hình đại diện; dòng in đậm: tổ hợp được chọn)", fontsize=10)
     fig.colorbar(im, ax=ax, fraction=0.02); fig.tight_layout(); fig.savefig(FIG_DIR / "E1_selection.png", dpi=130); plt.close(fig)
+
+
+def x3():
+    """Kiểm tra: cân bằng trắng theo nền có chuyển thông tin của nền vào màu quả chuối không?
+    Histogram HSV + LogReg học trên train đã tiền xử lý, chấm trên val gốc và val nền hoán đổi, với bốn mức tiền xử lý.
+    Kèm mức thay đổi màu của chính các điểm ảnh quả chuối (theo mask) giữa ảnh gốc và ảnh nền hoán đổi sau tiền xử lý."""
+    from .exp_segment import all_masks_v2
+    sel = json.loads((RESULTS_DIR / "select_traditional" / "selected.json").read_text()); cfg = sel["trad_color"]
+    va = load_split("val"); yva, iva = va["label_id"].values, va["idx"].values
+    raw_clean = np.stack([load_all_images(256)[i] for i in iva]); raw_swap = stress_sets("val")["swapbg"]
+    masks = all_masks_v2()[iva]
+    core = [cv2.erode(m, cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9, 9))) > 0 for m in masks]     # lõi quả chuối, tránh viền ghép
+    rows, raw = [], {}
+    for level in ("none", "bg", "wb", "wb+bg"):
+        X, y, _ = build_sets(level, "none")
+        Ft, dims = _feats(cfg, X); clf = build_clf(cfg, dims).fit(Ft, y)
+        Pc, Ps = process_batch(raw_clean, level), process_batch(raw_swap, level)
+        f_c = float(f1_score(yva, clf.predict(_feats(cfg, Pc)[0]), average="macro")); f_s = float(f1_score(yva, clf.predict(_feats(cfg, Ps)[0]), average="macro"))
+        lab = lambda im: cv2.cvtColor(im, cv2.COLOR_RGB2LAB).astype(np.float32)
+        d = float(np.mean([np.linalg.norm(lab(a)[c] - lab(b)[c], axis=1).mean() for a, b, c in zip(Pc, Ps, core) if c.any()]))
+        raw[level] = {"val_clean_macro_f1": f_c, "val_swapbg_macro_f1": f_s, "banana_color_shift_lab": d}
+        rows.append({"Tiền xử lý": LEVEL_NAME[level], "Hist HSV + LogReg: val gốc": f"{f_c:.3f}", "Hist HSV + LogReg: val nền hoán đổi": f"{f_s:.3f}",
+                     "Sụt": f"{f_c - f_s:+.3f}", "Màu quả chuối lệch đi khi đổi nền (khoảng cách Lab trung bình)": f"{d:.1f}"})
+    save_json(OUT / "x3_wb_leak.json", raw)
+    print(save_table(EXP, rows, "table_wb_leak", title="X3 — Cân bằng trắng theo nền có đưa thông tin của nền vào màu quả chuối không (371 ảnh val)"))
 
 
 def fig_examples(level, aug):
@@ -227,27 +281,38 @@ def fig_examples(level, aug):
     fig.tight_layout(); fig.savefig(FIG_DIR / "E1_preprocess_examples.png", dpi=110); plt.close(fig)
 
 
-def arm_x() -> ArmData:
-    selj = json.loads((OUT / "selection.json").read_text())["selected"]; level, aug = selj["level"], selj["aug"]
+def arm_x(variant: str = "a") -> ArmData:
+    """variant 'a': tổ hợp có điểm chọn cao nhất; 'b': tổ hợp tốt nhất không xử lý ảnh lúc suy luận."""
+    selj = json.loads((OUT / "selection.json").read_text())["selected" if variant == "a" else "selected_b"]; level, aug = selj["level"], selj["aug"]
     X, y, b = build_sets(level, aug)
     st = {k: process_batch(v, level) for k, v in stress_sets("test").items()}
-    return ArmData("X", OUT / "pipeline", X, y, process_batch(b["val"][0], level), b["val"][1], process_batch(b["test"][0], level), b["test"][1],
-                   stress=st, note=f"làm sạch + {LEVEL_NAME[level].lower()} + tăng cường: {MODE_NAME[aug].lower()}")
+    name, sub = ("X", "pipeline") if variant == "a" else ("Xb", "pipeline_b")
+    return ArmData(name, OUT / sub, X, y, process_batch(b["val"][0], level), b["val"][1], process_batch(b["test"][0], level), b["test"][1],
+                   stress=st, note=f"làm sạch; tiền xử lý: {LEVEL_NAME[level].lower()}; tăng cường train: {MODE_NAME[aug].lower()}")
 
 
 def run():
-    selj = json.loads((OUT / "selection.json").read_text())["selected"]
-    fig_examples(selj["level"], selj["aug"])
-    run_arm(arm_x())
+    selj = json.loads((OUT / "selection.json").read_text())
+    fig_examples(selj["selected"]["level"], selj["selected"]["aug"])
+    run_arm(arm_x("a"))
+    # X-b là biến thể đối chiếu: mặc định chỉ chạy 4 cấu hình truyền thống và hai CNN đại diện (a_vgg16, b_mobilenetv3)
+    # để giới hạn thời gian trên CPU; chạy đủ 9 cấu hình: python -m src.exp_arm_x --only RUN --xb-all
+    if "selected_b" in selj and selj["selected_b"] != selj["selected"]:
+        from .pipeline import TRAD
+        run_arm(arm_x("b"), None if XB_ALL else TRAD + ["a_vgg16", "b_mobilenetv3"])
 
 
-EXPS = {"X1": x1, "X2": x2, "RUN": run}
+XB_ALL = False
+EXPS = {"X1": x1, "X2": x2, "X3": x3, "RUN": run}
 
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--only", nargs="*", choices=list(EXPS))
+    ap.add_argument("--xb-all", action="store_true", help="chạy đủ 9 cấu hình cho biến thể X-b")
     a = ap.parse_args()
+    global XB_ALL
+    XB_ALL = a.xb_all
     exp_dir(EXP)
     for k in (a.only or EXPS):
         print(f"===== {k} =====", flush=True)

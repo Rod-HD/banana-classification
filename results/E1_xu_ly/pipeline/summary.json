@@ -1,0 +1,7 @@
+{
+  "arm": "X",
+  "note": "làm sạch; tiền xử lý: nền phẳng (không cân bằng trắng); tăng cường train: hình học + quang học",
+  "n_train": 5082,
+  "n_val": 371,
+  "n_test": 371
+}

@@ -8,11 +8,39 @@
       "robust": 0.8752501396552894
     },
     {
+      "arm": "X-a — xử lý dữ liệu: tiền xử lý lúc suy luận",
+      "config": "b_mobilenetv3",
+      "test_macro_f1": 0.9951462538487854,
+      "n_errors": 2,
+      "robust": 0.8813929573292145
+    },
+    {
+      "arm": "X-b — xử lý dữ liệu: tăng cường có thay nền",
+      "config": "b_mobilenetv3",
+      "test_macro_f1": 1.0,
+      "n_errors": 0,
+      "robust": 0.8832810281658453
+    },
+    {
       "arm": "T — Augmented của tác giả (không rò rỉ)",
       "config": "b_mobilenetv3",
       "test_macro_f1": 0.997565892470351,
       "n_errors": 1,
       "robust": 0.9091245933672978
+    },
+    {
+      "arm": "B1 — bài báo, trong phạm vi môn học (CNN + bộ phân lớp)",
+      "config": "MobileNetV3-Small + SVM tuyến tính",
+      "test_macro_f1": 0.9930068612984166,
+      "n_errors": 2,
+      "robust": 0.836026782163611
+    },
+    {
+      "arm": "B2 — bài báo, đúng phương pháp (ViT + SVM)",
+      "config": "ViT-B/16 + SVM",
+      "test_macro_f1": 0.9967736563839973,
+      "n_errors": 1,
+      "robust": 0.9194832411129573
     }
   ]
 }

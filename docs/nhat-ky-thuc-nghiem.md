@@ -1244,6 +1244,157 @@ Thời gian rút đặc trưng mỗi ảnh trên CPU (`results/E3_bai_bao/summar
 
 **Ảnh hưởng tới bước sau.** Đại diện của nhánh B trong bảng so sánh bốn nhánh: B1 là MobileNetV3 + SVM tuyến tính (chọn theo 5-fold trên train+val), B2 là ViT + SVM RBF (cấu hình chính của bài báo). Thông tin "mỗi quả chụp bốn mặt" của bài báo dữ liệu được kiểm tra ở bước 13 (ảnh mang số thứ tự liền kề).
 
+## Bước 13 — Nhánh X: xử lý dữ liệu do nhóm thiết kế, rồi chạy lại pipeline (12/11/2026)
+
+**Mục tiêu.** Trả lời câu hỏi "pipeline gốc đã xử lý và tăng cường dữ liệu chưa", thiết kế phần làm sạch, tiền xử lý và tăng cường, chọn tổ hợp tốt nhất bằng số liệu, rồi chạy lại 9 cấu hình của pipeline gốc trên dữ liệu đã xử lý.
+
+**Hiện trạng của pipeline gốc.** Chỉ resize ảnh về 256×256 và chuẩn hóa giá trị điểm ảnh bên trong mô hình. Không làm sạch, không cân bằng trắng, không tách nền. Tăng cường ảnh chỉ bật lúc huấn luyện cho `a_dropout` và hai mô hình hướng B; nhóm truyền thống không có (trừ thí nghiệm I2).
+
+**Đã làm.**
+- `python -m src.exp_arm_x --only X1`: kiểm tra và làm sạch dữ liệu; kiểm tra dấu vết "mỗi quả chụp bốn mặt".
+- `src/preprocess.py`: năm mức tiền xử lý: không xử lý; cân bằng trắng theo nền; nền phẳng; cân bằng trắng + nền phẳng; thêm cắt theo quả. `src/augment.py`: ba mức tăng cường chỉ trên train: không; hình học + quang học (2 bản mỗi ảnh); thêm thay nền ngẫu nhiên.
+- `python -m src.exp_arm_x --only X2`: chấm 12 tổ hợp trên val bằng hai mô hình đại diện, 7 phép thử, bootstrap 1.000 lần cho sai số của điểm chọn.
+- `python -m src.exp_arm_x --only RUN`: chạy lại pipeline cho hai biến thể: **X-a** (điểm chọn cao nhất) đủ 9 cấu hình; **X-b** (tốt nhất trong nhóm không xử lý ảnh lúc suy luận) cho 6 cấu hình đại diện.
+- `python -m src.exp_arm_x --only X3`: phép đo riêng về cân bằng trắng. `python -m src.exp_segment --only S2V2`: chạy lại S2 với mask mới.
+
+**Lý do chọn cách này.**
+- Tiêu chí chọn là điểm trên 7 phép thử (ảnh gốc và 6 phép khó) chứ không riêng ảnh gốc. **[đo]** Trên ảnh gốc, tổ hợp "không xử lý" đã đạt 1,000 / 0,993 trên val; nếu chỉ nhìn ảnh gốc thì mọi bước xử lý đều "làm kém đi" và không bước nào được chọn (`results/E1_xu_ly/table_selection.md`).
+- Dùng hai mô hình đại diện rẻ (cấu hình truyền thống tốt nhất; embedding MobileNetV3 đóng băng + LogReg) để chấm 12 tổ hợp trong khoảng 12 phút; huấn luyện đủ 9 cấu hình cho từng tổ hợp sẽ mất khoảng 1 giờ mỗi tổ hợp. **[lập luận]**
+- Tăng cường được áp lên ảnh thô rồi mới qua tiền xử lý như mọi ảnh khác, để ảnh train và ảnh cần dự đoán đi qua cùng một đường. **[lập luận]**
+
+**Phương án khác và vì sao không chọn (kể cả những thứ đã thử và bỏ).**
+- **Lưới tổ hợp đầu tiên thiếu mức "nền phẳng không cân bằng trắng".** Lần chạy đầu chỉ có 10 tổ hợp, nền phẳng luôn đi kèm cân bằng trắng. Tổ hợp đứng đầu khi đó là cân bằng trắng + nền phẳng (0,843), và ba tổ hợp kế tiếp cách nó dưới 0,01. Khi chạy thử pipeline với tổ hợp này, histogram HSV + LogReg tụt mạnh ở phép nền hoán đổi dù nền đã phẳng. Từ đó nhóm tìm ra nguyên nhân (cân bằng trắng, xem X3), thêm mức "nền phẳng" vào lưới và chạy lại toàn bộ phần chọn. Kết quả của lần chạy đầu không được dùng. **[đo]** `results/E1_xu_ly/table_wb_leak.md`, `results/E1_xu_ly/table_selection.md`.
+- **Cân bằng trắng theo nền:** không chọn. Hệ số cân bằng tính từ màu nền rồi nhân vào cả quả chuối; khi nền đổi, màu quả lệch trung bình 12,9 đơn vị Lab (không cân bằng trắng: 0,0), và histogram HSV + LogReg sụt 0,351 ở phép nền hoán đổi (chỉ nền phẳng: 0,023). Bước này không khử thông tin của nền mà chuyển nó vào màu quả. **[đo]** `results/E1_xu_ly/table_wb_leak.md`.
+- **Cắt theo quả:** không chọn; điểm chọn 0,804–0,813, và phép che 25% còn 0,20–0,30 vì ô đen bị coi là vật thể nên khung cắt sai. **[đo]** `results/E1_xu_ly/table_selection.md`.
+- **Chia lại tập theo quả/đợt chụp:** chưa làm. X1 cho thấy chia ngẫu nhiên lạc quan hơn chia theo khối ảnh liên tiếp 0,024–0,069, nhưng dữ liệu không có nhãn "quả nào", và đổi cách chia sẽ làm mọi kết quả trước không so được với nhau. Ghi vào hạn chế. **[đo]** `results/E1_xu_ly/table_blocked_cv.md`.
+- **Chạy đủ 9 cấu hình cho X-b:** chưa chạy `a_lenet`, `a_dropout`, `b_resnet50` (giới hạn thời gian trên CPU; lệnh: `python -m src.exp_arm_x --only RUN --xb-all`). **[lập luận]**
+- **Loại ảnh mờ, sửa nhãn:** không làm. 18 ảnh có độ nét dưới 1/4 trung vị được liệt kê ở `results/E1_xu_ly/low_sharpness.csv` nhưng giữ lại; không ảnh nào bị cả hai mô hình kiểm tra cùng đoán sai nên không có ứng viên sai nhãn. **[đo]** `results/E1_xu_ly/table_cleaning.md`.
+
+**Bằng chứng.**
+
+X1 — làm sạch (`results/E1_xu_ly/table_cleaning.md`, danh sách ảnh bị loại: `results/E1_xu_ly/train_dropped.csv`):
+
+| Kiểm tra | Kết quả |
+|---|---|
+| File không đọc được | 0 |
+| Ảnh không phải 256×256 (được resize khi đọc) | 2 |
+| File trùng tuyệt đối (md5) | 0 |
+| Ảnh train gần trùng (pHash, Hamming ≤ 2) với ảnh val hoặc test → loại khỏi train | 15 |
+| Bản lặp gần trùng trong nội bộ train → giữ 1 ảnh mỗi nhóm, loại | 20 |
+| Số ảnh train sau khi làm sạch | 1694 / 1729 |
+| Độ nét (phương sai Laplacian): phân vị 5% / trung vị / phân vị 95% | 56 / 153 / 280 |
+| Ảnh có độ nét dưới 1/4 trung vị (nghi mờ; giữ lại, chỉ liệt kê) | 18 |
+| Mask của bước S1 lớn hơn mask mới từ 1,5 lần (mask cũ tràn ra nền) | 129 / 2471 (5,2%) |
+
+X1 — dấu vết "mỗi quả chụp bốn mặt" (`results/E1_xu_ly/table_adjacent.md`, `results/E1_xu_ly/table_blocked_cv.md`):
+
+| Chỉ số | Đo được | Nếu ngẫu nhiên |
+|---|---|---|
+| Ảnh có láng giềng gần nhất cùng lớp (embedding MobileNetV3) mang số thứ tự cách ≤ 3 | 20,0% | 1,0% |
+| … cách đúng 1 | 10,1% | 0,3% |
+
+| Mô hình | 5-fold ngẫu nhiên phân tầng | 5-fold theo khối ảnh liên tiếp | Chênh |
+|---|---|---|---|
+| Hist HSV (8,8,8) + LogReg C=0,1 | 0,991 ± 0,005 | 0,922 ± 0,042 | +0,069 |
+| HOG 64×128 + LogReg C=0,1 | 0,986 ± 0,007 | 0,933 ± 0,062 | +0,053 |
+| Hist H-S + HOG + LogReg C=100 | 0,996 ± 0,003 | 0,973 ± 0,017 | +0,024 |
+| Embedding MobileNetV3 (ImageNet) + LogReg | 0,995 ± 0,005 | 0,964 ± 0,025 | +0,031 |
+
+X2–X4 — chọn tổ hợp trên val (`results/E1_xu_ly/table_selection.md`, hình `results/figures/E1_selection.png`, ảnh minh họa `results/figures/E1_preprocess_examples.png`):
+
+| Tiền xử lý | Tăng cường (train) | Số ảnh train | Ảnh gốc (TT / CNN) | Nền hoán đổi (TT / CNN) | V×0,6 (TT / CNN) | V×1,4 (TT / CNN) | Nhiễu σ=10 (TT / CNN) | Xoay +30° (TT / CNN) | Che 25% (TT / CNN) | TB 7 phép thử (TT) | TB 7 phép thử (CNN) | Điểm chọn | Kém tổ hợp đứng đầu (KTC 95%) | Phân biệt được với tổ hợp đứng đầu |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Không xử lý | Không tăng cường | 1694 | 1,000 / 0,993 | 0,354 / 0,788 | 0,995 / 0,955 | 0,900 / 0,906 | 0,190 / 0,930 | 0,970 / 0,961 | 0,947 / 0,372 | 0,765 | 0,843 | 0,804 ± 0,006 | 0,085 [+0,073; +0,098] | có |
+| Không xử lý | Hình học + quang học | 5082 | 0,997 / 0,986 | 0,479 / 0,768 | 0,994 / 0,896 | 0,992 / 0,881 | 0,245 / 0,924 | 0,963 / 0,971 | 0,965 / 0,502 | 0,805 | 0,847 | 0,826 ± 0,006 | 0,064 [+0,052; +0,075] | có |
+| Không xử lý | Hình học + quang học + thay nền ngẫu nhiên | 5082 | 0,998 / 0,987 | 0,859 / 0,960 | 0,988 / 0,952 | 0,945 / 0,916 | 0,141 / 0,945 | 0,932 / 0,954 | 0,834 / 0,284 | 0,814 | 0,857 | 0,835 ± 0,006 | 0,054 [+0,043; +0,065] | có |
+| Cân bằng trắng theo nền | Không tăng cường | 1694 | 0,988 / 0,987 | 0,661 / 0,788 | 0,982 / 0,985 | 0,874 / 0,948 | 0,172 / 0,926 | 0,906 / 0,932 | 0,770 / 0,304 | 0,765 | 0,838 | 0,802 ± 0,007 | 0,088 [+0,074; +0,102] | có |
+| Cân bằng trắng theo nền | Hình học + quang học | 5082 | 0,976 / 0,980 | 0,727 / 0,855 | 0,973 / 0,985 | 0,973 / 0,944 | 0,221 / 0,942 | 0,912 / 0,960 | 0,836 / 0,379 | 0,802 | 0,863 | 0,833 ± 0,006 | 0,056 [+0,045; +0,068] | có |
+| Cân bằng trắng theo nền | Hình học + quang học + thay nền ngẫu nhiên | 5082 | 0,967 / 0,970 | 0,836 / 0,944 | 0,974 / 0,978 | 0,939 / 0,943 | 0,165 / 0,927 | 0,888 / 0,924 | 0,802 / 0,522 | 0,796 | 0,887 | 0,841 ± 0,007 | 0,048 [+0,036; +0,059] | có |
+| Nền phẳng (không cân bằng trắng) | Không tăng cường | 1694 | 0,985 / 0,978 | 0,962 / 0,973 | 0,985 / 0,923 | 0,974 / 0,945 | 0,678 / 0,955 | 0,964 / 0,962 | 0,744 / 0,271 | 0,899 | 0,858 | 0,878 ± 0,006 | 0,011 [+0,003; +0,020] | có |
+| Nền phẳng (không cân bằng trắng) | Hình học + quang học | 5082 | 0,984 / 0,971 | 0,933 / 0,974 | 0,988 / 0,930 | 0,982 / 0,949 | 0,633 / 0,955 | 0,965 / 0,967 | 0,822 / 0,398 | 0,901 | 0,878 | 0,889 ± 0,006 | — | — |
+| Cân bằng trắng + nền phẳng | Không tăng cường | 1694 | 0,957 / 0,981 | 0,844 / 0,974 | 0,953 / 0,981 | 0,946 / 0,974 | 0,624 / 0,967 | 0,882 / 0,970 | 0,513 / 0,231 | 0,817 | 0,868 | 0,843 ± 0,006 | 0,047 [+0,037; +0,057] | có |
+| Cân bằng trắng + nền phẳng | Hình học + quang học | 5082 | 0,963 / 0,965 | 0,758 / 0,952 | 0,961 / 0,965 | 0,936 / 0,961 | 0,505 / 0,948 | 0,911 / 0,961 | 0,540 / 0,394 | 0,796 | 0,878 | 0,837 ± 0,007 | 0,052 [+0,042; +0,061] | có |
+| Cân bằng trắng + nền phẳng + cắt theo quả | Không tăng cường | 1694 | 0,950 / 0,977 | 0,759 / 0,968 | 0,956 / 0,977 | 0,938 / 0,983 | 0,635 / 0,974 | 0,788 / 0,952 | 0,289 / 0,113 | 0,759 | 0,849 | 0,804 ± 0,005 | 0,085 [+0,071; +0,099] | có |
+| Cân bằng trắng + nền phẳng + cắt theo quả | Hình học + quang học | 5082 | 0,937 / 0,961 | 0,752 / 0,940 | 0,952 / 0,963 | 0,929 / 0,970 | 0,652 / 0,930 | 0,839 / 0,951 | 0,287 / 0,316 | 0,764 | 0,862 | 0,813 ± 0,007 | 0,077 [+0,063; +0,091] | có |
+
+X3 — cân bằng trắng theo nền (`results/E1_xu_ly/table_wb_leak.md`):
+
+| Tiền xử lý | Hist HSV + LogReg: val gốc | Hist HSV + LogReg: val nền hoán đổi | Sụt | Màu quả chuối lệch đi khi đổi nền (khoảng cách Lab trung bình) |
+|---|---|---|---|---|
+| Không xử lý | 0,997 | 0,718 | +0,278 | 0,0 |
+| Nền phẳng (không cân bằng trắng) | 0,997 | 0,973 | +0,023 | 0,0 |
+| Cân bằng trắng theo nền | 0,977 | 0,750 | +0,226 | 12,9 |
+| Cân bằng trắng + nền phẳng | 0,983 | 0,632 | +0,351 | 12,9 |
+
+X-a — nền phẳng + tăng cường hình học/quang học, 9 cấu hình (`results/E1_xu_ly/pipeline/table.md`):
+
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0,1 | 0,990 | 0,993 | [0,981; 1,000] | 0,995 | 2 | 0,966 | 0,834 | 0,784 | 0,354 | 0,993 | 0,169 | 0,683 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,814 | 0,842 | [0,802; 0,878] | 0,849 | 56 | 0,838 | 0,799 | 0,820 | 0,792 | 0,686 | 0,381 | 0,719 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0,1 | 0,836 | 0,828 | [0,790; 0,864] | 0,830 | 63 | 0,836 | 0,810 | 0,831 | 0,822 | 0,629 | 0,294 | 0,704 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,984 | 0,982 | [0,965; 0,996] | 0,987 | 5 | 0,951 | 0,978 | 0,979 | 0,651 | 0,974 | 0,805 | 0,890 |
+| CNN hướng A | a_lenet | 0,947 | 0,922 | [0,892; 0,950] | 0,930 | 26 | 0,925 | 0,861 | 0,846 | 0,922 | 0,797 | 0,317 | 0,778 |
+| CNN hướng A | a_dropout | 0,979 | 0,959 | [0,936; 0,978] | 0,960 | 15 | 0,959 | 0,880 | 0,942 | 0,962 | 0,946 | 0,207 | 0,816 |
+| CNN hướng A | a_vgg16 | 0,982 | 0,958 | [0,936; 0,977] | 0,957 | 16 | 0,951 | 0,933 | 0,954 | 0,964 | 0,926 | 0,413 | 0,857 |
+| CNN hướng B | b_mobilenetv3 | 1,000 | 0,995 | [0,987; 1,000] | 0,995 | 2 | 0,995 | 0,943 | 0,915 | 0,988 | 0,998 | 0,450 | 0,881 |
+| CNN hướng B | b_resnet50 | 0,987 | 0,997 | [0,989; 1,000] | 0,997 | 1 | 0,997 | 0,983 | 0,956 | 0,985 | 0,990 | 0,397 | 0,885 |
+
+X-b — không xử lý ảnh lúc suy luận, tăng cường có thay nền ngẫu nhiên, 6 cấu hình (`results/E1_xu_ly/pipeline_b/table.md`):
+
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0,1 | 0,980 | 0,988 | [0,974; 0,998] | 0,989 | 4 | 0,963 | 0,459 | 0,714 | 0,184 | 0,982 | 0,143 | 0,574 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0,934 | 0,960 | [0,938; 0,979] | 0,962 | 14 | 0,799 | 0,691 | 0,892 | 0,179 | 0,708 | 0,617 | 0,648 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0,1 | 0,946 | 0,953 | [0,931; 0,974] | 0,957 | 16 | 0,495 | 0,922 | 0,720 | 0,662 | 0,615 | 0,571 | 0,664 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0,998 | 0,984 | [0,969; 0,995] | 0,984 | 6 | 0,853 | 0,977 | 0,930 | 0,128 | 0,908 | 0,842 | 0,773 |
+| CNN hướng A | a_vgg16 | 0,987 | 0,977 | [0,960; 0,991] | 0,978 | 8 | 0,907 | 0,960 | 0,953 | 0,965 | 0,943 | 0,516 | 0,874 |
+| CNN hướng B | b_mobilenetv3 | 1,000 | 1,000 | [1,000; 1,000] | 1,000 | 0 | 0,975 | 0,954 | 0,935 | 0,995 | 1,000 | 0,441 | 0,883 |
+
+Phép che 25% tách theo mức quả chuối bị che (`results/so_sanh_nhanh/table_occlusion_split.md`):
+
+| Nhánh | Cấu hình | Quả bị che ≥ 90% (40 ảnh) | Quả bị che 30–90% (286 ảnh) | Quả bị che < 30% (45 ảnh) |
+|---|---|---|---|---|
+| G | b_mobilenetv3 | 0,175 | 0,699 | 0,911 |
+| G | Hist H-S + HOG + LogReg | 0,950 | 0,965 | 0,978 |
+| X-a | b_mobilenetv3 | 0,125 | 0,451 | 0,667 |
+| X-a | Hist H-S + HOG + LogReg | 0,750 | 0,850 | 0,844 |
+| X-b | b_mobilenetv3 | 0,125 | 0,448 | 0,822 |
+| X-b | Hist H-S + HOG + LogReg | 0,975 | 0,815 | 0,933 |
+| T | b_mobilenetv3 | 0,550 | 0,717 | 1,000 |
+| T | Hist H-S + HOG + LogReg | 0,975 | 0,962 | 1,000 |
+
+S2 chạy lại với mask mới (`results/S2/table_mask_v2.md`, `results/S2/table_cnn_mask_v2.md`):
+
+| Đặc trưng + bộ phân lớp | Phiên bản ảnh | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Hist HSV (8,8,8) + LogReg C=0,1 [màu tốt nhất] | Toàn ảnh | 0,991 ± 0,005 | 0,992 ± 0,005 |
+| HOG 64×128 + LogReg C=0,1 | Toàn ảnh | 0,986 ± 0,007 | 0,989 ± 0,006 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Toàn ảnh | 0,996 ± 0,003 | 0,997 ± 0,003 |
+| Hist HSV (8,8,8) + LogReg C=0,1 [màu tốt nhất] | Chỉ vùng chuối | 0,964 ± 0,007 | 0,967 ± 0,005 |
+| HOG 64×128 + LogReg C=0,1 | Chỉ vùng chuối | 0,883 ± 0,005 | 0,886 ± 0,006 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng chuối | 0,966 ± 0,007 | 0,969 ± 0,007 |
+| Hist HSV (8,8,8) + LogReg C=0,1 [màu tốt nhất] | Chỉ vùng nền | 0,933 ± 0,012 | 0,943 ± 0,011 |
+| HOG 64×128 + LogReg C=0,1 | Chỉ vùng nền | 0,976 ± 0,005 | 0,980 ± 0,004 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng nền | 0,983 ± 0,006 | 0,986 ± 0,006 |
+
+| Mô hình (học trên ảnh đầy đủ) | Toàn ảnh | Chỉ vùng chuối | Chỉ vùng nền |
+|---|---|---|---|
+| a_vgg16_lr1e-3 | 0,990 | 0,949 | 0,799 |
+| b_mobilenetv3_lr1e-4 | 1,000 | 0,967 | 0,676 |
+| b_resnet50 | 0,998 | 0,924 | 0,721 |
+
+**Kết quả và kết luận.**
+- **X1.** Làm sạch chỉ loại 35/1.729 ảnh train. Phát hiện quan trọng hơn: 20,0% số ảnh có láng giềng gần nhất cùng lớp mang số thứ tự cách không quá 3 (ngẫu nhiên: 1,0%), và cross-validation chia theo khối ảnh liên tiếp thấp hơn chia ngẫu nhiên 0,024–0,069 ở cả bốn mô hình. Khớp với mô tả của bài báo dữ liệu: mỗi quả được chụp bốn mặt. Ảnh của cùng một quả hoặc cùng một đợt chụp nằm ở cả hai phía khi chia ngẫu nhiên, nên mọi con số chấm bằng cách chia ngẫu nhiên, kể cả 1,000 trên test, lạc quan hơn so với khi gặp quả chuối chưa từng thấy.
+- **X2–X4.** Tách nền là bước có tác dụng lớn nhất: điểm chọn tăng từ 0,804 (không xử lý) lên 0,878 (nền phẳng) và 0,889 ± 0,006 khi thêm tăng cường hình học/quang học; tổ hợp này phân biệt được với mọi tổ hợp khác theo bootstrap. Phần tăng đến từ phép nền hoán đổi (0,57 → 0,95, trung bình hai mô hình) và nhiễu (0,56 → 0,79). Cái giá là điểm trên ảnh gốc giảm (0,996 → 0,978) và phép che 25% kém đi (0,66 → 0,61).
+- **X-a (9 cấu hình).** Sau khi tách nền, phép nền hoán đổi gần như không còn tác dụng: điểm ở cột "nền hoán đổi" xấp xỉ điểm trên ảnh gốc ở cả 9 cấu hình (`b_mobilenetv3` 0,995 và 0,995; nhánh G: 1,000 và 0,794). Điểm bền trung bình tăng từ 0,750 lên 0,801. Đổi lại, điểm trên ảnh gốc giảm ở những mô hình trước đó dựa nhiều vào nền: HOG 0,990 → 0,828, cạnh 0,964 → 0,842, `a_lenet` 0,978 → 0,922, `a_vgg16` 0,986 → 0,958; trung bình 9 cấu hình 0,983 → 0,942. Các mô hình mạnh nhất gần như giữ nguyên: `b_resnet50` 0,997, `b_mobilenetv3` 0,995 (2 ảnh sai), Hist HSV 0,993, Hist H-S + HOG 0,982. Điểm yếu: phép che 25% (0,17–0,45, riêng Hist H-S + HOG 0,805), vì ô đen làm hỏng bước phân đoạn.
+- **X-b (6 cấu hình).** Chỉ thêm ảnh train có nền thay ngẫu nhiên, không đụng tới ảnh lúc suy luận: `b_mobilenetv3` vẫn đúng 371/371 ảnh gốc và đạt 0,975 ở phép nền hoán đổi (G: 0,794); Hist H-S + HOG đạt 0,984 và 0,853 (G: 1,000 và 0,410); `a_vgg16` 0,977 và 0,907 (G: 0,986 và 0,657). Trung bình 6 cấu hình: ảnh gốc 0,977 (G 0,989; X-a 0,933), điểm bền 0,736 (G 0,708; X-a 0,789).
+- **Phép che 25%** là chỗ cả hai biến thể X kém nhánh G ở mô hình CNN (0,44–0,45 so với 0,66). Bảng tách theo mức bị che cho thấy một phần lý do với cấu hình truyền thống: ở 40 ảnh mà quả bị che gần hết (35 ảnh là Sabri Kola), cấu hình truyền thống của nhánh G vẫn đúng 0,950, tức nhận ra Sabri từ nền; sau khi tách nền (X-a) còn 0,750. Với `b_mobilenetv3` thì không phải vậy: ở nhóm đó các nhánh G, X-a, X-b đều sai gần hết (0,125–0,175), còn chênh lệch nằm ở nhóm bị che một phần (0,699 so với 0,45); nguyên nhân chưa tách được.
+- **Kiểm tra lại S2 với mask mới.** Kết luận của S2 không đổi. Với đặc trưng thủ công, chỉ vùng nền vẫn cho 0,933–0,983 (mask cũ: 0,933–0,986) và chỉ vùng chuối cho 0,883–0,966 (mask cũ: 0,884–0,964). CNN học trên ảnh đầy đủ rồi đoán trên ảnh chỉ còn nền đạt 0,676–0,799 (mask cũ: 0,683–0,792). Khác biệt đáng kể duy nhất: `b_mobilenetv3` trên ảnh chỉ còn quả chuối đạt 0,967 thay vì 0,927, vì mask cũ đôi khi giữ lại cả một mảng nền quanh quả.
+- **Trả lời câu hỏi "xử lý nào là tối ưu".** Không có tổ hợp nào tốt hơn ở mọi mặt. Trên ảnh gốc, không bước xử lý nào cải thiện được pipeline gốc, vì nó đã đúng 371/371 ảnh. Nếu mục tiêu là mô hình nhìn quả chuối thay vì nền, thì với mô hình tốt nhất (`b_mobilenetv3`) biến thể X-b là lựa chọn cân bằng nhất: không mất điểm trên ảnh gốc, nền hoán đổi từ 0,794 lên 0,975, và không cần bước phân đoạn lúc dự đoán. X-a khử nền triệt để hơn (0,995) nhưng phụ thuộc vào phân đoạn và làm các mô hình yếu mất điểm.
+
+**Ảnh hưởng tới bước sau.** Bảng so sánh bốn nhánh dùng cả X-a và X-b. Mô hình `b_mobilenetv3` của X-b được thêm vào demo như một lựa chọn bền hơn với nền ảnh. Hạn chế "mỗi quả chụp nhiều mặt" được đưa vào báo cáo.
+
 ---
 
 ## Bảng quyết định
@@ -1287,3 +1438,7 @@ Thời gian rút đặc trưng mỗi ảnh trên CPU (`results/E3_bai_bao/summar
 | Không thay tập train gốc bằng bản Augmented của tác giả | Dùng bản Augmented làm tập train | Bước 11, `results/so_sanh_nhanh/table_models.md`: macro-F1 trung bình 0,979 so với 0,983; điểm bền 0,769 so với 0,750 | [đo] |
 | Chấm phương pháp của bài báo theo cả ba giao thức (như bài báo; giữ nhóm; giao thức của đồ án) | Chỉ dùng giao thức của bài báo | Bước 12, `results/E3_bai_bao/table_protocols.md`: giao thức của bài báo cao hơn 0,11–0,90 điểm ở 19/19 tổ hợp | [đo] |
 | Không thay pipeline của đồ án bằng ViT + SVM | Dùng ViT làm mô hình chính | Bước 12, `results/E3_bai_bao/table_test.md`: ngang nhau trên ảnh gốc; ViT bền hơn (0,919–0,937 so với 0,895) nhưng nằm ngoài môn học và chậm hơn ~23 lần | [đo] |
+| Tiêu chí chọn cách xử lý dữ liệu: trung bình 7 phép thử (ảnh gốc + 6 phép khó) trên val | Chỉ dùng điểm trên ảnh gốc | Bước 13, `results/E1_xu_ly/table_selection.md`: trên ảnh gốc "không xử lý" đã đạt 1,000 / 0,993 | [đo] |
+| Tiền xử lý của X-a: nền phẳng, giữ nguyên màu quả | Cân bằng trắng theo nền; cắt theo quả | Bước 13, `results/E1_xu_ly/table_wb_leak.md` (cân bằng trắng làm màu quả lệch 12,9 Lab khi đổi nền), `table_selection.md` (0,889 so với 0,843 và 0,813) | [đo] |
+| Chạy thêm biến thể X-b (tăng cường có thay nền, không xử lý lúc suy luận) | Chỉ chạy tổ hợp điểm cao nhất | Bước 13, `results/E1_xu_ly/pipeline_b/table.md`: `b_mobilenetv3` giữ 371/371 ảnh gốc, nền hoán đổi 0,975 | [đo] |
+| Giữ cách chia ngẫu nhiên, ghi "mỗi quả chụp nhiều mặt" là hạn chế | Chia lại theo khối ảnh liên tiếp | Bước 13, `results/E1_xu_ly/table_blocked_cv.md`: chia ngẫu nhiên cao hơn 0,024–0,069 | [đo] |

@@ -49,15 +49,20 @@ def _bullets(items, size="") -> str:
     return "\n".join(out)
 
 
-def _table(s) -> str:
+def _rows(s):
     rows = md_rows(s["table"], s.get("max_rows"))
     if s.get("cols"):
         idx = [rows[0].index(c) for c in s["cols"]]; rows = [[r[i] for i in idx] for r in rows]
+    return rows
+
+
+def _table(s, max_h: str = "0.74\\textheight") -> str:
+    rows = _rows(s)
     nc = len(rows[0])
     body = [" & ".join(r"\textbf{" + esc(c) + "}" for c in rows[0]) + r" \\ \midrule"]
     body += [" & ".join(esc(c) for c in r) + r" \\" for r in rows[1:]]
     spec = "l" * nc
-    return ("\\begin{center}\\begin{adjustbox}{max width=\\linewidth,max totalheight=0.74\\textheight}\n\\rowcolors{2}{uitbg}{white}\n"
+    return ("\\begin{center}\\begin{adjustbox}{max width=\\linewidth,max totalheight=" + max_h + "}\n\\rowcolors{2}{uitbg}{white}\n"
             f"\\begin{{tabular}}{{{spec}}}\\toprule\n" + "\n".join(body) + "\n\\bottomrule\\end{tabular}\n\\end{adjustbox}\\end{center}")
 
 
@@ -81,7 +86,10 @@ def frame(s, slides_dir: Path) -> str:
         return "\n".join(out)
     side = s.get("bullets") and (s.get("image") or s.get("table"))
     size = "\\small" if side or len(s.get("bullets") or []) > 6 else ""
-    if side:
+    if side and s.get("table") and len(_rows(s)[0]) > 4:      # bảng nhiều cột: chữ ở trên, bảng rộng hết khung ở dưới
+        out.append(_bullets(s["bullets"], "\\footnotesize"))
+        out.append(_table(s, "0.40\\textheight"))
+    elif side:
         out.append("\\begin{columns}[T]\n\\begin{column}{0.36\\textwidth}")
         out.append(_bullets(s["bullets"], "\\footnotesize"))
         out.append("\\end{column}\n\\begin{column}{0.62\\textwidth}")

@@ -3,7 +3,8 @@
 Các mức:
   none          chỉ resize (như pipeline gốc)
   wb            cân bằng trắng và hiệu chỉnh sáng theo nền giấy trắng (chia ảnh cho mô hình nền bậc hai)
-  wb+bg         thêm: thay toàn bộ nền bằng một màu trắng phẳng
+  bg            nền phẳng: giữ nguyên màu quả chuối, thay toàn bộ nền bằng một màu trắng phẳng (không cân bằng trắng)
+  wb+bg         cân bằng trắng rồi thay nền bằng màu trắng phẳng
   wb+bg+crop    thêm: cắt theo khung bao của quả chuối (lề 12%), đệm thành hình vuông, resize về 256×256
 """
 from __future__ import annotations
@@ -14,9 +15,9 @@ from joblib import Parallel, delayed
 
 from . import segmentation as S
 
-LEVELS = ["none", "wb", "wb+bg", "wb+bg+crop"]
-LEVEL_NAME = {"none": "Không xử lý", "wb": "Cân bằng trắng theo nền", "wb+bg": "Cân bằng trắng + nền phẳng",
-              "wb+bg+crop": "Cân bằng trắng + nền phẳng + cắt theo quả"}
+LEVELS = ["none", "wb", "bg", "wb+bg", "wb+bg+crop"]
+LEVEL_NAME = {"none": "Không xử lý", "wb": "Cân bằng trắng theo nền", "bg": "Nền phẳng (không cân bằng trắng)",
+              "wb+bg": "Cân bằng trắng + nền phẳng", "wb+bg+crop": "Cân bằng trắng + nền phẳng + cắt theo quả"}
 WHITE = 235          # mức xám mà nền giấy được đưa về
 
 
@@ -55,7 +56,7 @@ def crop_to_object(img, mask, margin: float = 0.12):
 def process(img, level: str = "none", return_mask: bool = False):
     if level == "none":
         return (img, None) if return_mask else img
-    out = white_balance(img)
+    out = white_balance(img) if level.startswith("wb") else img
     mask = None
     if level != "wb":
         mask = S.banana_mask_v2(out)

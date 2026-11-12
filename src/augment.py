@@ -2,7 +2,8 @@
 
   geo      hình học + quang học: lật ngang/dọc, xoay bội số 90°, xoay ±15°, độ sáng ±15%, làm mờ Gauss,
            nhiễu muối tiêu trên tối đa 1,5% điểm ảnh (cùng loại phép với công thức tác giả bộ dữ liệu công bố)
-  geo+bg   như trên, thêm thay nền ngẫu nhiên: ghép quả chuối lên nền lấy từ một ảnh train bất kỳ
+  geo+bg   như trên, thêm thay nền ngẫu nhiên: ghép quả chuối lên nền lấy từ một ảnh train bất kỳ (mọi lớp),
+           để màu và kết cấu nền không còn đi kèm với nhãn
 """
 from __future__ import annotations
 

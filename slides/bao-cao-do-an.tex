@@ -17,6 +17,12 @@
 \titlepage
 \note{Chào thầy/cô và các bạn. Nhóm trình bày đồ án nhận diện 4 giống chuối Bangladesh từ ảnh. Mục tiêu không chỉ là có mô hình chính xác mà là thử tất cả phương pháp đã học, so sánh bằng thực nghiệm và giải thích kết quả bằng tính chất của từng phương pháp.}
 \end{frame}
+\begin{frame}{Nội dung}
+\tableofcontents
+\note{Bài trình bày gồm năm phần: giới thiệu bài toán và dữ liệu; phương pháp; kết quả 30 thí nghiệm và đánh giá cuối; phần mở rộng so sánh ba nhánh độc lập với pipeline gốc; ưu điểm, hạn chế và hướng phát triển.}
+\end{frame}
+
+\section{Giới thiệu}
 \begin{frame}{Thành viên và mức độ hoàn thành}
 \begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.74\textheight}
 \rowcolors{2}{uitbg}{white}
@@ -80,6 +86,7 @@
 \note{Quy trình đánh giá chốt từ đầu để mọi phương pháp so sánh được với nhau. Test chỉ dùng một lần. Chênh lệch nhỏ hơn độ lệch chuẩn giữa các fold thì nhóm kết luận là chưa đủ cơ sở phân biệt. Bảng ảnh gần trùng ở results/data/near\_duplicates.json.}
 \end{frame}
 
+\section{Phương pháp}
 \begin{frame}{Phương pháp --- hướng truyền thống}
 \begin{itemize}
 \item \textbf{Đặc trưng màu:} histogram RGB, HSV (8,8,8), H-S; moment màu (9 chiều); màu chủ đạo k-means; CCV
@@ -106,6 +113,7 @@ B (lớn hơn) & b\_resnet50 & ResNet50: GĐ1 đóng băng, GĐ2 mở khối con
 \note{Hướng A làm đúng các ví dụ trong bài giảng. Hướng B dùng kiến trúc ngoài bài giảng nhưng vẫn là khái niệm đã học: transfer learning. Chung: Adam, cross-entropy, dừng sớm theo macro-F1 trên val. Khi fine-tune, BatchNorm phải giữ đóng băng (slide N4).}
 \end{frame}
 
+\section{Kết quả thực nghiệm}
 \begin{frame}{D1 --- Rò rỉ khi tăng cường ảnh trước khi chia}
 \begin{columns}[T]
 \begin{column}{0.36\textwidth}
@@ -393,6 +401,157 @@ CNN hướng B & b\_resnet50 (biến thể: b\_resnet50) & 0,997 & [0,988; 1,000
 \note{Chạy: python app/app.py. Tải ảnh, chọn mô hình, nhận giống và xác suất 4 lớp. Thông tin giống chỉ ghi những gì có nguồn.}
 \end{frame}
 
+\section{Phần mở rộng: ba nhánh so sánh}
+\begin{frame}{Mở rộng --- ba nhánh độc lập và bộ kiểm tra khó}
+\begin{columns}[T]
+\begin{column}{0.36\textwidth}
+\begin{itemize}\footnotesize
+\item \textbf{G}: pipeline gốc (mốc)
+\item \textbf{X}: xử lý dữ liệu do nhóm thiết kế
+\item \textbf{T}: bản Augmented của tác giả bộ dữ liệu
+\item \textbf{B}: phương pháp của bài báo (Ergün 2025)
+\item Mỗi nhánh đổi một thứ so với G; cùng 371 ảnh test gốc
+\item Bộ kiểm tra khó: 6 phép biến đổi; \textbf{điểm bền} = trung bình macro-F1
+\end{itemize}
+\end{column}
+\begin{column}{0.62\textwidth}
+\begin{center}\includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{../results/figures/E_stress_examples.png}\end{center}
+\end{column}
+\end{columns}
+\note{Trên ảnh gốc, hai cấu hình của pipeline gốc đã đúng 371/371 ảnh nên không còn chỗ để so sánh. Vì vậy mỗi mô hình được chấm thêm trên 6 phiên bản biến đổi của tập test, trong đó nền hoán đổi là ghép quả chuối lên nền của ảnh thuộc lớp khác. Ba nhánh độc lập, không chồng lên nhau.}
+\end{frame}
+
+\begin{frame}{Nhánh G trên bộ kiểm tra khó}
+\begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.74\textheight}
+\rowcolors{2}{uitbg}{white}
+\begin{tabular}{lllllllll}\toprule
+\textbf{Mô hình} & \textbf{Macro-F1 test} & \textbf{Nền hoán đổi} & \textbf{V$\times$0,6} & \textbf{V$\times$1,4} & \textbf{Nhiễu $\sigma$=10} & \textbf{Xoay +30$^\circ$} & \textbf{Che 25\%} & \textbf{Điểm bền} \\ \midrule
+Hist HSV (8,8,8) + LogReg C=0,1 & 0,994 & 0,726 & 0,304 & 0,673 & 0,086 & 0,983 & 0,150 & 0,487 \\
+Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần & 0,964 & 0,759 & 0,691 & 0,901 & 0,085 & 0,730 & 0,755 & 0,654 \\
+HOG 64$\times$128 + LogReg C=0,1 & 0,990 & 0,145 & 0,987 & 0,776 & 0,484 & 0,505 & 0,805 & 0,617 \\
+Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần & 1,000 & 0,410 & 0,997 & 0,856 & 0,172 & 0,972 & 0,959 & 0,728 \\
+a\_lenet & 0,978 & 0,744 & 0,979 & 0,977 & 0,978 & 0,874 & 0,469 & 0,837 \\
+a\_dropout & 0,942 & 0,855 & 0,864 & 0,932 & 0,940 & 0,925 & 0,100 & 0,769 \\
+a\_vgg16 & 0,986 & 0,657 & 0,979 & 0,963 & 0,984 & 0,887 & 0,843 & 0,886 \\
+b\_mobilenetv3 & 1,000 & 0,794 & 0,919 & 0,890 & 0,989 & 1,000 & 0,659 & 0,875 \\
+b\_resnet50 & 0,997 & 0,792 & 0,916 & 0,966 & 0,990 & 0,993 & 0,714 & 0,895 \\
+\bottomrule\end{tabular}
+\end{adjustbox}\end{center}
+\note{Macro-F1 trên ảnh gốc 0,94--1,00 nhưng điểm bền chỉ 0,49--0,90. Nền hoán đổi làm mọi cấu hình tụt: HOG còn 0,145, cấu hình truyền thống tốt nhất còn 0,410, b\_mobilenetv3 còn 0,794. Đây là xác nhận thứ hai cho kết luận của S2: mô hình dựa một phần vào nền.}
+\end{frame}
+
+\begin{frame}{Nhánh X --- làm sạch dữ liệu (X1)}
+\begin{columns}[T]
+\begin{column}{0.36\textwidth}
+\begin{itemize}\footnotesize
+\item Loại 35 ảnh train gần trùng (15 trùng với val/test, 20 lặp trong train)
+\item Mask của S1 tràn nền ở 5,2\% ảnh $\rightarrow$ dùng mô hình nền bậc hai
+\item Bài báo dữ liệu: \textbf{mỗi quả chụp 4 mặt}
+\item 20\% ảnh có láng giềng gần nhất mang số thứ tự liền kề (ngẫu nhiên: 1\%)
+\item Chia theo khối ảnh liên tiếp thấp hơn chia ngẫu nhiên 0,02--0,07
+\end{itemize}
+\end{column}
+\begin{column}{0.62\textwidth}
+\begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.74\textheight}
+\rowcolors{2}{uitbg}{white}
+\begin{tabular}{llll}\toprule
+\textbf{Mô hình} & \textbf{5-fold ngẫu nhiên phân tầng} & \textbf{5-fold theo khối ảnh liên tiếp} & \textbf{Chênh} \\ \midrule
+Hist HSV (8,8,8) + LogReg C=0,1 & 0,991 $\pm$ 0,005 & 0,922 $\pm$ 0,042 & +0,069 \\
+HOG 64$\times$128 + LogReg C=0,1 & 0,986 $\pm$ 0,007 & 0,933 $\pm$ 0,062 & +0,053 \\
+Hist H-S + HOG + LogReg C=100 & 0,996 $\pm$ 0,003 & 0,973 $\pm$ 0,017 & +0,024 \\
+Embedding MobileNetV3 (ImageNet) + LogReg & 0,995 $\pm$ 0,005 & 0,964 $\pm$ 0,025 & +0,031 \\
+\bottomrule\end{tabular}
+\end{adjustbox}\end{center}
+\end{column}
+\end{columns}
+\note{Pipeline gốc chỉ resize ảnh. Bước làm sạch loại ảnh gần trùng khỏi train. Phát hiện quan trọng: ảnh cùng quả hoặc cùng đợt chụp nằm ở cả hai phía khi chia ngẫu nhiên, nên cross-validation ngẫu nhiên lạc quan hơn chia theo khối ảnh liên tiếp. Bảng: results/E1\_xu\_ly/table\_blocked\_cv.md, table\_adjacent.md.}
+\end{frame}
+
+\begin{frame}{Nhánh X --- chọn tiền xử lý và tăng cường trên val (X2--X4)}
+\begin{columns}[T]
+\begin{column}{0.36\textwidth}
+\begin{itemize}\footnotesize
+\item 4 mức tiền xử lý $\times$ 3 mức tăng cường
+\item Không xử lý: điểm chọn 0,804
+\item \textbf{X-a} (điểm cao nhất): cân bằng trắng + nền phẳng --- 0,843
+\item \textbf{X-b} (chỉ can thiệp train): tăng cường có thay nền --- 0,843
+\item Các tổ hợp đứng đầu không phân biệt được (bootstrap)
+\item Cắt theo quả làm phép che 25\% tệ hơn
+\end{itemize}
+\end{column}
+\begin{column}{0.62\textwidth}
+\begin{center}\includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{../results/figures/E1_selection.png}\end{center}
+\end{column}
+\end{columns}
+\note{Điểm chọn là trung bình macro-F1 trên val của ảnh gốc và 6 phép thử khó, với hai mô hình đại diện. Hai chiến lược đứng đầu: sửa ảnh lúc suy luận (tách nền) hoặc làm đa dạng nền lúc huấn luyện. Nhóm chạy đủ 9 cấu hình cho cả hai. Bảng: results/E1\_xu\_ly/table\_selection.md.}
+\end{frame}
+
+\begin{frame}{Nhánh T --- bản Augmented của tác giả (7.413 ảnh)}
+\begin{itemize}\footnotesize
+\item Bản xuất Roboflow: mỗi ảnh gốc 3 file (1 gần nguyên gốc + 2 tăng cường)
+\item \textbf{T-kr} (chia theo ảnh gốc): so được với G
+\item Ảnh gốc: không cải thiện (0,979 so với 0,983); HOG giảm
+\item Điểm bền tăng nhẹ (0,769 so với 0,750)
+\item \textbf{T-tl} (chia ngẫu nhiên): 90,6\% ảnh test có file cùng ảnh gốc trong train
+\end{itemize}
+\begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.40\textheight}
+\rowcolors{2}{uitbg}{white}
+\begin{tabular}{lllll}\toprule
+\textbf{Cấu hình} & \textbf{G: macro-F1 test} & \textbf{G: điểm bền} & \textbf{T: macro-F1 test} & \textbf{T: điểm bền} \\ \midrule
+Hist HSV + LogReg & 0,994 & 0,487 & 0,997 & 0,555 \\
+Cạnh Roberts + KNN & 0,964 & 0,654 & 0,948 & 0,689 \\
+HOG + LogReg & 0,990 & 0,617 & 0,972 & 0,620 \\
+Hist H-S + HOG + LogReg & 1,000 & 0,728 & 0,989 & 0,745 \\
+a\_lenet & 0,978 & 0,837 & 0,966 & 0,780 \\
+a\_dropout & 0,942 & 0,769 & 0,963 & 0,796 \\
+a\_vgg16 & 0,986 & 0,886 & 0,985 & 0,905 \\
+b\_mobilenetv3 & 1,000 & 0,875 & 0,998 & 0,909 \\
+b\_resnet50 & 0,997 & 0,895 & 0,997 & 0,924 \\
+\textbf{Trung bình 9 cấu hình} & \textbf{0,983} & \textbf{0,750} & \textbf{0,979} & \textbf{0,769} \\
+\bottomrule\end{tabular}
+\end{adjustbox}\end{center}
+\note{Bản Augmented của tác giả không giúp trên ảnh gốc, giúp một ít về độ bền ở đúng các phép có trong công thức tăng cường. Chia ngẫu nhiên bộ 7.413 ảnh gây rò rỉ: 90,6\% ảnh test có anh em trong train. Bảng: results/E2\_aug\_tac\_gia/.}
+\end{frame}
+
+\begin{frame}{Nhánh B --- phương pháp của bài báo (Ergün 2025): ViT + SVM}
+\begin{columns}[T]
+\begin{column}{0.36\textwidth}
+\begin{itemize}\footnotesize
+\item Tái hiện: ViT + SVM 99,49\% (bài báo: 99,70\%)
+\item Giữ nhóm theo ảnh gốc: 99,20\% --- thổi phồng ở 19/19 tổ hợp (+0,11 đến +0,90 điểm)
+\item \textbf{B1} (CNN + SVM, trong môn học): ResNet50 99,16\%, MobileNetV3 99,27\%
+\item Giao thức của đồ án: ViT + SVM sai 1/371 ảnh; điểm bền 0,919--0,937
+\item Bài báo dữ liệu (Ferdaus 2025) không huấn luyện mô hình; không bài nào dùng YOLO
+\end{itemize}
+\end{column}
+\begin{column}{0.62\textwidth}
+\begin{center}\includegraphics[width=\linewidth,height=0.72\textheight,keepaspectratio]{../results/figures/E3_papers_protocols.png}\end{center}
+\end{column}
+\end{columns}
+\note{Nhóm tái hiện được kết quả chính của bài báo, nhưng khoảng cách ViT so với CNN nhỏ hơn bài báo công bố nhiều (dưới 1 điểm thay vì 3 điểm). Giao thức 5-fold trên bản Augmented có rò rỉ nhỏ nhưng nhất quán. Đặc trưng ViT bền hơn CNN trên bộ kiểm tra khó, đổi lại nặng và chậm hơn khoảng 23 lần. Bảng: results/E3\_bai\_bao/table\_protocols.md, table\_test.md.}
+\end{frame}
+
+\begin{frame}{So sánh bốn nhánh qua cấu hình đại diện}
+\begin{center}\begin{adjustbox}{max width=\linewidth,max totalheight=0.74\textheight}
+\rowcolors{2}{uitbg}{white}
+\begin{tabular}{llllllllll}\toprule
+\textbf{Nhánh} & \textbf{Cấu hình đại diện} & \textbf{Ảnh gốc} & \textbf{Nền hoán đổi} & \textbf{V$\times$0,6} & \textbf{V$\times$1,4} & \textbf{Nhiễu $\sigma$=10} & \textbf{Xoay +30$^\circ$} & \textbf{Che 25\%} & \textbf{Điểm bền} \\ \midrule
+G --- pipeline gốc & b\_mobilenetv3 & 1,000 & 0,794 & 0,919 & 0,890 & 0,989 & 1,000 & 0,659 & 0,875 \\
+X-a --- xử lý dữ liệu: tiền xử lý lúc suy luận & Hist HSV + LogReg & 0,987 & 0,610 & 0,977 & 0,883 & 0,597 & 0,985 & 0,143 & 0,699 \\
+T --- Augmented của tác giả (không rò rỉ) & b\_mobilenetv3 & 0,998 & 0,867 & 0,954 & 0,904 & 0,993 & 1,000 & 0,736 & 0,909 \\
+B1 --- bài báo, trong phạm vi môn học (CNN + bộ phân lớp) & MobileNetV3-Small + SVM tuyến tính & 0,993 & 0,742 & 0,965 & 0,856 & 0,897 & 0,981 & 0,575 & 0,836 \\
+B2 --- bài báo, đúng phương pháp (ViT + SVM) & ViT-B/16 + SVM & 0,997 & 0,857 & 0,990 & 0,978 & 0,986 & 0,978 & 0,728 & 0,919 \\
+\bottomrule\end{tabular}
+\end{adjustbox}\end{center}
+\note{Mỗi nhánh một cấu hình đại diện, chọn theo điểm lúc phát triển. Trên ảnh gốc các nhánh ngang nhau (0 đến vài ảnh sai). Khác biệt nằm ở bộ kiểm tra khó. Bảng: results/so\_sanh\_nhanh/table\_arms.md, table\_stress.md, table\_models.md.}
+\end{frame}
+
+\begin{frame}{So sánh bốn nhánh theo từng phép thử}
+\begin{center}\includegraphics[width=\linewidth,height=0.74\textheight,keepaspectratio]{../results/figures/E_compare_stress.png}\end{center}
+\note{Hình cho thấy mỗi nhánh mạnh ở phép thử nào. Không nhánh nào tốt nhất ở mọi phép thử.}
+\end{frame}
+
+\section{Kết luận}
 \begin{frame}{Ưu điểm và hạn chế}
 \begin{itemize}\small
 \item \textbf{Ưu điểm}

@@ -21,6 +21,82 @@ def j(path):
     return json.loads((R / path).read_text(encoding="utf-8"))
 
 
+def vn(x, d=3):
+    return f"{x:.{d}f}".replace(".", ",")
+
+
+def extension_slides():
+    """Slide của phần mở rộng (mục 12): ba nhánh X, T, B so sánh độc lập với pipeline gốc G. Số liệu đọc từ results/."""
+    E1, E2, E3, SS = R / "E1_xu_ly", R / "E2_aug_tac_gia", R / "E3_bai_bao", R / "so_sanh_nhanh"
+    if not (SS / "G" / "table.md").exists():
+        return []
+    g = {k: j(f"so_sanh_nhanh/G/{k}/metrics.json") for k in ["trad_fusion", "trad_hog", "b_mobilenetv3", "b_resnet50"]}
+    s = [{"section": "Phần mở rộng: ba nhánh so sánh", "title": "Mở rộng — ba nhánh độc lập và bộ kiểm tra khó", "image": F / "E_stress_examples.png",
+          "bullets": ["**G**: pipeline gốc (mốc)", "**X**: xử lý dữ liệu do nhóm thiết kế", "**T**: bản Augmented của tác giả bộ dữ liệu",
+                      "**B**: phương pháp của bài báo (Ergün 2025)", "Mỗi nhánh đổi một thứ so với G; cùng 371 ảnh test gốc",
+                      "Bộ kiểm tra khó: 6 phép biến đổi; **điểm bền** = trung bình macro-F1"],
+          "notes": "Trên ảnh gốc, hai cấu hình của pipeline gốc đã đúng 371/371 ảnh nên không còn chỗ để so sánh. Vì vậy mỗi mô hình được chấm thêm trên 6 phiên bản "
+                   "biến đổi của tập test, trong đó nền hoán đổi là ghép quả chuối lên nền của ảnh thuộc lớp khác. Ba nhánh độc lập, không chồng lên nhau."},
+         {"title": "Nhánh G trên bộ kiểm tra khó", "table": SS / "G" / "table.md",
+          "cols": ["Mô hình", "Macro-F1 test", "Nền hoán đổi", "V×0,6", "V×1,4", "Nhiễu σ=10", "Xoay +30°", "Che 25%", "Điểm bền"], "table_size": 10,
+          "notes": f"Macro-F1 trên ảnh gốc 0,94–1,00 nhưng điểm bền chỉ 0,49–0,90. Nền hoán đổi làm mọi cấu hình tụt: HOG còn {vn(g['trad_hog']['stress']['swapbg']['macro_f1'])}, "
+                   f"cấu hình truyền thống tốt nhất còn {vn(g['trad_fusion']['stress']['swapbg']['macro_f1'])}, b_mobilenetv3 còn {vn(g['b_mobilenetv3']['stress']['swapbg']['macro_f1'])}. "
+                   "Đây là xác nhận thứ hai cho kết luận của S2: mô hình dựa một phần vào nền."}]
+    if (E1 / "table_cleaning.md").exists() and (E1 / "selection.json").exists():
+        sel = j("E1_xu_ly/selection.json"); c = sel["combos"]
+        ka = f"{sel['selected']['level']}|{sel['selected']['aug']}"; kb = f"{sel.get('selected_b', sel['selected'])['level']}|{sel.get('selected_b', sel['selected'])['aug']}"
+        s.append({"title": "Nhánh X — làm sạch dữ liệu (X1)", "table": E1 / "table_blocked_cv.md",
+                  "bullets": ["Loại 35 ảnh train gần trùng (15 trùng với val/test, 20 lặp trong train)", "Mask của S1 tràn nền ở 5,2% ảnh → dùng mô hình nền bậc hai",
+                              "Bài báo dữ liệu: **mỗi quả chụp 4 mặt**", "20% ảnh có láng giềng gần nhất mang số thứ tự liền kề (ngẫu nhiên: 1%)",
+                              "Chia theo khối ảnh liên tiếp thấp hơn chia ngẫu nhiên 0,02–0,07"],
+                  "notes": "Pipeline gốc chỉ resize ảnh. Bước làm sạch loại ảnh gần trùng khỏi train. Phát hiện quan trọng: ảnh cùng quả hoặc cùng đợt chụp nằm ở cả hai phía khi chia ngẫu nhiên, "
+                           "nên cross-validation ngẫu nhiên lạc quan hơn chia theo khối ảnh liên tiếp. Bảng: results/E1_xu_ly/table_blocked_cv.md, table_adjacent.md."})
+        s.append({"title": "Nhánh X — chọn tiền xử lý và tăng cường trên val (X2–X4)", "image": F / "E1_selection.png",
+                  "bullets": ["4 mức tiền xử lý × 3 mức tăng cường", f"Không xử lý: điểm chọn {vn(c['none|none']['score'])}",
+                              f"**X-a** (điểm cao nhất): cân bằng trắng + nền phẳng — {vn(c[ka]['score'])}",
+                              f"**X-b** (chỉ can thiệp train): tăng cường có thay nền — {vn(c[kb]['score'])}",
+                              "Các tổ hợp đứng đầu không phân biệt được (bootstrap)", "Cắt theo quả làm phép che 25% tệ hơn"],
+                  "notes": "Điểm chọn là trung bình macro-F1 trên val của ảnh gốc và 6 phép thử khó, với hai mô hình đại diện. Hai chiến lược đứng đầu: sửa ảnh lúc suy luận (tách nền) "
+                           "hoặc làm đa dạng nền lúc huấn luyện. Nhóm chạy đủ 9 cấu hình cho cả hai. Bảng: results/E1_xu_ly/table_selection.md."})
+        if (E1 / "pipeline" / "table.md").exists():
+            s.append({"title": "Nhánh X-a — 9 cấu hình trên ảnh đã tiền xử lý", "table": E1 / "pipeline" / "table.md",
+                      "cols": ["Mô hình", "Macro-F1 test", "Nền hoán đổi", "V×0,6", "V×1,4", "Nhiễu σ=10", "Xoay +30°", "Che 25%", "Điểm bền"], "table_size": 10,
+                      "notes": "X-a: cân bằng trắng theo nền giấy và thay nền bằng màu trắng phẳng, áp dụng cho cả train lẫn ảnh cần dự đoán. Nền hoán đổi gần như không còn tác dụng, "
+                               "nhưng phép che 25% làm hỏng bước phân đoạn nên điểm ở cột đó thấp."})
+        if (E1 / "pipeline_b" / "table.md").exists():
+            s.append({"title": "Nhánh X-b — 9 cấu hình với tăng cường có thay nền", "table": E1 / "pipeline_b" / "table.md",
+                      "cols": ["Mô hình", "Macro-F1 test", "Nền hoán đổi", "V×0,6", "V×1,4", "Nhiễu σ=10", "Xoay +30°", "Che 25%", "Điểm bền"], "table_size": 10,
+                      "notes": "X-b: không đổi ảnh lúc suy luận; tập train được thêm 2 bản tăng cường mỗi ảnh, trong đó quả chuối được ghép lên nền của một ảnh train bất kỳ, "
+                               "để màu và kết cấu nền không còn đi kèm với nhãn."})
+    if (E2 / "khong_ro_ri" / "table.md").exists() and (SS / "table_models.md").exists():
+        s.append({"title": "Nhánh T — bản Augmented của tác giả (7.413 ảnh)", "table": SS / "table_models.md",
+                  "cols": ["Cấu hình", "G: macro-F1 test", "G: điểm bền", "T: macro-F1 test", "T: điểm bền"], "table_size": 10,
+                  "bullets": ["Bản xuất Roboflow: mỗi ảnh gốc 3 file (1 gần nguyên gốc + 2 tăng cường)", "**T-kr** (chia theo ảnh gốc): so được với G",
+                              "Ảnh gốc: không cải thiện (0,979 so với 0,983); HOG giảm", "Điểm bền tăng nhẹ (0,769 so với 0,750)",
+                              "**T-tl** (chia ngẫu nhiên): 90,6% ảnh test có file cùng ảnh gốc trong train"],
+                  "notes": "Bản Augmented của tác giả không giúp trên ảnh gốc, giúp một ít về độ bền ở đúng các phép có trong công thức tăng cường. "
+                           "Chia ngẫu nhiên bộ 7.413 ảnh gây rò rỉ: 90,6% ảnh test có anh em trong train. Bảng: results/E2_aug_tac_gia/."})
+    if (E3 / "table_protocols.md").exists():
+        r = j("E3_bai_bao/metrics.json"); v = r["vit_b16|svm_rbf"]; vl = r["vit_b16|svm_linear"]
+        s.append({"title": "Nhánh B — phương pháp của bài báo (Ergün 2025): ViT + SVM", "image": F / "E3_papers_protocols.png",
+                  "bullets": [f"Tái hiện: ViT + SVM {vn(100 * v['paper_protocol']['accuracy'], 2)}% (bài báo: 99,70%)",
+                              f"Giữ nhóm theo ảnh gốc: {vn(100 * v['group_protocol']['accuracy'], 2)}% — thổi phồng ở 19/19 tổ hợp (+0,11 đến +0,90 điểm)",
+                              "**B1** (CNN + SVM, trong môn học): ResNet50 99,16%, MobileNetV3 99,27%",
+                              f"Giao thức của đồ án: ViT + SVM sai {v['test']['n_errors']}/371 ảnh; điểm bền {vn(v['robust_score'])}–{vn(vl['robust_score'])}",
+                              "Bài báo dữ liệu (Ferdaus 2025) không huấn luyện mô hình; không bài nào dùng YOLO"],
+                  "notes": "Nhóm tái hiện được kết quả chính của bài báo, nhưng khoảng cách ViT so với CNN nhỏ hơn bài báo công bố nhiều (dưới 1 điểm thay vì 3 điểm). "
+                           "Giao thức 5-fold trên bản Augmented có rò rỉ nhỏ nhưng nhất quán. Đặc trưng ViT bền hơn CNN trên bộ kiểm tra khó, đổi lại nặng và chậm hơn khoảng 23 lần. "
+                           "Bảng: results/E3_bai_bao/table_protocols.md, table_test.md."})
+    if (SS / "table_arms.md").exists():
+        s.append({"title": "So sánh bốn nhánh qua cấu hình đại diện", "table": SS / "table_stress.md", "table_size": 10,
+                  "notes": "Mỗi nhánh một cấu hình đại diện, chọn theo điểm lúc phát triển. Trên ảnh gốc các nhánh ngang nhau (0 đến vài ảnh sai). Khác biệt nằm ở bộ kiểm tra khó. "
+                           "Bảng: results/so_sanh_nhanh/table_arms.md, table_stress.md, table_models.md."})
+        if (F / "E_compare_stress.png").exists():
+            s.append({"title": "So sánh bốn nhánh theo từng phép thử", "image": F / "E_compare_stress.png",
+                      "notes": "Hình cho thấy mỗi nhánh mạnh ở phép thử nào. Không nhánh nào tốt nhất ở mọi phép thử."})
+    return s
+
+
 def slides():
     fin = {k: j(f"final/{k}/metrics.json") for k in ["trad_fusion", "a_vgg16", "b_mobilenetv3"]}
     s = []
@@ -181,6 +257,7 @@ def slides():
               "notes": "Lỗi khớp với thiên lệch đo ở S2: ảnh không giống ảnh điển hình của lớp về kích thước quả và nền thì dễ bị đoán sai."})
     s.append({"title": "Demo", "image": F / "demo_screenshot.png",
               "notes": "Chạy: python app/app.py. Tải ảnh, chọn mô hình, nhận giống và xác suất 4 lớp. Thông tin giống chỉ ghi những gì có nguồn."})
+    s += extension_slides()
     s.append({"section": "Kết luận", "title": "Ưu điểm và hạn chế",
               "bullets": ["**Ưu điểm**", ("30 thí nghiệm, mỗi nhận định có bảng hoặc hình; ghi cả kết quả trái dự đoán", 1),
                           ("Quy trình đánh giá chặt: test dùng một lần, CV, độ lệch chuẩn, khoảng tin cậy", 1),
