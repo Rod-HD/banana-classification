@@ -22,7 +22,8 @@ Nếu còn thời gian thì mở thêm tab **4. Thử độ bền**, chọn mẫ
 1. Trước khi chạy, nói trước dự đoán của mình. Nếu là ảnh chuối thuộc 4 giống, chụp một quả trên nền trơn: "Em dự đoán chương trình sẽ nhận đúng." Nếu là ảnh ngoài phạm vi (giống khác, quả khác, con vật, nải chuối, nền phức tạp): "Ảnh này nằm ngoài phạm vi bài toán. Chương trình vẫn chạy được và sẽ trả về một trong bốn giống, vì đầu ra của bài toán chỉ có bốn lớp."
 2. Chạy ảnh. Chương trình không báo lỗi với bất kỳ ảnh nào.
 3. Khi được hỏi kết quả đúng hay sai với ảnh ngoài phạm vi: "Chương trình chạy đúng theo phát biểu bài toán: output là một trong bốn giống. Còn ảnh này không thuộc tập nhãn của bài toán nên em không đánh giá đúng sai cho nó được. Muốn chương trình trả lời là không phải bốn giống này thì phải phát biểu lại bài toán với lớp thứ năm, phần đó nhóm em chưa làm và đã ghi trong hạn chế."
-4. Không tự chọn ảnh khó để chạy. Chỉ chạy ảnh ngoài kịch bản khi được yêu cầu.
+4. Không nói rằng ảnh ngoài phạm vi sẽ có xác suất thấp. Nhóm đã thử: ảnh logo của trường cho ra Sagor Kola với xác suất 0.988. Mô hình chỉ biết chia xác suất cho 4 lớp, nên xác suất cao không có nghĩa là ảnh thuộc phạm vi bài toán. Dòng nhắc "mô hình không chắc chắn" trong demo chỉ hiện khi xác suất cao nhất dưới 0.6.
+5. Không tự chọn ảnh khó để chạy. Chỉ chạy ảnh ngoài kịch bản khi được yêu cầu.
 
 ## 4. Nếu thiếu thời gian
 
@@ -37,7 +38,7 @@ Các câu dưới đây là những câu dễ bị hỏi nhất. Danh sách đ�
 ### 5.1 Về bài toán và chương trình demo
 
 **1. Đưa vào ảnh con sư tử (hoặc quả táo, hoặc giống chuối khác) thì chương trình ra gì? Như vậy là đúng hay sai?**
-Chương trình vẫn chạy và trả về một trong bốn giống, vì theo phát biểu bài toán, output chỉ gồm bốn lớp. Xét theo ràng buộc đó thì chương trình không sai. Còn ảnh đó không thuộc tập nhãn nên không có nhãn đúng để so. Nếu muốn chương trình trả lời "không phải bốn giống này" thì bài toán phải có thêm lớp thứ năm và dữ liệu cho lớp đó. Nhóm em chưa làm phần này và đã ghi trong hạn chế.
+Chương trình vẫn chạy và trả về một trong bốn giống, vì theo phát biểu bài toán, output chỉ gồm bốn lớp. Xét theo ràng buộc đó thì chương trình không sai. Còn ảnh đó không thuộc tập nhãn nên không có nhãn đúng để so. Nếu muốn chương trình trả lời "không phải bốn giống này" thì bài toán phải có thêm lớp thứ năm và dữ liệu cho lớp đó. Nhóm em chưa làm phần này và đã ghi trong hạn chế. Xác suất trả về cũng không dùng để phát hiện ảnh ngoài phạm vi được: nhóm em thử ảnh logo của trường thì mô hình trả về Sagor Kola với xác suất 0.988.
 
 **2. Ảnh chuối chụp ngoài thực tế, ví dụ cả nải chuối hoặc chuối để trên bàn, thì có nhận đúng không?**
 Nhóm em chưa có dữ liệu như vậy để đo nên không khẳng định được. Mô hình chỉ học ảnh một quả chuối trên nền trơn. Thí nghiệm của nhóm em cho thấy mô hình dựa một phần vào nền: khi ghép quả chuối lên nền của ảnh lớp khác, macro-F1 của MobileNetV3 giảm từ 1.000 xuống 0.794. Nên với ảnh ngoài thực tế, em dự đoán kết quả sẽ kém hơn trên bộ dữ liệu.

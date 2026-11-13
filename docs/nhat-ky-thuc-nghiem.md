@@ -1709,9 +1709,10 @@ Bốn hình có ghi số đo thời gian (`M4_color_features.png`, `P4_knn_algor
 **Mục tiêu.** Hình trong `results/` mang tiêu đề do code vẽ lên, nên sau khi sửa tiêu đề trong code ở Bước 17 phải sinh lại hình. Yêu cầu: số liệu không được đổi theo.
 
 **Đã làm.**
-- Chép code đã sửa vào một bản clone riêng (có sẵn `data/cache/`), chạy lại `scripts/run_all.sh` cho bước 1 đến 8.
+- Chép code đã sửa vào một bản clone riêng (có sẵn `data/cache/`), chạy lại `scripts/run_all.sh` cho bước 1 đến 8, rồi bước 10 đến 14 (bước 14 gồm cả bước 9: dựng báo cáo, slide, kịch bản).
 - So từng file bảng và số liệu (`.md`, `.json`, `.csv`, `.txt`) sinh ra trong clone với file trong repo chính (đã sửa nhãn bằng thay chuỗi ở Bước 17).
 - Chép các hình khác nhau từ clone sang repo chính, trừ 4 hình có số đo thời gian đã vẽ lại ở Bước 17.
+- Dựng lại báo cáo và slide trong repo chính để nhúng hình mới, rồi so với báo cáo, slide và kịch bản mà clone tự dựng ở bước 14.
 
 **Lý do chọn cách này.** Chạy trong clone thì kết quả của repo chính, kể cả số đo thời gian đã dẫn trong báo cáo, không bị ghi đè. Việc so từng file cho biết cách sửa nhãn bằng thay chuỗi có cho đúng kết quả mà code mới sinh ra hay không. **[lập luận]**
 
@@ -1727,10 +1728,18 @@ Bốn hình có ghi số đo thời gian (`M4_color_features.png`, `P4_knn_algor
 | File bảng và số liệu của bước 1 đến 8 (254 file) | 169 file giống hệt, 85 file chỉ khác số đo thời gian, 0 file khác ở chỗ khác |
 | Hình của bước 1 đến 8 | 40 hình khác bản cũ, đã chép sang (31 hình trong `results/figures/`, 9 ma trận nhầm lẫn trong `results/final/`) |
 | Hình khác bản cũ trên vùng rộng | 2 hình: `N3_dropout.png` (chú giải đổi "Dropout(0,5)" thành "Dropout(0.5)") và `N8_robustness.png` (nhãn trục đổi "V×0,6" thành "V×0.6") |
+| Bước 10 đến 14 chạy lại trong clone | 5/5 bước kết thúc với mã thoát 0, tổng 3275 s (bước 12 dùng lại `metrics.json` đã có, chỉ dựng lại bảng và hình) |
+| Toàn bộ file bảng và số liệu trong `results/` (385 file) | 295 file giống hệt, 89 file chỉ khác số đo thời gian, 1 file không được sinh lại trong lần chạy này (`results/cnn/table_checkpoints.md`, do lệnh `python -m src.cnn.checkpoints` ghi, lệnh này không nằm trong `run_all.sh`; trong repo chính file này chỉ đổi tiêu đề và ký hiệu ô trống) |
+| Hình của bước 10 đến 14 | 46 hình khác bản cũ, đã chép sang (thư mục `results/E1_xu_ly/`, `E2_aug_tac_gia/`, `so_sanh_nhanh/` và 8 hình trong `results/figures/`) |
+| Hình khác bản cũ trên vùng rộng ở phần mở rộng | 2 hình: `E1_selection.png` (tiêu đề, nhãn cột) và `E_compare_arms.png` (chú giải tên nhánh) |
+| Báo cáo dựng trong repo chính so với báo cáo clone tự dựng (`report/report.md`) | khác 40 dòng, đều là dòng của các bảng có cột thời gian |
+| Kịch bản thuyết trình và nguồn slide (`.tex`, bỏ qua chữ số) so với bản clone tự dựng | trùng |
+| `report/report.pdf` và `slides/bao-cao-do-an.pdf` sau khi dựng lại | 76 trang và 54 trang; 0 gạch dài trong phần chữ của cả hai file |
+| Demo với ảnh ngoài phạm vi và định dạng lạ (logo PNG có bảng màu, ảnh xám, RGBA, CMYK, ảnh 4000×3000, ảnh 1×1), 4 mô hình | không lỗi, luôn trả về 4 xác suất tổng bằng 1; logo của trường cho ra Sagor Kola với xác suất 0.988 (`b_mobilenetv3`), nên xác suất cao không cho biết ảnh có thuộc phạm vi bài toán hay không |
 
-**Kết quả và kết luận.** Với bước 1 đến 8, nhãn đã sửa trong repo chính trùng với kết quả do code mới sinh ra, và không số liệu nào đổi ngoài số đo thời gian. Phần mở rộng (bước 10 đến 14) đang chạy lại, kết quả sẽ ghi bổ sung vào mục này.
+**Kết quả và kết luận.** Với mọi bước, nhãn đã sửa trong repo chính trùng với kết quả do code mới sinh ra, và không số liệu nào đổi ngoài số đo thời gian. Toàn bộ hình trong `results/` giờ mang tiêu đề do code hiện tại sinh ra. Chạy `bash scripts/run_all.sh 14` trong clone dựng được báo cáo, slide và kịch bản giống bản trong repo chính.
 
-**Ảnh hưởng tới bước sau.** Sau khi xong phần mở rộng, báo cáo và slide được dựng lại để nhúng hình mới.
+**Ảnh hưởng tới bước sau.** Không đổi kết quả thí nghiệm. Báo cáo và slide đã nhúng hình mới.
 
 ## Bảng quyết định
 
