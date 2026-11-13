@@ -1607,6 +1607,59 @@ Bảng `.md`, báo cáo và slide không dùng hai trường này nên không đ
 
 **Ảnh hưởng tới bước sau.** README có thêm cột "Chạy lại, dùng trọng số có sẵn (đo)" bên cạnh cột thời gian huấn luyện lại từ đầu.
 
+## Bước 16 — Demo nhiều tab: dự đoán, so sánh, Grad-CAM, thử độ bền, nhiều ảnh, đánh giá theo metric, kết quả (13/11/2026)
+
+**Mục tiêu.** Mở rộng demo (Bước 9 chỉ có một màn hình tải ảnh và dự đoán) để khi bảo vệ trình bày được cả cách mô hình ra quyết định, độ bền của nó và các metric cơ bản của môn học, bằng chính dữ liệu và mô hình của đồ án.
+
+**Đã làm.**
+- `app/core.py`: phần xử lý không phụ thuộc giao diện: nạp mô hình trong `models/`, dự đoán một ảnh hoặc cả lô, Grad-CAM, áp các phép biến đổi của bộ kiểm tra khó lên một ảnh, đọc tập val/test từ `data/raw` theo `data/splits/`, sinh lại 6 phiên bản của bộ kiểm tra khó, tính accuracy, precision, recall, F1, TP/FP/FN và ma trận nhầm lẫn.
+- `app/app.py`: giao diện Gradio 7 tab (Dự đoán; So sánh mô hình; Giải thích (Grad-CAM); Thử độ bền; Nhiều ảnh; Đánh giá theo metric; Kết quả thực nghiệm). Chế độ dòng lệnh `--image` giữ nguyên.
+- Ảnh chụp giao diện: `results/figures/demo_screenshot.png`, `demo_gradcam.png`, `demo_metric.png`; cập nhật README, báo cáo (mục 5.12), slide (thêm một trang Grad-CAM), tài liệu hỏi đáp.
+- Kiểm tra bằng trình duyệt: mở từng tab, tải ảnh, bấm từng nút, đọc kết quả hiển thị.
+
+**Lý do chọn cách này.**
+- Giữ Gradio như Bước 9: đã có trong `requirements.txt`, có sẵn webcam, dán ảnh, thanh xác suất; lệnh chạy không đổi. **[lập luận]**
+- Tab metric tính lại từ ảnh và mô hình thay vì chép số từ `results/`, để người xem tự kiểm được rằng con số trong báo cáo ra từ mô hình đang chạy. **[lập luận]**
+- Grad-CAM dùng điểm lớp trước softmax: với MobileNetV3 xác suất thường bằng 1,000 nên gradient của xác suất gần 0 và bản đồ nhiệt không có nghĩa. **[lập luận]**
+- Hàm dự đoán một ảnh được biên dịch thành đồ thị (`tf.function`) thay vì gọi mô hình trực tiếp. **[đo]**, xem bảng dưới.
+
+**Phương án khác và vì sao không chọn.**
+- Streamlit: phải thêm thư viện và đổi lệnh chạy. **[lập luận]**
+- Trang web tĩnh chạy TF.js: không chạy được mô hình truyền thống (HOG + histogram màu, scikit-learn), Grad-CAM và tab metric khó làm hơn nhiều. **[lập luận]**
+- Tab metric đọc sẵn kết quả từ `results/` thay vì tính lại: nhanh hơn nhưng không chứng minh được số liệu ra từ mô hình. **[lập luận]**
+
+**Bằng chứng.** **[đo]**
+
+Tab "Đánh giá theo metric" so với kết quả đã ghi (test 371 ảnh, ảnh gốc):
+
+| Mô hình | Tính lại trong demo | Đã ghi (`models/models.json`) |
+|---|---|---|
+| `b_mobilenetv3` | accuracy 1,0000, macro-F1 1,0000, sai 0 | 1,0000 / 1,0000 |
+| `a_lenet` | accuracy 0,9811, macro-F1 0,9777, sai 7 | 0,9811 / 0,9777 |
+| `b_mobilenetv3_thay_nen` | accuracy 1,0000, macro-F1 1,0000, sai 0 | 1,0000 / 1,0000 |
+| `trad_best` | accuracy 1,0000, macro-F1 1,0000, sai 0 | 1,0000 / 1,0000 |
+
+| Kiểm tra | Kết quả |
+|---|---|
+| 6 phiên bản bộ kiểm tra khó sinh trong demo so với `data/cache/stress_test.npz` của thí nghiệm | 6/6 giống hệt từng điểm ảnh |
+| `b_mobilenetv3`, nền hoán đổi, tính trong demo | macro-F1 0,7939; `results/so_sanh_nhanh/table_stress.md` ghi 0,794 |
+| `b_mobilenetv3`, val, ảnh gốc | macro-F1 1,0000, khớp `results/cnn/b_mobilenetv3_lr1e-4/metrics.json` |
+| Xác suất tính theo đường Grad-CAM so với dự đoán của mô hình (3 CNN) | chênh lệch lớn nhất 0,0 |
+| Lưới Grad-CAM | MobileNetV3: 7×7; LeNet: 26×26 |
+| Kiểm tra bằng trình duyệt 7 tab | mọi nút chạy, không có lỗi trên trang |
+
+Thời gian dự đoán một ảnh (CPU, trung bình 10 lần):
+
+| Mô hình | Gọi trực tiếp (ms) | Hàm đã biên dịch (ms) |
+|---|---|---|
+| `b_mobilenetv3` | 135,6 | 12,2 |
+| `a_lenet` | 9,7 | 1,6 |
+| `b_mobilenetv3_thay_nen` | 132,8 | 11,9 |
+
+**Kết quả và kết luận.** Demo có 7 tab; mọi số liệu trong demo hoặc tính trực tiếp từ ảnh và mô hình của đồ án, hoặc đọc từ `results/`, và các số tính lại khớp với số đã ghi. Tab Thử độ bền cho thấy trực tiếp thiên lệch theo nền đã đo ở S2 và ở bộ kiểm tra khó. Ngưỡng nhắc "mô hình không chắc chắn" (xác suất cao nhất dưới 0,6) chỉ là quy ước của demo, không rút ra từ thí nghiệm, và được ghi rõ như vậy trên giao diện.
+
+**Ảnh hưởng tới bước sau.** Không đổi kết quả thí nghiệm. Báo cáo, slide, README và tài liệu hỏi đáp mô tả demo mới.
+
 ## Bảng quyết định
 
 | Quyết định | Phương án thay thế | Bằng chứng | Nhãn |
@@ -1660,3 +1713,4 @@ Bảng `.md`, báo cáo và slide không dùng hai trường này nên không đ
 | Không commit `data/cache/` | Commit cả cache | Bước 15: 8,3 GiB, 15 file trên 100 MiB; tính lại được, không cần huấn luyện | [đo] |
 | Nhánh mở rộng mặc định tính lại, dùng lại trọng số; `SKIP_DONE=1` để bỏ qua cấu hình đã xong | Luôn bỏ qua cấu hình đã có kết quả | Bước 15: nhánh T-kr tính lại trùng từng byte trong 401 giây | [đo] |
 | Kiểm chứng tái lập bằng bản clone mới từ GitHub | Chạy lại trong thư mục làm việc | Bước 15 (bổ sung): 2,5 giờ, mọi khác biệt chỉ ở số đo thời gian | [đo] |
+| Demo 7 tab; tab metric tính lại từ ảnh và mô hình | Chỉ dự đoán một ảnh; đọc sẵn số từ `results/` | Bước 16: số tính lại khớp số đã ghi cho 4 mô hình; bộ kiểm tra khó sinh lại giống hệt | [đo] |

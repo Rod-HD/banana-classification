@@ -163,7 +163,27 @@ python -m src.cnn.train --model b_mobilenetv3 --stage 2 --lr 1e-4 --augment --ta
 python app/app.py
 ```
 
-Lệnh trên mở giao diện web tại http://127.0.0.1:7860: tải ảnh lên, chọn mô hình, nhận giống dự đoán và xác suất 4 lớp. Dự đoán một ảnh trên dòng lệnh:
+Lệnh trên mở giao diện web tại http://127.0.0.1:7860 (thêm `--share` để Gradio cấp một link công khai tạm thời). Giao diện có 7 tab:
+
+| Tab | Chức năng | Nút và điều khiển chính |
+|---|---|---|
+| 1. Dự đoán | Tải ảnh, chụp webcam hoặc dán ảnh; giống dự đoán, xác suất 4 lớp, thời gian dự đoán, thông tin giống; nhắc khi xác suất cao nhất dưới 0,6 | chọn mô hình, **Dự đoán**, **Xóa**, ảnh ví dụ |
+| 2. So sánh mô hình | Một ảnh qua cả 4 mô hình trong `models/`: bảng xác suất, thời gian, dung lượng; biểu đồ xác suất | **Chạy tất cả mô hình** |
+| 3. Giải thích (Grad-CAM) | Bản đồ nhiệt vùng ảnh CNN dựa vào; ảnh sau khi resize đúng như mô hình nhìn thấy | chọn mô hình CNN, chọn lớp cần giải thích, độ đậm lớp phủ, **Tạo bản đồ nhiệt** |
+| 4. Thử độ bền | Biến đổi ảnh bằng đúng các phép của bộ kiểm tra khó (độ sáng V, nhiễu, xoay, che, ảnh xám, lật, thay nền) rồi so dự đoán trước và sau | mẫu phép biến đổi, các thanh trượt, chọn nền, **Áp dụng và dự đoán**, **Đặt lại** |
+| 5. Nhiều ảnh | Dự đoán hàng loạt; nếu tên file chứa tên giống thì đếm số ảnh đúng | **Dự đoán tất cả**, **Tải CSV** |
+| 6. Đánh giá theo metric | Tính lại accuracy, precision, recall, F1 (từng lớp, macro, weighted), TP/FP/FN, ma trận nhầm lẫn và ảnh bị đoán sai trên val hoặc test, với ảnh gốc hoặc từng phép của bộ kiểm tra khó; đối chiếu với kết quả đã ghi | chọn mô hình, tập, phiên bản ảnh, **Tính metric**, **So sánh mọi mô hình** |
+| 7. Kết quả thực nghiệm | Xem mọi bảng `results/**/table*.md` và hình `results/figures/` | chọn bảng, chọn hình |
+
+Số liệu trong demo hoặc tính trực tiếp từ ảnh trong `data/raw` và mô hình trong `models/`, hoặc đọc từ `results/`. Tab 6 cho lại đúng kết quả đã ghi: ví dụ LeNet trên test sai 7/371 ảnh, macro-F1 0,9777; MobileNetV3 với nền hoán đổi đạt macro-F1 0,794 như `results/so_sanh_nhanh/table_stress.md`. Phần xử lý nằm trong `app/core.py`, giao diện trong `app/app.py`.
+
+![Tab Dự đoán](results/figures/demo_screenshot.png)
+
+![Tab Giải thích (Grad-CAM)](results/figures/demo_gradcam.png)
+
+![Tab Đánh giá theo metric](results/figures/demo_metric.png)
+
+Dự đoán một ảnh trên dòng lệnh:
 
 ```bash
 python app/app.py --image app/examples/sagor_kola_sagor_kola_110.jpg --model b_mobilenetv3
@@ -199,7 +219,7 @@ results/          kết quả từng thí nghiệm (results/<mã>/), hình (resu
 models/           mô hình dùng cho demo
 checkpoints/      trọng số của từng lần huấn luyện CNN: <run>/best.keras, <run>/state.json
 logs/             log của các lần chạy
-app/              demo (app.py), thông tin giống chuối, ảnh ví dụ
+app/              demo: giao diện (app.py), phần xử lý (core.py), thông tin giống chuối, ảnh ví dụ
 report/           báo cáo (report_template.md → report.md, report.docx)
 slides/           slide trình bày: Beamer LaTeX style UIT (.tex, .pdf, theme beamerthemeUIT.sty) và bản .pptx
 docs/             kế hoạch, nhật ký thực nghiệm, hỏi đáp khi bảo vệ

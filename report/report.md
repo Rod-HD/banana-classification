@@ -813,9 +813,13 @@ Lỗi tập trung ở Sagor Kola: 23/78 ảnh bị ít nhất một mô hình đ
 
 ### 5.12 Demo
 
-`app/app.py` (Gradio): tải ảnh lên, chọn mô hình (`b_mobilenetv3`, `a_lenet` hoặc cấu hình truyền thống tốt nhất), nhận giống dự đoán cùng xác suất 4 lớp. Thông tin về giống trong `app/variety_info.json` chỉ ghi những gì có nguồn dẫn; chỗ chưa có nguồn để "TODO".
+`app/app.py` (Gradio, chạy bằng `python app/app.py`) có 7 tab. (1) **Dự đoán**: tải ảnh, chụp webcam hoặc dán ảnh, chọn mô hình (`b_mobilenetv3`, bản X-b có thay nền, `a_lenet` hoặc cấu hình truyền thống tốt nhất), nhận giống dự đoán, xác suất 4 lớp, thời gian dự đoán và thông tin giống. (2) **So sánh mô hình**: một ảnh qua cả 4 mô hình. (3) **Giải thích**: Grad-CAM trên lớp tích chập cuối của CNN. (4) **Thử độ bền**: áp đúng các phép của bộ kiểm tra khó (độ sáng, nhiễu, xoay, che, thay nền) lên một ảnh rồi so dự đoán trước và sau. (5) **Nhiều ảnh**: dự đoán hàng loạt, tải CSV. (6) **Đánh giá theo metric**: tính lại accuracy, precision, recall, F1 từng lớp, macro, weighted, ma trận nhầm lẫn và ảnh bị đoán sai trên val hoặc test, với ảnh gốc hoặc từng phép thử khó; kết quả trùng với số đã ghi ở mục 5.10 và 5.13. (7) **Kết quả thực nghiệm**: xem các bảng và hình trong `results/`. Thông tin về giống trong `app/variety_info.json` chỉ ghi những gì có nguồn dẫn; chỗ chưa có nguồn để "TODO".
 
-![Giao diện demo](../results/figures/demo_screenshot.png)
+![Giao diện demo: tab Dự đoán](../results/figures/demo_screenshot.png)
+
+![Giao diện demo: tab Giải thích (Grad-CAM)](../results/figures/demo_gradcam.png)
+
+![Giao diện demo: tab Đánh giá theo metric](../results/figures/demo_metric.png)
 
 ### 5.13 Phần mở rộng: ba nhánh so sánh độc lập với pipeline gốc
 

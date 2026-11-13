@@ -263,7 +263,9 @@ def slides():
                           "Sabri_Kola_5: quả to, nền trắng → 6/9 mô hình sai"],
               "notes": "Lỗi khớp với thiên lệch đo ở S2: ảnh không giống ảnh điển hình của lớp về kích thước quả và nền thì dễ bị đoán sai."})
     s.append({"title": "Demo", "image": F / "demo_screenshot.png",
-              "notes": "Chạy: python app/app.py. Tải ảnh, chọn mô hình, nhận giống và xác suất 4 lớp. Thông tin giống chỉ ghi những gì có nguồn."})
+              "notes": "Chạy: python app/app.py. 7 tab: dự đoán, so sánh 4 mô hình, Grad-CAM, thử độ bền bằng các phép của bộ kiểm tra khó, dự đoán nhiều ảnh, tính lại accuracy/precision/recall/F1 và ma trận nhầm lẫn trên val/test, xem bảng và hình trong results/. Thông tin giống chỉ ghi những gì có nguồn."})
+    s.append({"title": "Demo: giải thích bằng Grad-CAM", "image": F / "demo_gradcam.png",
+              "notes": "Grad-CAM lấy gradient của điểm lớp theo bản đồ đặc trưng của lớp tích chập cuối, tô vùng ảnh mô hình dựa vào. Tab Đánh giá theo metric tính lại đúng các con số trong báo cáo (ví dụ LeNet sai 7/371 ảnh test, macro-F1 0,9777)."})
     s += extension_slides()
     s.append({"section": "Kết luận", "title": "Ưu điểm và hạn chế",
               "bullets": ["**Ưu điểm**", ("30 thí nghiệm, mỗi nhận định có bảng hoặc hình; ghi cả kết quả trái dự đoán", 1),
