@@ -1,0 +1,49 @@
+===== S1 =====
+### S1 — Chỉ số không cần nhãn mask trên 400 ảnh (100 ảnh mỗi lớp)
+
+| Phương pháp | Số mảnh rời (trung bình) | Số mảnh rời (trung vị) | Tỉ lệ lỗ thủng trong vật | Tỉ lệ diện tích vật | IoU với phương pháp được chọn |
+|---|---|---|---|---|---|
+| Ngưỡng toàn cục (T=127) | 11.6 | 9 | 0.085 | 0.105 | 0.689 |
+| Otsu (ảnh xám) | 2.9 | 2 | 0.052 | 0.149 | 0.799 |
+| Ngưỡng thích nghi | 16.9 | 14 | 0.282 | 0.081 | 0.561 |
+| K-means màu (k=2) | 2.5 | 1 | 0.027 | 0.140 | 0.859 |
+| Otsu trên khoảng cách màu tới nền | 2.5 | 1 | 0.010 | 0.145 | 0.971 |
+| Otsu khoảng cách màu + hậu xử lý (dùng cho S2) | 1.0 | 1 | 0.000 | 0.144 | 1.000 |
+
+===== S2 =====
+### S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val)
+
+| Đặc trưng + bộ phân lớp | Phiên bản ảnh | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Toàn ảnh | 0.991 ± 0.005 | 0.992 ± 0.005 |
+| HOG 64×128 + LogReg C=0.1 | Toàn ảnh | 0.986 ± 0.007 | 0.989 ± 0.006 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Toàn ảnh | 0.996 ± 0.003 | 0.997 ± 0.003 |
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng chuối | 0.964 ± 0.010 | 0.967 ± 0.008 |
+| HOG 64×128 + LogReg C=0.1 | Chỉ vùng chuối | 0.884 ± 0.010 | 0.888 ± 0.009 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng chuối | 0.958 ± 0.005 | 0.961 ± 0.005 |
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng nền | 0.957 ± 0.009 | 0.963 ± 0.009 |
+| HOG 64×128 + LogReg C=0.1 | Chỉ vùng nền | 0.983 ± 0.006 | 0.985 ± 0.005 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng nền | 0.989 ± 0.009 | 0.990 ± 0.007 |
+
+### S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng
+
+| Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Màu Lab trung bình của nền (3 số) + KNN k=5 | 3 | 0.934 ± 0.012 | 0.945 ± 0.011 |
+| Màu Lab trung bình của nền (3 số) + LogReg | 3 | 0.637 ± 0.024 | 0.706 ± 0.020 |
+| Tỉ lệ diện tích quả chuối trong ảnh (1 số) + KNN k=5 | 1 | 0.619 ± 0.022 | 0.642 ± 0.016 |
+| HOG của mask nhị phân (chỉ hình bóng) + LogReg C=0.1 | 3780 | 0.857 ± 0.017 | 0.861 ± 0.014 |
+
+### S2 — Màu nền (Lab của OpenCV, thang 0–255) và kích thước quả theo lớp (train+val)
+
+| Lớp | Nền: L trung bình ± std | Nền: a | Nền: b | Tỉ lệ diện tích quả chuối |
+|---|---|---|---|---|
+| Bangla Kola | 200.8000030517578 ± 12.100000381469727 | 128.10000610351562 ± 1.100000023841858 | 128.6999969482422 ± 2.0999999046325684 | 0.136 |
+| Champa Kola | 190.60000610351562 ± 11.600000381469727 | 127.0999984741211 ± 0.4000000059604645 | 123.80000305175781 ± 0.8999999761581421 | 0.164 |
+| Sabri Kola | 206.89999389648438 ± 12.699999809265137 | 127.30000305175781 ± 1.0 | 120.0999984741211 ± 10.300000190734863 | 0.054 |
+| Sagor Kola | 196.0 ± 19.100000381469727 | 128.3000030517578 ± 0.699999988079071 | 128.39999389648438 ± 2.299999952316284 | 0.220 |
+
+
+real	5m53.468s
+user	12m14.904s
+sys	0m24.350s

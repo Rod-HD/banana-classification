@@ -5,19 +5,20 @@ __pycache__/
 venv/
 .env
 
-# intermediate artifacts
-checkpoints/
+# file trung gian, tự sinh lại khi chạy
 data/cache/
-logs/*.log
 *.zip
+# checkpoints/<run>/ chỉ commit best.keras (kiến trúc + trọng số tốt nhất) và state.json (lịch sử huấn luyện)
+checkpoints/*/last.keras
+checkpoints/*/full.keras
+checkpoints/*/best.weights.h5
+checkpoints/*/*.tmp.keras
 
 # OS / editor
 .DS_Store
 .vscode/
 .idea/
 
-# bản Augmented của tác giả (tải bằng scripts/download_data.sh augmented)
-data/aug_author/
 # file trung gian của LaTeX
 slides/*.aux
 slides/*.log

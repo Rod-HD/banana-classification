@@ -1,5 +1,6 @@
 """Huấn luyện CNN (hướng A và hướng B). Adam + cross-entropy, dừng sớm theo macro-F1 trên val,
-lưu checkpoint mỗi epoch vào checkpoints/<run>/ và hỗ trợ --resume.
+lưu checkpoint mỗi epoch vào checkpoints/<run>/ và hỗ trợ --resume. Khi xong, mỗi run để lại
+checkpoints/<run>/best.keras (kiến trúc + trọng số tốt nhất) và state.json; run đã xong thì --resume không huấn luyện lại.
 
 Ví dụ:
     python -m src.cnn.train --model a_lenet
@@ -160,12 +161,23 @@ class F1Checkpoint(keras.callbacks.Callback):
               f"acc {rec['val_accuracy']:.4f} macro-F1 {rec['val_macro_f1']:.4f} | best {st['best_f1']:.4f} @ {st['best_epoch']}", flush=True)
 
 
+def save_inference(model, path):
+    """Lưu mô hình ở dạng chỉ gồm kiến trúc và trọng số, không kèm trạng thái của bộ tối ưu Adam
+    (hai mảng moment cho mỗi trọng số huấn luyện được, chỉ cần khi huấn luyện tiếp và làm file lớn gấp ba).
+    Đây là file dùng để dự đoán và là file được đo dung lượng."""
+    tmp = path.with_name("slim.tmp.keras")
+    model.save(tmp)
+    keras.models.load_model(tmp, compile=False).save(path)
+    tmp.unlink()
+
+
 def fit_loop(model, Xtr, ytr, Xva, yva, run, lr, epochs, patience, batch=32, resume=False, class_weight=None,
              train_eval=None):
     ckpt = CKPT_DIR / run; ckpt.mkdir(parents=True, exist_ok=True)
     state = {"epoch": 0, "best_f1": -1.0, "best_epoch": 0, "wait": 0, "history": [], "train_time_s": 0.0, "done": False}
+    best_w, best_k = ckpt / "best.weights.h5", ckpt / "best.keras"
     saved = json.loads((ckpt / "state.json").read_text()) if resume and (ckpt / "state.json").exists() else None
-    if saved and saved.get("done") and (ckpt / "best.weights.h5").exists():
+    if saved and saved.get("done") and (best_k.exists() or best_w.exists()):
         state = saved          # run đã xong: không huấn luyện lại, chỉ nạp trọng số tốt nhất
         print(f"run đã hoàn tất ({state['epoch']} epoch, best {state['best_f1']:.4f}); dùng lại trọng số đã lưu", flush=True)
     elif saved and (ckpt / "last.keras").exists():
@@ -181,8 +193,12 @@ def fit_loop(model, Xtr, ytr, Xva, yva, run, lr, epochs, patience, batch=32, res
         model.fit(ds, epochs=epochs, initial_epoch=state["epoch"], callbacks=[cb], verbose=0, class_weight=class_weight)
     state["done"] = True
     (ckpt / "state.json").write_text(json.dumps(state))
-    model.load_weights(ckpt / "best.weights.h5")
-    model.save(ckpt / "best.keras")
+    if best_w.exists():                     # vừa huấn luyện xong: chuyển trọng số tốt nhất thành best.keras
+        model.load_weights(best_w)
+        save_inference(model, best_k)
+        best_w.unlink()
+    else:                                   # run đã xong từ trước (best.keras có sẵn trong repo)
+        model.load_weights(best_k)
     if (ckpt / "last.keras").exists():      # checkpoint để --resume chỉ cần khi run còn dang dở
         (ckpt / "last.keras").unlink()
     return model, state
@@ -266,7 +282,7 @@ def main(argv=None):
         else:       # hướng B, giai đoạn 2
             model, base = M.b_model(a.model, size, augment=a.augment)
             init = a.init_from or (a.model + "_s1" + (f"_frac{int(round(a.frac * 100))}" if a.frac < 1.0 else ""))
-            head = M.b_head(base.output_shape[-1]); head.load_weights(CKPT_DIR / init / "best.weights.h5")
+            head = M.b_head(base.output_shape[-1]); head.load_weights(CKPT_DIR / init / "best.keras")
             model.get_layer("softmax").set_weights(head.get_layer("softmax").get_weights())
             M.unfreeze(base, a.model)
     if a.minority_aug:

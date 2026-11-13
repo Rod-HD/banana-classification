@@ -166,6 +166,8 @@ Phần "Phương pháp" và "Kết quả thực nghiệm" của báo cáo đư�
 - `results/<thí_nghiệm>/`: `metrics.json`, `classification_report.txt`, hình Confusion Matrix; `results/summary.csv` và `results/summary.md` tổng hợp mọi cấu hình.
 - `results/figures/`: hình dùng trong báo cáo (đường cong theo k, đường cong học, biểu đồ độ sụt theo từng phép biến đổi, ảnh phân đoạn, ảnh dự đoán sai).
 - `models/`: mô hình dùng cho demo (mỗi file dưới 50 MB).
+- `checkpoints/<run>/`: trọng số của từng lần huấn luyện CNN (`best.keras`: kiến trúc và trọng số tốt nhất theo macro-F1 trên val, không kèm trạng thái bộ tối ưu; `state.json`: lịch sử huấn luyện). Commit vào repo để chạy lại không phải huấn luyện lại.
+- `data/aug_author/`: bản Augmented của tác giả bộ dữ liệu, dùng ở mục 12. `logs/`: log của các lần chạy.
 - `app/app.py`: demo tải ảnh lên và nhận giống chuối dự đoán cùng xác suất 4 lớp. `app/variety_info.json` chỉ ghi thông tin có nguồn dẫn; chỗ chưa có nguồn để `"TODO"`.
 - `report/`: báo cáo `report.md` và bản `.docx` theo đúng các mục ở phần 3. Bảng thành viên và mức độ hoàn thành để trống cho nhóm tự điền.
 - `slides/`: slide trình bày theo các mục ở phần 3, có ghi chú thuyết trình cho từng slide. Bản chính là Beamer LaTeX theo style UIT (`.tex` và `.pdf`); bản `.pptx` cùng nội dung được sinh từ cùng một nguồn.

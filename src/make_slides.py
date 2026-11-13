@@ -227,8 +227,8 @@ def slides():
                        "results/N4/table_batchnorm.md."})
     s.append({"title": "N6 — So sánh hướng A và hướng B", "table": R / "N6" / "table.md",
               "cols": ["Hướng", "Mô hình", "Macro-F1 val", "Số tham số", "File mô hình (MB)", "Thời gian huấn luyện (s)", "Dự đoán 1 ảnh (ms, CPU)"],
-              "notes": "Hướng B tốt hơn. Nhưng 'lớn hơn' không có nghĩa là nặng hơn: MobileNetV3 chỉ 0,94 triệu tham số, 11,7 MB, 12,5 ms mỗi ảnh, "
-                       "trong khi a_vgg16 của hướng A nặng 370 MB và mất 130 ms."})
+              "notes": "Hướng B tốt hơn. Nhưng 'lớn hơn' không có nghĩa là nặng hơn: MobileNetV3 chỉ 0,94 triệu tham số, 4,3 MB, 12,5 ms mỗi ảnh, "
+                       "trong khi a_vgg16 của hướng A nặng 163 MB và mất 130 ms."})
     s.append({"title": "N7, N8 — Embedding và độ bền", "image": F / "N8_robustness.png",
               "bullets": ["N7: embedding MobileNetV3 đã fine-tune + KNN = 1,000; embedding ImageNet chưa học + KNN = 0,932",
                           "N8: CNN bền với nhiễu, xoay, ảnh xám",
@@ -268,7 +268,7 @@ def slides():
     s.append({"section": "Kết luận", "title": "Ưu điểm và hạn chế",
               "bullets": ["**Ưu điểm**", ("30 thí nghiệm, mỗi nhận định có bảng hoặc hình; ghi cả kết quả trái dự đoán", 1),
                           ("Quy trình đánh giá chặt: test dùng một lần, CV, độ lệch chuẩn, khoảng tin cậy", 1),
-                          ("Mô hình 11,7 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test", 1), ("Chạy lại toàn bộ bằng một lệnh", 1),
+                          ("Mô hình 4,3 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test", 1), ("Chạy lại toàn bộ bằng một lệnh", 1),
                           ("Đối chiếu với bài báo và bản Augmented của tác giả trên cùng tập test", 1),
                           "**Hạn chế**", ("Thiên lệch theo bối cảnh chụp (S2): chỉ nhìn nền vẫn đạt 0,93–0,99", 1),
                           ("Mỗi quả chụp nhiều mặt, chia ngẫu nhiên không tách theo quả: lạc quan 0,02–0,07 (X1)", 1),

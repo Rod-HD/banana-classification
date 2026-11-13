@@ -1,0 +1,3 @@
+run=b_mobilenetv3_s1 n_train=1729 n_val=371 size=224 lr=0.001 epochs=60 patience=10 params={'total': 2308, 'trainable': 2308, 'non_trainable': 0}
+tiếp tục từ epoch 31 (best 0.9870)
+KẾT QUẢ b_mobilenetv3_s1: val macro-F1 0.9870 acc 0.9892 | train acc 0.9965 | 31 epoch, 4s (0.1s/epoch)

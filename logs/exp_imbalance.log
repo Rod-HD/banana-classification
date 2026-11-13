@@ -1,0 +1,41 @@
+===== I1 =====
+### I1 — Accuracy so với macro-F1 và recall từng lớp (mô hình chưa xử lý mất cân bằng)
+
+| Mô hình (chưa xử lý mất cân bằng) | Chấm trên | Accuracy | Macro-F1 | Accuracy − Macro-F1 | Recall Bangla | Recall Champa | Recall Sabri | Recall Sagor | Recall thấp nhất |
+|---|---|---|---|---|---|---|---|---|---|
+| Luôn đoán lớp đông nhất (Champa Kola) | train+val | 0.402 | 0.143 | +0.259 | 0.000 | 1.000 | 0.000 | 0.000 | 0.000 (Bangla) |
+| HOG 64×128 + KNN k=31 | out-of-fold 5-fold | 0.884 | 0.871 | +0.014 | 0.899 | 1.000 | 0.988 | 0.552 | 0.552 (Sagor) |
+| Hist HSV + KNN k=31 | out-of-fold 5-fold | 0.883 | 0.868 | +0.015 | 0.870 | 0.998 | 0.986 | 0.576 | 0.576 (Sagor) |
+| Moment màu + LogReg | out-of-fold 5-fold | 0.925 | 0.908 | +0.017 | 0.870 | 0.992 | 0.986 | 0.785 | 0.785 (Sagor) |
+| Cạnh Sobel + LogReg | out-of-fold 5-fold | 0.900 | 0.894 | +0.007 | 0.822 | 0.920 | 0.977 | 0.857 | 0.822 (Bangla) |
+| Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | out-of-fold 5-fold | 0.959 | 0.955 | +0.004 | 0.950 | 0.995 | 0.988 | 0.870 | 0.870 (Sagor) |
+| HOG 64×128 + LogReg C=0.1 | out-of-fold 5-fold | 0.989 | 0.986 | +0.002 | 0.968 | 0.998 | 0.993 | 0.984 | 0.968 (Bangla) |
+| Hist HSV (8,8,8) + LogReg C=0.1 | out-of-fold 5-fold | 0.992 | 0.991 | +0.001 | 0.992 | 0.998 | 0.998 | 0.978 | 0.978 (Sagor) |
+| Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | out-of-fold 5-fold | 0.997 | 0.996 | +0.000 | 0.995 | 0.996 | 1.000 | 0.996 | 0.995 (Bangla) |
+| CNN a_lenet_frac25 | val | 0.930 | 0.924 | +0.006 | 0.879 | 0.953 | 0.961 | 0.899 | 0.879 (Bangla) |
+| CNN a_lenet | val | 0.978 | 0.973 | +0.005 | 1.000 | 0.993 | 0.987 | 0.924 | 0.924 (Sagor) |
+| CNN a_dropout | val | 0.946 | 0.940 | +0.006 | 0.924 | 0.987 | 0.987 | 0.848 | 0.848 (Sagor) |
+| CNN a_vgg16 | val | 0.987 | 0.984 | +0.003 | 0.955 | 0.993 | 0.987 | 1.000 | 0.955 (Bangla) |
+| CNN b_mobilenetv3_s1 | val | 0.989 | 0.987 | +0.002 | 0.970 | 1.000 | 1.000 | 0.975 | 0.970 (Bangla) |
+| CNN b_mobilenetv3 | val | 0.995 | 0.993 | +0.002 | 0.985 | 1.000 | 1.000 | 0.987 | 0.985 (Bangla) |
+
+===== I2 =====
+### I2 — Các cách xử lý mất cân bằng (lấy mẫu lại chỉ trên phần huấn luyện)
+
+| Mô hình | Cách xử lý | Chấm | Macro-F1 | Accuracy | Precision Bangla (ít nhất) | Recall Bangla (ít nhất) | Precision Champa (đông nhất) | Recall Champa (đông nhất) | Recall thấp nhất |
+|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Không xử lý | 5-fold CV | 0.996 ± 0.003 | 0.997 | 0.995 | 0.995 | 0.999 | 0.996 | 0.995 (Bangla) |
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Class weight | 5-fold CV | 0.996 ± 0.003 | 0.997 | 0.995 | 0.995 | 0.999 | 0.996 | 0.995 (Bangla) |
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Oversampling | 5-fold CV | 0.995 ± 0.005 | 0.996 | 0.992 | 0.992 | 0.999 | 0.996 | 0.992 (Bangla) |
+| Truyền thống tốt nhất: Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | Tăng cường lớp ít | 5-fold CV | 0.996 ± 0.002 | 0.996 | 0.992 | 0.997 | 0.999 | 0.995 | 0.993 (Sagor) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Không xử lý | 5-fold CV | 0.894 ± 0.008 | 0.900 | 0.849 | 0.822 | 0.921 | 0.920 | 0.822 (Bangla) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Class weight | 5-fold CV | 0.888 ± 0.007 | 0.895 | 0.823 | 0.828 | 0.925 | 0.902 | 0.828 (Bangla) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Oversampling | 5-fold CV | 0.888 ± 0.005 | 0.895 | 0.821 | 0.825 | 0.926 | 0.905 | 0.825 (Bangla) |
+| Truyền thống yếu hơn (minh họa): Cạnh Sobel + LogReg | Tăng cường lớp ít | 5-fold CV | 0.884 ± 0.011 | 0.892 | 0.776 | 0.857 | 0.957 | 0.892 | 0.852 (Sagor) |
+| Hướng A tốt nhất: a_vgg16 | Không xử lý | val | 0.984 | 0.987 | 0.984 | 0.955 | 1.000 | 0.993 | 0.955 (Bangla) |
+| Hướng B tốt nhất: b_mobilenetv3 | Không xử lý | val | 0.993 | 0.995 | 0.985 | 0.985 | 1.000 | 1.000 | 0.985 (Bangla) |
+
+
+real	7m55.431s
+user	17m14.627s
+sys	0m23.434s

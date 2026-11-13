@@ -1,0 +1,44 @@
+run=a_dropout n_train=1729 n_val=371 size=128 lr=0.001 epochs=40 patience=40 params={'total': 1746260, 'trainable': 1746260, 'non_trainable': 0}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 1.0910 acc 0.5529 | val loss 0.5904 acc 0.7925 macro-F1 0.7831 | best 0.7831 @ 1
+epoch   2 loss 0.5781 acc 0.7866 | val loss 0.4799 acc 0.8275 macro-F1 0.8110 | best 0.8110 @ 2
+epoch   3 loss 0.4500 acc 0.8352 | val loss 0.4387 acc 0.8679 macro-F1 0.8612 | best 0.8612 @ 3
+epoch   4 loss 0.3514 acc 0.8866 | val loss 0.3572 acc 0.8922 macro-F1 0.8866 | best 0.8866 @ 4
+epoch   5 loss 0.3124 acc 0.8924 | val loss 0.2891 acc 0.9111 macro-F1 0.9042 | best 0.9042 @ 5
+epoch   6 loss 0.2948 acc 0.8976 | val loss 0.3200 acc 0.9164 macro-F1 0.9090 | best 0.9090 @ 6
+epoch   7 loss 0.2406 acc 0.9092 | val loss 0.2739 acc 0.9272 macro-F1 0.9196 | best 0.9196 @ 7
+epoch   8 loss 0.1619 acc 0.9491 | val loss 0.2915 acc 0.9218 macro-F1 0.9127 | best 0.9196 @ 7
+epoch   9 loss 0.1541 acc 0.9427 | val loss 0.2941 acc 0.9084 macro-F1 0.9049 | best 0.9196 @ 7
+epoch  10 loss 0.1103 acc 0.9618 | val loss 0.3415 acc 0.9030 macro-F1 0.8976 | best 0.9196 @ 7
+epoch  11 loss 0.1205 acc 0.9578 | val loss 0.3331 acc 0.9245 macro-F1 0.9161 | best 0.9196 @ 7
+epoch  12 loss 0.0968 acc 0.9676 | val loss 0.3232 acc 0.9137 macro-F1 0.9053 | best 0.9196 @ 7
+epoch  13 loss 0.0733 acc 0.9717 | val loss 0.2713 acc 0.9272 macro-F1 0.9224 | best 0.9224 @ 13
+epoch  14 loss 0.1005 acc 0.9653 | val loss 0.2789 acc 0.9111 macro-F1 0.9070 | best 0.9224 @ 13
+epoch  15 loss 0.0659 acc 0.9774 | val loss 0.3826 acc 0.9057 macro-F1 0.9014 | best 0.9224 @ 13
+epoch  16 loss 0.0528 acc 0.9792 | val loss 0.3067 acc 0.9299 macro-F1 0.9252 | best 0.9252 @ 16
+epoch  17 loss 0.0381 acc 0.9873 | val loss 0.3158 acc 0.9326 macro-F1 0.9278 | best 0.9278 @ 17
+epoch  18 loss 0.0433 acc 0.9855 | val loss 0.3912 acc 0.9191 macro-F1 0.9150 | best 0.9278 @ 17
+epoch  19 loss 0.0431 acc 0.9844 | val loss 0.5406 acc 0.8841 macro-F1 0.8760 | best 0.9278 @ 17
+epoch  20 loss 0.0518 acc 0.9815 | val loss 0.3377 acc 0.9218 macro-F1 0.9164 | best 0.9278 @ 17
+epoch  21 loss 0.0653 acc 0.9780 | val loss 0.3707 acc 0.9191 macro-F1 0.9143 | best 0.9278 @ 17
+epoch  22 loss 0.0765 acc 0.9728 | val loss 0.4342 acc 0.9084 macro-F1 0.9029 | best 0.9278 @ 17
+epoch  23 loss 0.0354 acc 0.9855 | val loss 0.3432 acc 0.9299 macro-F1 0.9228 | best 0.9278 @ 17
+epoch  24 loss 0.0334 acc 0.9896 | val loss 0.4201 acc 0.9245 macro-F1 0.9207 | best 0.9278 @ 17
+epoch  25 loss 0.0664 acc 0.9792 | val loss 0.3532 acc 0.9461 macro-F1 0.9399 | best 0.9399 @ 25
+epoch  26 loss 0.0424 acc 0.9850 | val loss 0.4107 acc 0.9218 macro-F1 0.9152 | best 0.9399 @ 25
+epoch  27 loss 0.0324 acc 0.9861 | val loss 0.3879 acc 0.9299 macro-F1 0.9224 | best 0.9399 @ 25
+epoch  28 loss 0.0273 acc 0.9919 | val loss 0.4202 acc 0.9272 macro-F1 0.9192 | best 0.9399 @ 25
+epoch  29 loss 0.0277 acc 0.9925 | val loss 0.4005 acc 0.9272 macro-F1 0.9194 | best 0.9399 @ 25
+epoch  30 loss 0.0208 acc 0.9919 | val loss 0.4254 acc 0.9299 macro-F1 0.9225 | best 0.9399 @ 25
+epoch  31 loss 0.0171 acc 0.9936 | val loss 0.4452 acc 0.9299 macro-F1 0.9235 | best 0.9399 @ 25
+epoch  32 loss 0.0071 acc 0.9983 | val loss 0.4805 acc 0.9326 macro-F1 0.9260 | best 0.9399 @ 25
+epoch  33 loss 0.0244 acc 0.9919 | val loss 0.5674 acc 0.8976 macro-F1 0.8959 | best 0.9399 @ 25
+epoch  34 loss 0.0321 acc 0.9879 | val loss 0.4583 acc 0.9137 macro-F1 0.9092 | best 0.9399 @ 25
+epoch  35 loss 0.0191 acc 0.9931 | val loss 0.5070 acc 0.9272 macro-F1 0.9203 | best 0.9399 @ 25
+epoch  36 loss 0.0328 acc 0.9907 | val loss 0.5449 acc 0.9030 macro-F1 0.9025 | best 0.9399 @ 25
+epoch  37 loss 0.0266 acc 0.9907 | val loss 0.4498 acc 0.9299 macro-F1 0.9238 | best 0.9399 @ 25
+epoch  38 loss 0.0108 acc 0.9954 | val loss 0.4131 acc 0.9191 macro-F1 0.9120 | best 0.9399 @ 25
+epoch  39 loss 0.0223 acc 0.9936 | val loss 0.5281 acc 0.9272 macro-F1 0.9211 | best 0.9399 @ 25
+epoch  40 loss 0.0150 acc 0.9960 | val loss 0.5444 acc 0.9326 macro-F1 0.9270 | best 0.9399 @ 25
+KẾT QUẢ a_dropout: val macro-F1 0.9399 acc 0.9461 | train acc 0.9994 | 40 epoch, 168s (4.2s/epoch)

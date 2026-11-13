@@ -1,0 +1,85 @@
+===== P1 =====
+### P1 — Quy tắc k = số lớp + 1 so với k chọn bằng cross-validation
+
+| Đặc trưng | k = số lớp + 1 = 5 | k tốt nhất theo CV | Macro-F1 tại k tốt nhất | Chênh so với k=5 | k=1 | k=31 |
+|---|---|---|---|---|---|---|
+| Moment màu (9 chiều) | 0.972 ± 0.008 | 1 | 0.977 ± 0.003 | +0.006 | 0.977 ± 0.003 | 0.937 ± 0.012 |
+| Hist HSV (512 chiều) | 0.965 ± 0.014 | 1 | 0.975 ± 0.005 | +0.011 | 0.975 ± 0.005 | 0.867 ± 0.026 |
+| HOG 64×128 (3780 chiều) | 0.946 ± 0.007 | 1 | 0.967 ± 0.011 | +0.020 | 0.967 ± 0.011 | 0.871 ± 0.012 |
+
+===== P2 =====
+### P2 — KNN (k=5) theo độ đo và cách chuẩn hóa; macro-F1 5-fold
+
+| Độ đo | Chuẩn hóa | Moment màu (9 chiều) | Hist HSV (512 chiều) | HOG 64×128 (3780 chiều) |
+|---|---|---|---|---|
+| Euclidean | không | 0.977 ± 0.005 | 0.953 ± 0.006 | 0.954 ± 0.008 |
+| Euclidean | vector đơn vị (L2) | 0.970 ± 0.005 | 0.936 ± 0.011 | 0.954 ± 0.008 |
+| Euclidean | z-score | 0.972 ± 0.008 | 0.965 ± 0.014 | 0.946 ± 0.007 |
+| Manhattan | không | 0.977 ± 0.004 | 0.964 ± 0.009 | 0.978 ± 0.007 |
+| Manhattan | vector đơn vị (L2) | 0.967 ± 0.006 | 0.956 ± 0.013 | 0.978 ± 0.007 |
+| Manhattan | z-score | 0.974 ± 0.008 | 0.961 ± 0.009 | 0.975 ± 0.010 |
+| Cosine | không | 0.970 ± 0.005 | 0.936 ± 0.011 | 0.954 ± 0.008 |
+| Cosine | vector đơn vị (L2) | 0.970 ± 0.005 | 0.936 ± 0.011 | 0.954 ± 0.008 |
+| Hellinger | L1 rồi lấy căn | không áp dụng (có giá trị âm) | 0.976 ± 0.015 | 0.957 ± 0.011 |
+
+### P2 — Euclidean so với cosine: tỉ lệ ảnh truy vấn có cùng 10 láng giềng gần nhất (420 ảnh truy vấn, 1680 ảnh tham chiếu)
+
+| Đặc trưng | Đã chuẩn hóa đơn vị: cùng 10 láng giềng, cùng thứ tự | Đã chuẩn hóa đơn vị: cùng tập 10 láng giềng | Chưa chuẩn hóa: cùng tập 10 láng giềng |
+|---|---|---|---|
+| Moment màu (9 chiều) | 99.5% | 100.0% | 11.2% |
+| Hist HSV (512 chiều) | 100.0% | 100.0% | 18.1% |
+| HOG 64×128 (3780 chiều) | 100.0% | 100.0% | 99.3% |
+
+===== P3 =====
+### P3 — Bình chọn đa số (uniform) so với ưu tiên điểm gần (distance); 5-fold
+
+| Đặc trưng | k | Macro-F1 uniform | Macro-F1 distance | Recall Bangla Kola (lớp ít ảnh nhất) uniform | Recall Bangla Kola distance | Recall thấp nhất trong 4 lớp uniform → distance |
+|---|---|---|---|---|---|---|
+| Moment màu (9 chiều) | 5 | 0.972 ± 0.008 | 0.972 ± 0.008 | 0.984 ± 0.013 | 0.984 ± 0.013 | 0.922 → 0.924 |
+| Moment màu (9 chiều) | 15 | 0.955 ± 0.008 | 0.961 ± 0.006 | 0.942 ± 0.026 | 0.968 ± 0.018 | 0.888 → 0.888 |
+| Hist HSV (512 chiều) | 5 | 0.965 ± 0.014 | 0.966 ± 0.013 | 0.981 ± 0.007 | 0.981 ± 0.007 | 0.879 → 0.888 |
+| Hist HSV (512 chiều) | 15 | 0.931 ± 0.013 | 0.933 ± 0.014 | 0.952 ± 0.018 | 0.955 ± 0.022 | 0.756 → 0.765 |
+| HOG 64×128 (3780 chiều) | 5 | 0.946 ± 0.007 | 0.949 ± 0.008 | 0.955 ± 0.021 | 0.952 ± 0.026 | 0.816 → 0.830 |
+| HOG 64×128 (3780 chiều) | 15 | 0.912 ± 0.011 | 0.914 ± 0.010 | 0.920 ± 0.033 | 0.923 ± 0.036 | 0.697 → 0.706 |
+
+===== P4 =====
+### P4 (phụ) — Đặc trưng 9 chiều, tập tham chiếu nhân bản kèm nhiễu Gauss σ=0,05 (dữ liệu tổng hợp, chỉ để đo thời gian)
+
+| Số điểm tham chiếu | brute: dự đoán 420 ảnh (ms) | kd_tree: dự đoán 420 ảnh (ms) | ball_tree: dự đoán 420 ảnh (ms) |
+|---|---|---|---|
+| 1680 | 1.9 | 3.7 | 4.5 |
+| 8400 | 21.3 | 5.8 | 8.4 |
+| 33600 | 111.3 | 10.6 | 24.0 |
+| 100800 | 487.0 | 20.6 | 68.3 |
+
+### P4 — Brute Force, K-D Tree, Ball Tree (k=5, 1680 ảnh tham chiếu, 420 ảnh truy vấn, 1 luồng, trung vị 3 lần)
+
+| Đặc trưng | brute: dựng (ms) | brute: dự đoán 420 ảnh (ms) | kd_tree: dựng (ms) | kd_tree: dự đoán 420 ảnh (ms) | kd_tree: kết quả trùng brute | ball_tree: dựng (ms) | ball_tree: dự đoán 420 ảnh (ms) | ball_tree: kết quả trùng brute |
+|---|---|---|---|---|---|---|---|---|
+| Moment màu (9 chiều) | 0.7 | 1.8 | 1.5 | 4.0 | có | 1.6 | 4.9 | có |
+| Hist HSV (512 chiều) | 1.5 | 8.1 | 38.1 | 363.7 | có | 32.7 | 271.6 | có |
+| HOG 64×128 (3780 chiều) | 7.3 | 63.3 | 276.2 | 3795.9 | có | 303.9 | 3196.5 | có |
+
+===== P5 =====
+### P5 — Thời gian huấn luyện và dự đoán (trung bình mỗi fold, đặc trưng đã rút sẵn)
+
+| Đặc trưng | Bộ phân lớp | Huấn luyện 1680 ảnh (ms) | Dự đoán 420 ảnh (ms) | Dự đoán (ms/ảnh) | Macro-F1 |
+|---|---|---|---|---|---|
+| Moment màu (9 chiều) | KNN (k=5) | 2.2 | 3.9 | 0.0094 | 0.972 ± 0.008 |
+| Moment màu (9 chiều) | Logistic Regression | 14.7 | 0.4 | 0.0010 | 0.908 ± 0.009 |
+| Moment màu (9 chiều) | Linear SVM | 5.0 | 0.4 | 0.0011 | 0.838 ± 0.011 |
+| Hist HSV (512 chiều) | KNN (k=5) | 8.0 | 21.7 | 0.0518 | 0.965 ± 0.014 |
+| Hist HSV (512 chiều) | Logistic Regression | 479.1 | 4.0 | 0.0095 | 0.991 ± 0.005 |
+| Hist HSV (512 chiều) | Linear SVM | 464.2 | 2.7 | 0.0065 | 0.989 ± 0.008 |
+| HOG 64×128 (3780 chiều) | KNN (k=5) | 70.7 | 84.6 | 0.2014 | 0.946 ± 0.007 |
+| HOG 64×128 (3780 chiều) | Logistic Regression | 1019.2 | 13.8 | 0.0328 | 0.985 ± 0.004 |
+| HOG 64×128 (3780 chiều) | Linear SVM | 2211.7 | 8.3 | 0.0197 | 0.982 ± 0.004 |
+
+### P6 — Bộ phân lớp tuyến tính so với KNN theo số chiều của đặc trưng; macro-F1 5-fold
+
+| Đặc trưng | KNN (k=5) | Logistic Regression | Linear SVM | LogReg − KNN |
+|---|---|---|---|---|
+| Moment màu (9 chiều) | 0.972 ± 0.008 | 0.908 ± 0.009 | 0.838 ± 0.011 | -0.064 |
+| Hist HSV (512 chiều) | 0.965 ± 0.014 | 0.991 ± 0.005 | 0.989 ± 0.008 | +0.027 |
+| HOG 64×128 (3780 chiều) | 0.946 ± 0.007 | 0.985 ± 0.004 | 0.982 ± 0.004 | +0.039 |
+

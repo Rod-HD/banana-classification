@@ -1,0 +1,13 @@
+run=b_mobilenetv3_noaug n_train=1729 n_val=371 size=224 lr=1e-05 epochs=20 patience=5 params={'total': 941428, 'trainable': 917204, 'non_trainable': 24224}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 0.0436 acc 0.9913 | val loss 0.0390 acc 0.9892 macro-F1 0.9870 | best 0.9870 @ 1
+epoch   2 loss 0.0323 acc 0.9936 | val loss 0.0270 acc 0.9919 macro-F1 0.9906 | best 0.9906 @ 2
+epoch   3 loss 0.0244 acc 0.9965 | val loss 0.0218 acc 0.9946 macro-F1 0.9930 | best 0.9930 @ 3
+epoch   4 loss 0.0193 acc 0.9971 | val loss 0.0218 acc 0.9973 macro-F1 0.9965 | best 0.9965 @ 4
+epoch   5 loss 0.0160 acc 0.9983 | val loss 0.0175 acc 0.9946 macro-F1 0.9930 | best 0.9965 @ 4
+epoch   6 loss 0.0139 acc 0.9988 | val loss 0.0158 acc 0.9973 macro-F1 0.9965 | best 0.9965 @ 4
+epoch   7 loss 0.0108 acc 0.9994 | val loss 0.0158 acc 0.9973 macro-F1 0.9965 | best 0.9965 @ 4
+epoch   8 loss 0.0096 acc 0.9988 | val loss 0.0124 acc 0.9973 macro-F1 0.9965 | best 0.9965 @ 4
+epoch   9 loss 0.0121 acc 0.9960 | val loss 0.0107 acc 0.9973 macro-F1 0.9965 | best 0.9965 @ 4
+KẾT QUẢ b_mobilenetv3_noaug: val macro-F1 0.9965 acc 0.9973 | train acc 0.9988 | 9 epoch, 208s (23.1s/epoch)

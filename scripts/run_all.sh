@@ -10,6 +10,11 @@
 #           10 bộ kiểm tra khó + nhánh G | 11 nhánh T (bản Augmented của tác giả) | 12 nhánh B (phương pháp của bài báo)
 #           13 nhánh X (xử lý dữ liệu) | 14 so sánh bốn nhánh, tổng hợp, rồi dựng lại báo cáo và slide
 #   FRESH=1 bash scripts/run_all.sh    # xóa data/cache/ trước (rút lại toàn bộ đặc trưng)
+#   RETRAIN=1 bash scripts/run_all.sh  # xóa checkpoints/ trước (huấn luyện lại mọi CNN từ đầu; thời gian huấn luyện đã ghi là 3,3 giờ)
+#   SKIP_DONE=1 bash scripts/run_all.sh 11 13   # nhánh T, X: bỏ qua cấu hình đã có kết quả (chạy tiếp sau khi bị ngắt)
+#
+# Trọng số CNN đã huấn luyện có sẵn trong checkpoints/<run>/best.keras, nên mặc định các bước huấn luyện
+# không chạy lại: mỗi lệnh train nạp trọng số đã lưu rồi chấm lại.
 #
 # Yêu cầu: đã cài thư viện (bash scripts/setup_env.sh) và có ảnh trong data/raw/
 # (có sẵn trong repo; tải lại từ nguồn bằng bash scripts/download_data.sh).
@@ -18,14 +23,15 @@ cd "$(dirname "$0")/.."
 export PYTHONHASHSEED=42 TF_CPP_MIN_LOG_LEVEL=2
 mkdir -p logs
 [ "${FRESH:-0}" = "1" ] && rm -rf data/cache
+[ "${RETRAIN:-0}" = "1" ] && rm -rf checkpoints
 
 STEPS=("$@")
 want() { [ ${#STEPS[@]} -eq 0 ] && return 0; for s in "${STEPS[@]}"; do [ "$s" = "$1" ] && return 0; done; return 1; }
 run() { echo ">>> python -m $*"; python -m "$@" 2>&1 | tee "logs/$(echo "$1" | tr '.' '_').log"; }
-# Huấn luyện một CNN; log vào logs/cnn_<tên>.log; --resume để chạy tiếp nếu bị ngắt giữa chừng.
+# Huấn luyện một CNN; log vào logs/cnn_<tên>.log; --resume: run đã xong thì dùng lại trọng số, run bị ngắt thì chạy tiếp.
 train() { local name="$1"; shift; echo ">>> train $name: $*"
           python -m src.cnn.train "$@" --resume 2>&1 | grep --line-buffered -vE "^(WARNING|I0000|W0000|E0000)|oneDNN|cpu_feature|To enable" \
-            | tee "logs/cnn_$name.log" | grep --line-buffered -E "run=|KẾT QUẢ|tiếp tục"; }
+            | tee "logs/cnn_$name.log" | grep --line-buffered -E "run=|KẾT QUẢ|tiếp tục|dùng lại"; }
 
 if want 1; then   # Bước 1: chia dữ liệu, ảnh gần trùng, thống kê, D1
   run src.env_info
@@ -94,7 +100,7 @@ if want 10; then  # Bước 10: bộ kiểm tra khó; nhánh G (pipeline gốc) 
   run src.stress
   run src.pipeline
 fi
-if want 11; then  # Bước 11: nhánh T: 9 cấu hình với bản Augmented của tác giả (tự tải nếu chưa có)
+if want 11; then  # Bước 11: nhánh T: 9 cấu hình với bản Augmented của tác giả (có sẵn trong data/aug_author/; tự tải nếu thiếu)
   [ -d data/aug_author/bangla_kola ] || bash scripts/download_data.sh augmented
   run src.exp_arm_t
 fi

@@ -1,0 +1,52 @@
+{"train": [311, 695, 356, 367], "val": [66, 150, 76, 79], "test": [67, 149, 77, 78]} {
+ "<= 0": {
+  "pairs_total": 3,
+  "pairs_same_class": 3,
+  "pairs_diff_class": 0,
+  "pairs_cross_split": 1,
+  "pairs_train_test": 0,
+  "pairs_train_val": 1,
+  "pairs_val_test": 0,
+  "test_images_with_neighbor_in_train": 0
+ },
+ "<= 2": {
+  "pairs_total": 42,
+  "pairs_same_class": 41,
+  "pairs_diff_class": 1,
+  "pairs_cross_split": 17,
+  "pairs_train_test": 7,
+  "pairs_train_val": 8,
+  "pairs_val_test": 2,
+  "test_images_with_neighbor_in_train": 7
+ },
+ "<= 4": {
+  "pairs_total": 383,
+  "pairs_same_class": 373,
+  "pairs_diff_class": 10,
+  "pairs_cross_split": 184,
+  "pairs_train_test": 83,
+  "pairs_train_val": 86,
+  "pairs_val_test": 15,
+  "test_images_with_neighbor_in_train": 44
+ },
+ "<= 6": {
+  "pairs_total": 1527,
+  "pairs_same_class": 1471,
+  "pairs_diff_class": 56,
+  "pairs_cross_split": 753,
+  "pairs_train_test": 336,
+  "pairs_train_val": 355,
+  "pairs_val_test": 62,
+  "test_images_with_neighbor_in_train": 103
+ },
+ "<= 8": {
+  "pairs_total": 4367,
+  "pairs_same_class": 4092,
+  "pairs_diff_class": 275,
+  "pairs_cross_split": 2138,
+  "pairs_train_test": 957,
+  "pairs_train_val": 960,
+  "pairs_val_test": 221,
+  "test_images_with_neighbor_in_train": 180
+ }
+}

@@ -1,0 +1,50 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794506575.816220    4440 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794506576.851999    4440 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+{'Nhóm': 'Truyền thống (màu)', 'Mô hình': 'Hist HSV (8,8,8) + LogReg C=0.1', 'Macro-F1 test': '0.994', 'KTC 95% (bootstrap)': '[0.984; 1.000]', 'Accuracy test': '0.995', 'Số ảnh sai / 371': 2, 'Recall thấp nhất': '0.985 (Bangla)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.991 ± 0.005', '_key': 'trad_color'}
+{'Nhóm': 'Truyền thống (cạnh)', 'Mô hình': 'Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần', 'Macro-F1 test': '0.964', 'KTC 95% (bootstrap)': '[0.944; 0.982]', 'Accuracy test': '0.968', 'Số ảnh sai / 371': 12, 'Recall thấp nhất': '0.885 (Sagor)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.955 ± 0.015', '_key': 'trad_edge'}
+{'Nhóm': 'Truyền thống (HOG)', 'Mô hình': 'HOG 64×128 + LogReg C=0.1', 'Macro-F1 test': '0.990', 'KTC 95% (bootstrap)': '[0.977; 1.000]', 'Accuracy test': '0.992', 'Số ảnh sai / 371': 3, 'Recall thấp nhất': '0.985 (Bangla)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.986 ± 0.007', '_key': 'trad_hog'}
+{'Nhóm': 'Truyền thống (ghép)', 'Mô hình': 'Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần', 'Macro-F1 test': '1.000', 'KTC 95% (bootstrap)': '[1.000; 1.000]', 'Accuracy test': '1.000', 'Số ảnh sai / 371': 0, 'Recall thấp nhất': '1.000 (Bangla)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.996 ± 0.003', '_key': 'trad_fusion'}
+{'Nhóm': 'CNN hướng A', 'Mô hình': 'a_lenet (biến thể: a_lenet)', 'Macro-F1 test': '0.978', 'KTC 95% (bootstrap)': '[0.960; 0.993]', 'Accuracy test': '0.981', 'Số ảnh sai / 371': 7, 'Recall thấp nhất': '0.955 (Bangla)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.973', '_key': 'a_lenet'}
+{'Nhóm': 'CNN hướng A', 'Mô hình': 'a_dropout (biến thể: a_dropout_aug)', 'Macro-F1 test': '0.942', 'KTC 95% (bootstrap)': '[0.917; 0.965]', 'Accuracy test': '0.943', 'Số ảnh sai / 371': 21, 'Recall thấp nhất': '0.872 (Sagor)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.948', '_key': 'a_dropout'}
+{'Nhóm': 'CNN hướng A', 'Mô hình': 'a_vgg16 (biến thể: a_vgg16_lr1e-3)', 'Macro-F1 test': '0.986', 'KTC 95% (bootstrap)': '[0.971; 0.997]', 'Accuracy test': '0.989', 'Số ảnh sai / 371': 4, 'Recall thấp nhất': '0.970 (Bangla)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.990', '_key': 'a_vgg16'}
+{'Nhóm': 'CNN hướng B', 'Mô hình': 'b_mobilenetv3 (biến thể: b_mobilenetv3_lr1e-4)', 'Macro-F1 test': '1.000', 'KTC 95% (bootstrap)': '[1.000; 1.000]', 'Accuracy test': '1.000', 'Số ảnh sai / 371': 0, 'Recall thấp nhất': '1.000 (Bangla)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '1.000', '_key': 'b_mobilenetv3'}
+{'Nhóm': 'CNN hướng B', 'Mô hình': 'b_resnet50 (biến thể: b_resnet50)', 'Macro-F1 test': '0.997', 'KTC 95% (bootstrap)': '[0.988; 1.000]', 'Accuracy test': '0.997', 'Số ảnh sai / 371': 1, 'Recall thấp nhất': '0.987 (Sabri)', 'Macro-F1 lúc chọn (5-fold CV hoặc val)': '0.998', '_key': 'b_resnet50'}
+### Đánh giá cuối trên tập test (371 ảnh; mỗi ảnh sai tương ứng 0,27% accuracy)
+
+| Nhóm | Mô hình | Macro-F1 test | KTC 95% (bootstrap) | Accuracy test | Số ảnh sai / 371 | Recall thấp nhất | Macro-F1 lúc chọn (5-fold CV hoặc val) |
+|---|---|---|---|---|---|---|---|
+| Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0.1 | 0.994 | [0.984; 1.000] | 0.995 | 2 | 0.985 (Bangla) | 0.991 ± 0.005 |
+| Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0.964 | [0.944; 0.982] | 0.968 | 12 | 0.885 (Sagor) | 0.955 ± 0.015 |
+| Truyền thống (HOG) | HOG 64×128 + LogReg C=0.1 | 0.990 | [0.977; 1.000] | 0.992 | 3 | 0.985 (Bangla) | 0.986 ± 0.007 |
+| Truyền thống (ghép) | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 1.000 | [1.000; 1.000] | 1.000 | 0 | 1.000 (Bangla) | 0.996 ± 0.003 |
+| CNN hướng A | a_lenet (biến thể: a_lenet) | 0.978 | [0.960; 0.993] | 0.981 | 7 | 0.955 (Bangla) | 0.973 |
+| CNN hướng A | a_dropout (biến thể: a_dropout_aug) | 0.942 | [0.917; 0.965] | 0.943 | 21 | 0.872 (Sagor) | 0.948 |
+| CNN hướng A | a_vgg16 (biến thể: a_vgg16_lr1e-3) | 0.986 | [0.971; 0.997] | 0.989 | 4 | 0.970 (Bangla) | 0.990 |
+| CNN hướng B | b_mobilenetv3 (biến thể: b_mobilenetv3_lr1e-4) | 1.000 | [1.000; 1.000] | 1.000 | 0 | 1.000 (Bangla) | 1.000 |
+| CNN hướng B | b_resnet50 (biến thể: b_resnet50) | 0.997 | [0.988; 1.000] | 0.997 | 1 | 0.987 (Sabri) | 0.998 |
+
+### So sánh từng cặp giữa mô hình tốt nhất của ba nhóm trên tập test
+
+| Mô hình 1 | Mô hình 2 | Cả hai sai | Chỉ mô hình 1 sai | Chỉ mô hình 2 sai | Cả hai đúng |
+|---|---|---|---|---|---|
+| trad_fusion | a_vgg16 | 0 | 0 | 4 | 367 |
+| trad_fusion | b_mobilenetv3 | 0 | 0 | 0 | 371 |
+| a_vgg16 | b_mobilenetv3 | 0 | 4 | 0 | 367 |
+
+### Accuracy trên test tách theo việc có ảnh gần trùng (pHash) trong tập huấn luyện
+
+| Ngưỡng Hamming | Mô hình | Ảnh test có ảnh gần trùng trong train+val | Accuracy trên nhóm đó | Ảnh test không có | Accuracy trên nhóm không có |
+|---|---|---|---|---|---|
+| ≤ 2 | trad_fusion | 9 | 1.000 | 362 | 1.000 |
+| ≤ 2 | a_vgg16 | 9 | 1.000 | 362 | 0.989 |
+| ≤ 2 | b_mobilenetv3 | 9 | 1.000 | 362 | 1.000 |
+| ≤ 4 | trad_fusion | 50 | 1.000 | 321 | 1.000 |
+| ≤ 4 | a_vgg16 | 50 | 1.000 | 321 | 0.988 |
+| ≤ 4 | b_mobilenetv3 | 50 | 1.000 | 321 | 1.000 |
+
+
+real	1m37.511s
+user	3m8.091s
+sys	0m4.878s

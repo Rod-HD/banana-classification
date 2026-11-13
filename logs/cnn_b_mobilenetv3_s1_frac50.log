@@ -1,0 +1,31 @@
+run=b_mobilenetv3_s1_frac50 n_train=864 n_val=371 size=224 lr=0.001 epochs=60 patience=10 params={'total': 2308, 'trainable': 2308, 'non_trainable': 0}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 1.1677 acc 0.5069 | val loss 0.7317 acc 0.7844 macro-F1 0.7407 | best 0.7407 @ 1
+epoch   2 loss 0.6432 acc 0.7743 | val loss 0.4600 acc 0.8652 macro-F1 0.8491 | best 0.8491 @ 2
+epoch   3 loss 0.4500 acc 0.8646 | val loss 0.3528 acc 0.8814 macro-F1 0.8665 | best 0.8665 @ 3
+epoch   4 loss 0.3510 acc 0.9074 | val loss 0.2851 acc 0.9164 macro-F1 0.9054 | best 0.9054 @ 4
+epoch   5 loss 0.2868 acc 0.9201 | val loss 0.2411 acc 0.9353 macro-F1 0.9242 | best 0.9242 @ 5
+epoch   6 loss 0.2456 acc 0.9329 | val loss 0.2122 acc 0.9434 macro-F1 0.9332 | best 0.9332 @ 6
+epoch   7 loss 0.2164 acc 0.9387 | val loss 0.1866 acc 0.9569 macro-F1 0.9466 | best 0.9466 @ 7
+epoch   8 loss 0.1916 acc 0.9549 | val loss 0.1733 acc 0.9542 macro-F1 0.9432 | best 0.9466 @ 7
+epoch   9 loss 0.1808 acc 0.9525 | val loss 0.1569 acc 0.9730 macro-F1 0.9657 | best 0.9657 @ 9
+epoch  10 loss 0.1564 acc 0.9653 | val loss 0.1439 acc 0.9730 macro-F1 0.9657 | best 0.9657 @ 9
+epoch  11 loss 0.1429 acc 0.9734 | val loss 0.1324 acc 0.9730 macro-F1 0.9657 | best 0.9657 @ 9
+epoch  12 loss 0.1402 acc 0.9699 | val loss 0.1269 acc 0.9704 macro-F1 0.9628 | best 0.9657 @ 9
+epoch  13 loss 0.1249 acc 0.9792 | val loss 0.1159 acc 0.9757 macro-F1 0.9692 | best 0.9692 @ 13
+epoch  14 loss 0.1175 acc 0.9745 | val loss 0.1097 acc 0.9757 macro-F1 0.9692 | best 0.9692 @ 13
+epoch  15 loss 0.1094 acc 0.9826 | val loss 0.1063 acc 0.9757 macro-F1 0.9692 | best 0.9692 @ 13
+epoch  16 loss 0.0982 acc 0.9803 | val loss 0.1002 acc 0.9757 macro-F1 0.9692 | best 0.9692 @ 13
+epoch  17 loss 0.1024 acc 0.9803 | val loss 0.0953 acc 0.9838 macro-F1 0.9800 | best 0.9800 @ 17
+epoch  18 loss 0.0942 acc 0.9838 | val loss 0.0934 acc 0.9757 macro-F1 0.9692 | best 0.9800 @ 17
+epoch  19 loss 0.0831 acc 0.9896 | val loss 0.0919 acc 0.9838 macro-F1 0.9800 | best 0.9800 @ 17
+epoch  20 loss 0.0794 acc 0.9907 | val loss 0.0853 acc 0.9811 macro-F1 0.9764 | best 0.9800 @ 17
+epoch  21 loss 0.0805 acc 0.9838 | val loss 0.0819 acc 0.9811 macro-F1 0.9764 | best 0.9800 @ 17
+epoch  22 loss 0.0781 acc 0.9884 | val loss 0.0804 acc 0.9811 macro-F1 0.9764 | best 0.9800 @ 17
+epoch  23 loss 0.0744 acc 0.9873 | val loss 0.0765 acc 0.9838 macro-F1 0.9800 | best 0.9800 @ 17
+epoch  24 loss 0.0656 acc 0.9965 | val loss 0.0770 acc 0.9811 macro-F1 0.9764 | best 0.9800 @ 17
+epoch  25 loss 0.0667 acc 0.9884 | val loss 0.0742 acc 0.9838 macro-F1 0.9799 | best 0.9800 @ 17
+epoch  26 loss 0.0609 acc 0.9919 | val loss 0.0720 acc 0.9838 macro-F1 0.9799 | best 0.9800 @ 17
+epoch  27 loss 0.0613 acc 0.9896 | val loss 0.0707 acc 0.9838 macro-F1 0.9800 | best 0.9800 @ 17
+KẾT QUẢ b_mobilenetv3_s1_frac50: val macro-F1 0.9800 acc 0.9838 | train acc 0.9931 | 27 epoch, 2s (0.1s/epoch)

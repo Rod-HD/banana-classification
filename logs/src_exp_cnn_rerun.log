@@ -1,0 +1,101 @@
+===== RUNS =====
+### Tất cả các lần huấn luyện CNN (chấm trên val, 371 ảnh)
+
+| Run | Mô hình | Ảnh vào | Số ảnh train | lr | Tăng cường | Tham số huấn luyện | Epoch chọn / tổng | Macro-F1 val | Accuracy val | Accuracy train | Giây / epoch | Thời gian huấn luyện (s) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| a_dropout | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 25 / 40 | 0.940 | 0.946 | 0.999 | 4.2 | 168 |
+| a_dropout_aug | a_dropout | 128×128 | 1729 | 0.001 | có | 1746260 | 25 / 40 | 0.948 | 0.954 | 0.967 | 4.8 | 194 |
+| a_dropout_nodrop | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 33 / 40 | 0.951 | 0.957 | 1.000 | 3.8 | 150 |
+| a_dropout_nodrop_seed43 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 18 / 40 | 0.960 | 0.968 | 1.000 | 5.8 | 234 |
+| a_dropout_nodrop_seed44 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 37 / 40 | 0.947 | 0.951 | 1.000 | 6.0 | 242 |
+| a_dropout_seed43 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 22 / 40 | 0.947 | 0.954 | 0.997 | 6.3 | 253 |
+| a_dropout_seed44 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 39 / 40 | 0.935 | 0.943 | 0.999 | 5.8 | 233 |
+| a_lenet | a_lenet | 64×64 | 1729 | 0.001 | không | 337976 | 40 / 50 | 0.973 | 0.978 | 1.000 | 0.6 | 31 |
+| a_lenet_frac25 | a_lenet | 64×64 | 432 | 0.001 | không | 337976 | 22 / 32 | 0.924 | 0.930 | 1.000 | 0.2 | 7 |
+| a_lenet_frac50 | a_lenet | 64×64 | 864 | 0.001 | không | 337976 | 13 / 23 | 0.950 | 0.957 | 0.995 | 0.4 | 8 |
+| a_lenet_s128 | a_lenet | 128×128 | 1729 | 0.001 | không | 1628216 | 13 / 23 | 0.956 | 0.962 | 1.000 | 1.7 | 40 |
+| a_lenet_s32 | a_lenet | 32×32 | 1729 | 0.001 | không | 61496 | 20 / 30 | 0.954 | 0.960 | 0.984 | 0.3 | 9 |
+| a_vgg16 | a_vgg16 | 224×224 | 1729 | 0.0001 | không | 25954564 | 7 / 15 | 0.984 | 0.987 | 1.000 | 3.9 | 59 |
+| a_vgg16_frac25 | a_vgg16 | 224×224 | 432 | 0.0001 | không | 25954564 | 3 / 11 | 0.967 | 0.973 | 0.995 | 1.2 | 13 |
+| a_vgg16_frac50 | a_vgg16 | 224×224 | 864 | 0.0001 | không | 25954564 | 3 / 11 | 0.963 | 0.968 | 1.000 | 2.1 | 23 |
+| a_vgg16_lr1e-3 | a_vgg16 | 224×224 | 1729 | 0.001 | không | 25954564 | 16 / 24 | 0.990 | 0.992 | 0.999 | 3.9 | 94 |
+| b_mobilenetv3 | b_mobilenetv3 | 224×224 | 1729 | 1e-05 | có | 917204 | 12 / 17 | 0.993 | 0.995 | 0.997 | 20.1 | 341 |
+| b_mobilenetv3_frac25 | b_mobilenetv3 | 224×224 | 432 | 1e-05 | có | 917204 | 12 / 17 | 0.975 | 0.978 | 0.998 | 7.3 | 124 |
+| b_mobilenetv3_frac50 | b_mobilenetv3 | 224×224 | 864 | 1e-05 | có | 917204 | 2 / 7 | 0.974 | 0.978 | 0.994 | 16.2 | 114 |
+| b_mobilenetv3_lr1e-3 | b_mobilenetv3 | 224×224 | 1729 | 0.001 | có | 917204 | 4 / 9 | 0.993 | 0.995 | 0.998 | 26.3 | 236 |
+| b_mobilenetv3_lr1e-4 | b_mobilenetv3 | 224×224 | 1729 | 0.0001 | có | 917204 | 7 / 12 | 1.000 | 1.000 | 1.000 | 26.9 | 323 |
+| b_mobilenetv3_noaug | b_mobilenetv3 | 224×224 | 1729 | 1e-05 | không | 917204 | 4 / 9 | 0.997 | 0.997 | 0.999 | 23.1 | 208 |
+| b_mobilenetv3_s1 | b_mobilenetv3 | 224×224 | 1729 | 0.001 | không | 2308 | 21 / 31 | 0.987 | 0.989 | 0.997 | 0.1 | 4 |
+| b_mobilenetv3_s1_frac25 | b_mobilenetv3 | 224×224 | 432 | 0.001 | không | 2308 | 41 / 51 | 0.974 | 0.978 | 1.000 | 0.1 | 3 |
+| b_mobilenetv3_s1_frac50 | b_mobilenetv3 | 224×224 | 864 | 0.001 | không | 2308 | 17 / 27 | 0.980 | 0.984 | 0.993 | 0.1 | 2 |
+| b_resnet50 | b_resnet50 | 224×224 | 1729 | 1e-05 | có | 14961668 | 3 / 8 | 0.998 | 0.997 | 1.000 | 91.2 | 730 |
+| b_resnet50_s1 | b_resnet50 | 224×224 | 1729 | 0.001 | không | 8196 | 10 / 20 | 0.996 | 0.997 | 1.000 | 0.2 | 4 |
+
+===== N3 =====
+### N3 — Dropout và khoảng cách train–val (seed 42, 40 epoch, train chấm ở chế độ suy luận)
+
+| Cấu hình | Epoch chọn / tổng | Macro-F1 val | Accuracy train (epoch chọn) | Accuracy val (epoch chọn) | Loss train (epoch cuối) | Loss val (epoch cuối) | Khoảng cách loss val − train (epoch cuối) | Loss val thấp nhất |
+|---|---|---|---|---|---|---|---|---|
+| a_dropout có Dropout(0,5) | 25 / 40 | 0.940 | 0.999 | 0.946 | 0.0022 | 0.5444 | 0.5422 | 0.2713 |
+| a_dropout không Dropout | 33 / 40 | 0.951 | 1.000 | 0.957 | 0.0000 | 0.3486 | 0.3486 | 0.1584 |
+
+### N3 — Lặp lại với 3 seed khởi tạo (cùng cách chia dữ liệu)
+
+| Cấu hình | Số lần chạy | Macro-F1 val từng seed | Macro-F1 val (TB ± ĐLC) | Khoảng cách loss val − train ở epoch 40 (TB ± ĐLC) | Loss val thấp nhất (TB ± ĐLC) |
+|---|---|---|---|---|---|
+| Có Dropout(0,5) | 3 | 0.940, 0.947, 0.935 | 0.941 ± 0.005 | 0.456 ± 0.061 | 0.248 ± 0.021 |
+| Không Dropout | 3 | 0.951, 0.960, 0.947 | 0.953 ± 0.006 | 0.376 ± 0.081 | 0.202 ± 0.055 |
+
+===== N6 =====
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794502411.925180   30587 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794502413.021217   30587 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+{'Hướng': 'A', 'Mô hình': 'a_lenet', 'Biến thể được chốt': 'a_lenet', 'Macro-F1 val': '0.973', 'Accuracy val': '0.978', 'Số tham số': 337976, 'File mô hình (MB)': '4.1', 'Thời gian huấn luyện (s)': '34', 'Dự đoán 1 ảnh (ms, CPU)': '7.6', 'Cách tính thời gian huấn luyện': '50 epoch × 0.7 s'}
+{'Hướng': 'A', 'Mô hình': 'a_dropout', 'Biến thể được chốt': 'a_dropout_aug', 'Macro-F1 val': '0.948', 'Accuracy val': '0.954', 'Số tham số': 1746260, 'File mô hình (MB)': '21.0', 'Thời gian huấn luyện (s)': '184', 'Dự đoán 1 ảnh (ms, CPU)': '12.2', 'Cách tính thời gian huấn luyện': '40 epoch × 4.6 s'}
+{'Hướng': 'A', 'Mô hình': 'a_vgg16', 'Biến thể được chốt': 'a_vgg16_lr1e-3', 'Macro-F1 val': '0.990', 'Accuracy val': '0.992', 'Số tham số': 40669252, 'File mô hình (MB)': '370.4', 'Thời gian huấn luyện (s)': '218', 'Dự đoán 1 ảnh (ms, CPU)': '159.0', 'Cách tính thời gian huấn luyện': 'tính đặc trưng thân đóng băng cho 1729 ảnh train: 124 s; đầu phân lớp 24 epoch × 3.9 s'}
+{'Hướng': 'B', 'Mô hình': 'b_mobilenetv3', 'Biến thể được chốt': 'b_mobilenetv3_lr1e-4', 'Macro-F1 val': '1.000', 'Accuracy val': '1.000', 'Số tham số': 941428, 'File mô hình (MB)': '11.7', 'Thời gian huấn luyện (s)': '217', 'Dự đoán 1 ảnh (ms, CPU)': '137.3', 'Cách tính thời gian huấn luyện': 'tính đặc trưng thân đóng băng cho 1729 ảnh train: 25 s; giai đoạn 1: 31 epoch, 4 s; giai đoạn 2: 12 epoch × 15.7 s'}
+WARNING:tensorflow:5 out of the last 7 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7fcf44e78b80> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:6 out of the last 8 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7fcf44e78b80> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+{'Hướng': 'B', 'Mô hình': 'b_resnet50', 'Biến thể được chốt': 'b_resnet50', 'Macro-F1 val': '0.998', 'Accuracy val': '0.997', 'Số tham số': 23595908, 'File mô hình (MB)': '214.8', 'Thời gian huấn luyện (s)': '554', 'Dự đoán 1 ảnh (ms, CPU)': '272.9', 'Cách tính thời gian huấn luyện': 'tính đặc trưng thân đóng băng cho 1729 ảnh train: 74 s; giai đoạn 1: 20 epoch, 4 s; giai đoạn 2: 8 epoch × 59.5 s'}
+### N6 — So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)
+
+| Hướng | Mô hình | Biến thể được chốt | Macro-F1 val | Accuracy val | Số tham số | File mô hình (MB) | Thời gian huấn luyện (s) | Dự đoán 1 ảnh (ms, CPU) | Cách tính thời gian huấn luyện |
+|---|---|---|---|---|---|---|---|---|---|
+| A | a_lenet | a_lenet | 0.973 | 0.978 | 337976 | 4.1 | 34 | 7.6 | 50 epoch × 0.7 s |
+| A | a_dropout | a_dropout_aug | 0.948 | 0.954 | 1746260 | 21.0 | 184 | 12.2 | 40 epoch × 4.6 s |
+| A | a_vgg16 | a_vgg16_lr1e-3 | 0.990 | 0.992 | 40669252 | 370.4 | 218 | 159.0 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 124 s; đầu phân lớp 24 epoch × 3.9 s |
+| B | b_mobilenetv3 | b_mobilenetv3_lr1e-4 | 1.000 | 1.000 | 941428 | 11.7 | 217 | 137.3 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 25 s; giai đoạn 1: 31 epoch, 4 s; giai đoạn 2: 12 epoch × 15.7 s |
+| B | b_resnet50 | b_resnet50 | 0.998 | 0.997 | 23595908 | 214.8 | 554 | 272.9 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 74 s; giai đoạn 1: 20 epoch, 4 s; giai đoạn 2: 8 epoch × 59.5 s |
+
+===== N7 =====
+### N7 — Feature vector thủ công so với embedding của CNN: học trên train (1729 ảnh), macro-F1 trên val (371 ảnh)
+
+| Đặc trưng | Loại | Số chiều | KNN (k=5) | LogReg |
+|---|---|---|---|---|
+| Hist HSV (8,8,8) | thủ công | 512 | 0.982 | 0.997 |
+| HOG 64×128 | thủ công | 3780 | 0.945 | 0.987 |
+| Hist H-S + HOG (ghép, chuẩn hóa từng phần) | thủ công | 3844 | 0.990 | 0.998 |
+| VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối) | embedding | 512 | 0.932 | 0.986 |
+| a_vgg16, lớp Dense(256) áp chót | embedding | 256 | 0.986 | 0.986 |
+| MobileNetV3 ImageNet, sau GAP (chưa fine-tune) | embedding | 576 | 0.981 | 0.993 |
+| b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune) | embedding | 576 | 1.000 | 0.996 |
+
+===== N8 =====
+{'Mô hình': 'Truyền thống: Hist HSV (8,8,8)', 'Ảnh gốc': '0.997', 'Xáo trộn 4×4': '0.997', 'V×0,6': '0.280', 'V×1,4': '0.705', 'Ảnh xám': '0.145', 'Nhiễu σ=5': '0.451', 'Nhiễu σ=10': '0.085', 'Nhiễu σ=20': '0.085', 'Che 25%': '0.076', 'Xoay −30°': '0.987', 'Xoay −15°': '0.993', 'Xoay +15°': '0.992', 'Xoay +30°': '0.994'}
+{'Mô hình': 'Truyền thống: HOG 64×128', 'Ảnh gốc': '0.983', 'Xáo trộn 4×4': '0.302', 'V×0,6': '0.984', 'V×1,4': '0.800', 'Ảnh xám': '0.981', 'Nhiễu σ=5': '0.537', 'Nhiễu σ=10': '0.461', 'Nhiễu σ=20': '0.318', 'Che 25%': '0.801', 'Xoay −30°': '0.679', 'Xoay −15°': '0.929', 'Xoay +15°': '0.886', 'Xoay +30°': '0.550'}
+{'Mô hình': 'Truyền thống: Hist H-S + HOG', 'Ảnh gốc': '0.998', 'Xáo trộn 4×4': '0.898', 'V×0,6': '0.995', 'V×1,4': '0.888', 'Ảnh xám': '0.770', 'Nhiễu σ=5': '0.706', 'Nhiễu σ=10': '0.180', 'Nhiễu σ=20': '0.101', 'Che 25%': '0.918', 'Xoay −30°': '0.978', 'Xoay −15°': '0.987', 'Xoay +15°': '0.988', 'Xoay +30°': '0.974'}
+{'Mô hình': 'Hướng A tốt nhất: a_vgg16_lr1e-3', 'Ảnh gốc': '0.990', 'Xáo trộn 4×4': '0.097', 'V×0,6': '0.984', 'V×1,4': '0.969', 'Ảnh xám': '0.953', 'Nhiễu σ=5': '0.981', 'Nhiễu σ=10': '0.976', 'Nhiễu σ=20': '0.932', 'Che 25%': '0.850', 'Xoay −30°': '0.888', 'Xoay −15°': '0.973', 'Xoay +15°': '0.980', 'Xoay +30°': '0.906'}
+{'Mô hình': 'Hướng B tốt nhất: b_mobilenetv3_lr1e-4', 'Ảnh gốc': '1.000', 'Xáo trộn 4×4': '0.850', 'V×0,6': '0.913', 'V×1,4': '0.907', 'Ảnh xám': '0.963', 'Nhiễu σ=5': '0.997', 'Nhiễu σ=10': '0.987', 'Nhiễu σ=20': '0.953', 'Che 25%': '0.659', 'Xoay −30°': '0.993', 'Xoay −15°': '1.000', 'Xoay +15°': '0.997', 'Xoay +30°': '0.996'}
+### N8 — Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)
+
+| Mô hình | Ảnh gốc | Xáo trộn 4×4 | V×0,6 | V×1,4 | Ảnh xám | Nhiễu σ=5 | Nhiễu σ=10 | Nhiễu σ=20 | Che 25% | Xoay −30° | Xoay −15° | Xoay +15° | Xoay +30° |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống: Hist HSV (8,8,8) | 0.997 | 0.997 | 0.280 | 0.705 | 0.145 | 0.451 | 0.085 | 0.085 | 0.076 | 0.987 | 0.993 | 0.992 | 0.994 |
+| Truyền thống: HOG 64×128 | 0.983 | 0.302 | 0.984 | 0.800 | 0.981 | 0.537 | 0.461 | 0.318 | 0.801 | 0.679 | 0.929 | 0.886 | 0.550 |
+| Truyền thống: Hist H-S + HOG | 0.998 | 0.898 | 0.995 | 0.888 | 0.770 | 0.706 | 0.180 | 0.101 | 0.918 | 0.978 | 0.987 | 0.988 | 0.974 |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | 0.990 | 0.097 | 0.984 | 0.969 | 0.953 | 0.981 | 0.976 | 0.932 | 0.850 | 0.888 | 0.973 | 0.980 | 0.906 |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | 1.000 | 0.850 | 0.913 | 0.907 | 0.963 | 0.997 | 0.987 | 0.953 | 0.659 | 0.993 | 1.000 | 0.997 | 0.996 |
+

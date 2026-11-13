@@ -1,0 +1,21 @@
+run=a_vgg16_lr1e-3_minaug n_train=2780 n_val=371 size=224 lr=0.001 epochs=40 patience=8 params={'total': 25954564, 'trainable': 25954564, 'non_trainable': 0}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 5.2928 acc 0.8957 | val loss 0.2257 acc 0.9784 macro-F1 0.9739 | best 0.9739 @ 1
+epoch   2 loss 0.2202 acc 0.9878 | val loss 0.0870 acc 0.9946 macro-F1 0.9933 | best 0.9933 @ 2
+epoch   3 loss 0.1373 acc 0.9932 | val loss 0.0900 acc 0.9919 macro-F1 0.9897 | best 0.9933 @ 2
+epoch   4 loss 0.0106 acc 0.9986 | val loss 0.2229 acc 0.9838 macro-F1 0.9790 | best 0.9933 @ 2
+epoch   5 loss 0.0166 acc 0.9978 | val loss 0.1481 acc 0.9865 macro-F1 0.9826 | best 0.9933 @ 2
+epoch   6 loss 0.0154 acc 0.9986 | val loss 0.0774 acc 0.9892 macro-F1 0.9860 | best 0.9933 @ 2
+epoch   7 loss 0.0465 acc 0.9978 | val loss 0.1312 acc 0.9892 macro-F1 0.9863 | best 0.9933 @ 2
+epoch   8 loss 0.0574 acc 0.9953 | val loss 0.0800 acc 0.9919 macro-F1 0.9898 | best 0.9933 @ 2
+epoch   9 loss 0.0375 acc 0.9968 | val loss 0.0469 acc 0.9946 macro-F1 0.9943 | best 0.9943 @ 9
+epoch  10 loss 0.2090 acc 0.9903 | val loss 0.0647 acc 0.9919 macro-F1 0.9905 | best 0.9943 @ 9
+epoch  11 loss 0.1788 acc 0.9928 | val loss 0.1384 acc 0.9865 macro-F1 0.9849 | best 0.9943 @ 9
+epoch  12 loss 0.6044 acc 0.9860 | val loss 0.1307 acc 0.9919 macro-F1 0.9913 | best 0.9943 @ 9
+epoch  13 loss 0.1611 acc 0.9942 | val loss 0.1269 acc 0.9919 macro-F1 0.9898 | best 0.9943 @ 9
+epoch  14 loss 0.0377 acc 0.9982 | val loss 0.2151 acc 0.9811 macro-F1 0.9767 | best 0.9943 @ 9
+epoch  15 loss 0.0367 acc 0.9968 | val loss 0.0954 acc 0.9919 macro-F1 0.9894 | best 0.9943 @ 9
+epoch  16 loss 0.0663 acc 0.9946 | val loss 0.2347 acc 0.9838 macro-F1 0.9802 | best 0.9943 @ 9
+epoch  17 loss 0.0616 acc 0.9975 | val loss 0.1599 acc 0.9892 macro-F1 0.9870 | best 0.9943 @ 9
+KẾT QUẢ a_vgg16_lr1e-3_minaug: val macro-F1 0.9943 acc 0.9946 | train acc 0.9989 | 17 epoch, 104s (6.1s/epoch)

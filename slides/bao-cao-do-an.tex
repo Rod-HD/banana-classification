@@ -294,14 +294,14 @@ trad\_fusion & Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần & 0,996
 \rowcolors{2}{uitbg}{white}
 \begin{tabular}{lllllll}\toprule
 \textbf{Hướng} & \textbf{Mô hình} & \textbf{Macro-F1 val} & \textbf{Số tham số} & \textbf{File mô hình (MB)} & \textbf{Thời gian huấn luyện (s)} & \textbf{Dự đoán 1 ảnh (ms, CPU)} \\ \midrule
-A & a\_lenet & 0,973 & 337976 & 4,1 & 30 & 1,4 \\
-A & a\_dropout & 0,948 & 1746260 & 21,0 & 192 & 2,5 \\
-A & a\_vgg16 & 0,990 & 40669252 & 370,4 & 226 & 130,4 \\
-B & b\_mobilenetv3 & 1,000 & 941428 & 11,7 & 216 & 12,5 \\
-B & b\_resnet50 & 0,998 & 23595908 & 214,8 & 591 & 61,1 \\
+A & a\_lenet & 0,973 & 337976 & 1,4 & 30 & 1,4 \\
+A & a\_dropout & 0,948 & 1746260 & 7,0 & 192 & 2,5 \\
+A & a\_vgg16 & 0,990 & 40669252 & 162,8 & 226 & 130,4 \\
+B & b\_mobilenetv3 & 1,000 & 941428 & 4,3 & 216 & 12,5 \\
+B & b\_resnet50 & 0,998 & 23595908 & 95,1 & 591 & 61,1 \\
 \bottomrule\end{tabular}
 \end{adjustbox}\end{center}
-\note{Hướng B tốt hơn. Nhưng 'lớn hơn' không có nghĩa là nặng hơn: MobileNetV3 chỉ 0,94 triệu tham số, 11,7 MB, 12,5 ms mỗi ảnh, trong khi a\_vgg16 của hướng A nặng 370 MB và mất 130 ms.}
+\note{Hướng B tốt hơn. Nhưng 'lớn hơn' không có nghĩa là nặng hơn: MobileNetV3 chỉ 0,94 triệu tham số, 4,3 MB, 12,5 ms mỗi ảnh, trong khi a\_vgg16 của hướng A nặng 163 MB và mất 130 ms.}
 \end{frame}
 
 \begin{frame}{N7, N8 --- Embedding và độ bền}
@@ -595,7 +595,7 @@ B2 --- bài báo, đúng phương pháp (ViT + SVM) & ViT-B/16 + SVM & 0,997 & 0
 \begin{itemize}
 \item 30 thí nghiệm, mỗi nhận định có bảng hoặc hình; ghi cả kết quả trái dự đoán
 \item Quy trình đánh giá chặt: test dùng một lần, CV, độ lệch chuẩn, khoảng tin cậy
-\item Mô hình 11,7 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test
+\item Mô hình 4,3 MB, 12,5 ms/ảnh, đúng 371/371 ảnh test
 \item Chạy lại toàn bộ bằng một lệnh
 \item Đối chiếu với bài báo và bản Augmented của tác giả trên cùng tập test
 \end{itemize}

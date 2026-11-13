@@ -1,0 +1,24 @@
+run=b_resnet50_s1 n_train=1729 n_val=371 size=224 lr=0.001 epochs=60 patience=10 params={'total': 8196, 'trainable': 8196, 'non_trainable': 0}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 0.6015 acc 0.7924 | val loss 0.1704 acc 0.9542 macro-F1 0.9420 | best 0.9420 @ 1
+epoch   2 loss 0.1511 acc 0.9630 | val loss 0.1015 acc 0.9677 macro-F1 0.9597 | best 0.9597 @ 2
+epoch   3 loss 0.1010 acc 0.9751 | val loss 0.0749 acc 0.9757 macro-F1 0.9703 | best 0.9703 @ 3
+epoch   4 loss 0.0704 acc 0.9850 | val loss 0.0604 acc 0.9811 macro-F1 0.9773 | best 0.9773 @ 4
+epoch   5 loss 0.0580 acc 0.9902 | val loss 0.0563 acc 0.9865 macro-F1 0.9845 | best 0.9845 @ 5
+epoch   6 loss 0.0474 acc 0.9925 | val loss 0.0405 acc 0.9892 macro-F1 0.9858 | best 0.9858 @ 6
+epoch   7 loss 0.0358 acc 0.9960 | val loss 0.0399 acc 0.9811 macro-F1 0.9773 | best 0.9858 @ 6
+epoch   8 loss 0.0325 acc 0.9965 | val loss 0.0352 acc 0.9838 macro-F1 0.9809 | best 0.9858 @ 6
+epoch   9 loss 0.0274 acc 0.9971 | val loss 0.0314 acc 0.9919 macro-F1 0.9916 | best 0.9916 @ 9
+epoch  10 loss 0.0255 acc 0.9960 | val loss 0.0269 acc 0.9973 macro-F1 0.9965 | best 0.9965 @ 10
+epoch  11 loss 0.0215 acc 0.9971 | val loss 0.0256 acc 0.9919 macro-F1 0.9894 | best 0.9965 @ 10
+epoch  12 loss 0.0241 acc 0.9960 | val loss 0.0300 acc 0.9865 macro-F1 0.9822 | best 0.9965 @ 10
+epoch  13 loss 0.0173 acc 0.9971 | val loss 0.0268 acc 0.9892 macro-F1 0.9858 | best 0.9965 @ 10
+epoch  14 loss 0.0156 acc 0.9988 | val loss 0.0253 acc 0.9919 macro-F1 0.9893 | best 0.9965 @ 10
+epoch  15 loss 0.0130 acc 1.0000 | val loss 0.0220 acc 0.9946 macro-F1 0.9929 | best 0.9965 @ 10
+epoch  16 loss 0.0123 acc 1.0000 | val loss 0.0250 acc 0.9892 macro-F1 0.9869 | best 0.9965 @ 10
+epoch  17 loss 0.0115 acc 1.0000 | val loss 0.0209 acc 0.9946 macro-F1 0.9929 | best 0.9965 @ 10
+epoch  18 loss 0.0110 acc 0.9994 | val loss 0.0181 acc 0.9946 macro-F1 0.9929 | best 0.9965 @ 10
+epoch  19 loss 0.0110 acc 0.9983 | val loss 0.0244 acc 0.9865 macro-F1 0.9845 | best 0.9965 @ 10
+epoch  20 loss 0.0081 acc 1.0000 | val loss 0.0196 acc 0.9919 macro-F1 0.9894 | best 0.9965 @ 10
+KẾT QUẢ b_resnet50_s1: val macro-F1 0.9965 acc 0.9973 | train acc 1.0000 | 20 epoch, 4s (0.2s/epoch)

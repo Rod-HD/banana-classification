@@ -1,0 +1,12 @@
+run=b_resnet50 n_train=1729 n_val=371 size=224 lr=1e-05 epochs=20 patience=5 params={'total': 23595908, 'trainable': 14961668, 'non_trainable': 8634240}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 0.0731 acc 0.9780 | val loss 0.0241 acc 0.9865 macro-F1 0.9837 | best 0.9837 @ 1
+epoch   2 loss 0.0320 acc 0.9902 | val loss 0.0210 acc 0.9946 macro-F1 0.9941 | best 0.9941 @ 2
+epoch   3 loss 0.0174 acc 0.9942 | val loss 0.0140 acc 0.9973 macro-F1 0.9976 | best 0.9976 @ 3
+epoch   4 loss 0.0169 acc 0.9954 | val loss 0.0127 acc 0.9946 macro-F1 0.9940 | best 0.9976 @ 3
+epoch   5 loss 0.0094 acc 0.9977 | val loss 0.0146 acc 0.9946 macro-F1 0.9943 | best 0.9976 @ 3
+epoch   6 loss 0.0114 acc 0.9983 | val loss 0.0103 acc 0.9946 macro-F1 0.9933 | best 0.9976 @ 3
+epoch   7 loss 0.0133 acc 0.9942 | val loss 0.0139 acc 0.9973 macro-F1 0.9965 | best 0.9976 @ 3
+epoch   8 loss 0.0048 acc 0.9994 | val loss 0.0119 acc 0.9973 macro-F1 0.9965 | best 0.9976 @ 3
+KẾT QUẢ b_resnet50: val macro-F1 0.9976 acc 0.9973 | train acc 1.0000 | 8 epoch, 730s (91.2s/epoch)

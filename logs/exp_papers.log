@@ -1,0 +1,73 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794516454.121309   22642 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794516455.215961   22642 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+resnet50|svm_rbf (i) 99.16% (ii) 98.97% test F1 0.997 bền 0.778
+resnet50|svm_linear (i) 99.15% (ii) 98.85% test F1 0.997 bền 0.841
+resnet50|mlp (i) 98.97% (ii) 98.87% test F1 0.997 bền 0.873
+resnet50|logreg (i) 99.12% (ii) 98.96% test F1 0.997 bền 0.852
+resnet50|knn (i) 93.96% (ii) 93.05% test F1 0.982 bền 0.890
+mobilenetv3|svm_rbf (i) 99.27% (ii) 99.08% test F1 0.990 bền 0.785
+mobilenetv3|svm_linear (i) 98.80% (ii) 98.60% test F1 0.993 bền 0.836
+mobilenetv3|mlp (i) 99.22% (ii) 98.91% test F1 0.993 bền 0.846
+mobilenetv3|logreg (i) 98.68% (ii) 98.50% test F1 0.997 bền 0.805
+mobilenetv3|knn (i) 96.07% (ii) 95.55% test F1 0.973 bền 0.880
+/home/user/banana-classification/src/exp_papers.py:79: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/utils/tensor_numpy.cpp:208.)
+  t = torch.from_numpy(np.asarray(X[a:a + batch])).permute(0, 3, 1, 2).float() / 255.0
+squeezenet|svm_rbf (i) 98.58% (ii) 98.12% test F1 0.997 bền 0.629
+squeezenet|svm_linear (i) 98.03% (ii) 97.65% test F1 0.997 bền 0.786
+squeezenet|mlp (i) 98.57% (ii) 98.35% test F1 0.997 bền 0.816
+squeezenet|logreg (i) 97.59% (ii) 97.33% test F1 0.997 bền 0.768
+squeezenet|knn (i) 91.73% (ii) 91.61% test F1 0.979 bền 0.789
+vit_b16|svm_rbf (i) 99.49% (ii) 99.20% test F1 0.997 bền 0.919
+vit_b16|svm_linear (i) 99.41% (ii) 99.12% test F1 1.000 bền 0.937
+vit_b16|mlp (i) 99.50% (ii) 99.03% test F1 0.994 bền 0.922
+vit_b16|gbm (i) 97.71% (ii) 97.14% test F1 0.972 bền 0.881
+### E3 — Phương pháp của bài báo trên bản Augmented (7.413 ảnh), 5-fold: như bài báo (i) so với giữ nhóm theo ảnh gốc (ii)
+
+| Hướng | Bộ rút đặc trưng | Bộ phân lớp | Bài báo công bố: accuracy (%) | (i) Như bài báo: accuracy (%) | (i) Macro-F1 | (ii) Giữ nhóm theo ảnh gốc: accuracy (%) | (ii) Macro-F1 | Thổi phồng (i) − (ii), điểm % |
+|---|---|---|---|---|---|---|---|---|
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | SVM (RBF, C=1) | 96.69 | 99.16 ± 0.15 | 0.9900 | 98.97 ± 0.38 | 0.9881 | +0.19 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | SVM tuyến tính (C=0,01) | — | 99.15 ± 0.16 | 0.9901 | 98.85 ± 0.33 | 0.9864 | +0.30 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | MLP (1 lớp ẩn 256) | 97.76 | 98.97 ± 0.28 | 0.9881 | 98.87 ± 0.20 | 0.9868 | +0.11 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | Logistic Regression | — | 99.12 ± 0.15 | 0.9894 | 98.96 ± 0.29 | 0.9876 | +0.16 |
+| B1 | ResNet50 (ImageNet), sau GAP, 2048 chiều | KNN (k=5) | — | 93.96 ± 0.47 | 0.9356 | 93.05 ± 0.75 | 0.9258 | +0.90 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | SVM (RBF, C=1) | — | 99.27 ± 0.21 | 0.9912 | 99.08 ± 0.31 | 0.9891 | +0.19 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | SVM tuyến tính (C=0,01) | — | 98.80 ± 0.34 | 0.9858 | 98.60 ± 0.39 | 0.9836 | +0.20 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | MLP (1 lớp ẩn 256) | — | 99.22 ± 0.11 | 0.9909 | 98.91 ± 0.32 | 0.9875 | +0.31 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | Logistic Regression | — | 98.68 ± 0.22 | 0.9844 | 98.50 ± 0.36 | 0.9828 | +0.18 |
+| B1 | MobileNetV3-Small (ImageNet), sau GAP, 576 chiều | KNN (k=5) | — | 96.07 ± 0.62 | 0.9572 | 95.55 ± 0.81 | 0.9516 | +0.53 |
+| B1 | SqueezeNet 1.1 (ImageNet), sau GAP, 512 chiều | SVM (RBF, C=1) | 97.63 | 98.58 ± 0.42 | 0.9836 | 98.12 ± 0.29 | 0.9783 | +0.46 |
+| B1 | SqueezeNet 1.1 (ImageNet), sau GAP, 512 chiều | SVM tuyến tính (C=0,01) | — | 98.03 ± 0.43 | 0.9772 | 97.65 ± 0.14 | 0.9726 | +0.38 |
+| B1 | SqueezeNet 1.1 (ImageNet), sau GAP, 512 chiều | MLP (1 lớp ẩn 256) | 95.88 | 98.57 ± 0.20 | 0.9837 | 98.35 ± 0.24 | 0.9815 | +0.22 |
+| B1 | SqueezeNet 1.1 (ImageNet), sau GAP, 512 chiều | Logistic Regression | — | 97.59 ± 0.41 | 0.9727 | 97.33 ± 0.40 | 0.9693 | +0.26 |
+| B1 | SqueezeNet 1.1 (ImageNet), sau GAP, 512 chiều | KNN (k=5) | — | 91.73 ± 0.33 | 0.9079 | 91.61 ± 0.70 | 0.9064 | +0.12 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | SVM (RBF, C=1) | 99.70 | 99.49 ± 0.15 | 0.9937 | 99.20 ± 0.33 | 0.9905 | +0.28 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | SVM tuyến tính (C=0,01) | — | 99.41 ± 0.19 | 0.9929 | 99.12 ± 0.37 | 0.9895 | +0.28 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | MLP (1 lớp ẩn 256) | 99.29 | 99.50 ± 0.21 | 0.9942 | 99.03 ± 0.38 | 0.9886 | +0.47 |
+| B2 | ViT-B/16 (ImageNet), token phân lớp, 768 chiều | GBM (HistGradientBoosting) | 97.39 | 97.71 ± 0.36 | 0.9734 | 97.14 ± 0.60 | 0.9666 | +0.57 |
+
+### E3 — Phương pháp của bài báo theo giao thức của đồ án: học trên train+val gốc (2.100 ảnh), chấm trên test gốc (371 ảnh) và bộ kiểm tra khó
+
+| Hướng | Bộ rút đặc trưng | Bộ phân lớp | Macro-F1 5-fold (train+val) | Macro-F1 test | KTC 95% | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| B1 | ResNet50 (ImageNet) | SVM (RBF, C=1) | 0.993 ± 0.003 | 0.997 | [0.988; 1.000] | 1 | 0.824 | 0.961 | 0.928 | 0.901 | 0.964 | 0.087 | 0.778 |
+| B1 | ResNet50 (ImageNet) | SVM tuyến tính (C=0,01) | 0.994 ± 0.002 | 0.997 | [0.989; 1.000] | 1 | 0.718 | 0.969 | 0.908 | 0.977 | 0.972 | 0.502 | 0.841 |
+| B1 | ResNet50 (ImageNet) | MLP (1 lớp ẩn 256) | 0.990 ± 0.004 | 0.997 | [0.988; 1.000] | 1 | 0.849 | 0.966 | 0.938 | 0.979 | 0.968 | 0.534 | 0.873 |
+| B1 | ResNet50 (ImageNet) | Logistic Regression | 0.995 ± 0.003 | 0.997 | [0.988; 1.000] | 1 | 0.744 | 0.988 | 0.897 | 0.986 | 0.983 | 0.513 | 0.852 |
+| B1 | ResNet50 (ImageNet) | KNN (k=5) | 0.971 ± 0.008 | 0.982 | [0.966; 0.995] | 6 | 0.921 | 0.933 | 0.978 | 0.977 | 0.956 | 0.572 | 0.890 |
+| B1 | MobileNetV3-Small (ImageNet) | SVM (RBF, C=1) | 0.994 ± 0.006 | 0.990 | [0.976; 1.000] | 3 | 0.805 | 0.984 | 0.898 | 0.945 | 0.946 | 0.130 | 0.785 |
+| B1 | MobileNetV3-Small (ImageNet) | SVM tuyến tính (C=0,01) | 0.996 ± 0.003 | 0.993 | [0.982; 1.000] | 2 | 0.742 | 0.965 | 0.856 | 0.897 | 0.981 | 0.575 | 0.836 |
+| B1 | MobileNetV3-Small (ImageNet) | MLP (1 lớp ẩn 256) | 0.994 ± 0.003 | 0.993 | [0.982; 1.000] | 2 | 0.831 | 0.974 | 0.905 | 0.966 | 0.952 | 0.451 | 0.846 |
+| B1 | MobileNetV3-Small (ImageNet) | Logistic Regression | 0.995 ± 0.001 | 0.997 | [0.989; 1.000] | 1 | 0.746 | 0.969 | 0.847 | 0.933 | 0.964 | 0.367 | 0.805 |
+| B1 | MobileNetV3-Small (ImageNet) | KNN (k=5) | 0.975 ± 0.008 | 0.973 | [0.953; 0.990] | 9 | 0.887 | 0.950 | 0.956 | 0.962 | 0.958 | 0.569 | 0.880 |
+| B1 | SqueezeNet 1.1 (ImageNet) | SVM (RBF, C=1) | 0.990 ± 0.004 | 0.997 | [0.988; 1.000] | 1 | 0.680 | 0.861 | 0.885 | 0.279 | 0.984 | 0.087 | 0.629 |
+| B1 | SqueezeNet 1.1 (ImageNet) | SVM tuyến tính (C=0,01) | 0.993 ± 0.003 | 0.997 | [0.988; 1.000] | 1 | 0.647 | 0.939 | 0.827 | 0.906 | 0.986 | 0.409 | 0.786 |
+| B1 | SqueezeNet 1.1 (ImageNet) | MLP (1 lớp ẩn 256) | 0.994 ± 0.005 | 0.997 | [0.988; 1.000] | 1 | 0.727 | 0.942 | 0.880 | 0.816 | 0.980 | 0.553 | 0.816 |
+| B1 | SqueezeNet 1.1 (ImageNet) | Logistic Regression | 0.995 ± 0.003 | 0.997 | [0.988; 1.000] | 1 | 0.637 | 0.932 | 0.852 | 0.783 | 0.975 | 0.428 | 0.768 |
+| B1 | SqueezeNet 1.1 (ImageNet) | KNN (k=5) | 0.962 ± 0.006 | 0.979 | [0.962; 0.992] | 8 | 0.713 | 0.939 | 0.923 | 0.835 | 0.921 | 0.405 | 0.789 |
+| B2 | ViT-B/16 (ImageNet) | SVM (RBF, C=1) | 0.994 ± 0.004 | 0.997 | [0.989; 1.000] | 1 | 0.857 | 0.990 | 0.978 | 0.986 | 0.978 | 0.728 | 0.919 |
+| B2 | ViT-B/16 (ImageNet) | SVM tuyến tính (C=0,01) | 0.996 ± 0.004 | 1.000 | [1.000; 1.000] | 0 | 0.827 | 0.994 | 0.977 | 0.990 | 0.983 | 0.854 | 0.937 |
+| B2 | ViT-B/16 (ImageNet) | MLP (1 lớp ẩn 256) | 0.995 ± 0.004 | 0.994 | [0.984; 1.000] | 2 | 0.864 | 0.988 | 0.958 | 0.988 | 0.981 | 0.751 | 0.922 |
+| B2 | ViT-B/16 (ImageNet) | GBM (HistGradientBoosting) | 0.975 ± 0.005 | 0.972 | [0.952; 0.988] | 9 | 0.849 | 0.958 | 0.942 | 0.939 | 0.943 | 0.658 | 0.881 |
+

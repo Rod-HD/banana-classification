@@ -26,7 +26,7 @@ Nhận diện 4 giống chuối Bangladesh (Bangla Kola, Champa Kola, Sabri Kola
 | CNN hướng B | b_resnet50 (biến thể: b_resnet50) | 0,997 | [0,988; 1,000] | 0,997 | 1 | 0,987 (Sabri) | 0,998 |
 <!-- /T -->
 
-- Mô hình tốt nhất của nhóm truyền thống: **Hist H-S + HOG + Logistic Regression**. Hướng A: **`a_vgg16`**. Hướng B: **`b_mobilenetv3`** (11,7 MB, khoảng 12,5 ms/ảnh trên CPU).
+- Mô hình tốt nhất của nhóm truyền thống: **Hist H-S + HOG + Logistic Regression**. Hướng A: **`a_vgg16`**. Hướng B: **`b_mobilenetv3`** (4,3 MB, khoảng 12,5 ms/ảnh trên CPU).
 - **Lưu ý quan trọng (thí nghiệm S2):** bộ dữ liệu có thiên lệch theo bối cảnh chụp. Chỉ dùng 4 góc ảnh 64×64, hầu như không chứa quả chuối, HOG + LogReg vẫn đạt macro-F1 0,968 (5-fold CV). Con số gần 100% là độ chính xác trên bộ dữ liệu này, không phải trong điều kiện chụp bất kỳ. Xem [results/S2/](results/S2/) và mục 5.10 của báo cáo.
 
 ## Phần mở rộng: ba nhánh so sánh độc lập với pipeline gốc
@@ -68,13 +68,38 @@ Lệnh trên cài đúng các phiên bản trong `requirements.txt`, tức các 
 bash scripts/download_data.sh
 ```
 
+## Những gì có sẵn trong repo (không cần chạy lại)
+
+| Thứ có sẵn | Vị trí | Ghi chú |
+|---|---|---|
+| Kết quả mọi thí nghiệm | `results/` | bảng, hình, `metrics.json` của từng thí nghiệm |
+| Trọng số của 54 lần huấn luyện CNN | `checkpoints/<run>/best.keras` | kiến trúc + trọng số tốt nhất theo macro-F1 trên val; `state.json` là lịch sử huấn luyện |
+| Mô hình cho demo | `models/` | chạy `python app/app.py` được ngay |
+| Bản Augmented của tác giả | `data/aug_author/` | 7.413 ảnh, dùng ở bước 11–12 |
+| Log của lần chạy đã sinh ra `results/` | `logs/` | |
+| Báo cáo, slide, nhật ký, hỏi đáp | `report/`, `slides/`, `docs/` | |
+
+Kiểm tra trọng số trong repo cho lại đúng kết quả đã ghi (nạp từng `best.keras`, dự đoán lại, so với `metrics.json`; khoảng 5 phút):
+
+```bash
+python -m src.cnn.checkpoints
+```
+
+Kết quả của lần kiểm tra gần nhất: [results/cnn/table_checkpoints.md](results/cnn/table_checkpoints.md).
+
 ## Chạy lại toàn bộ thí nghiệm
 
 ```bash
 bash scripts/run_all.sh
 ```
 
-Lệnh này chạy lần lượt các bước 1–8 theo mục 11 của kế hoạch, phần mở rộng (bước 10–14), rồi bước 9 (mô hình demo, báo cáo, slide); ghi lại mọi bảng, hình, mô hình, báo cáo và slide. Tổng cộng khoảng 8 giờ trên CPU 4 nhân (bước 1–9: khoảng 3 giờ; phần mở rộng: khoảng 5 giờ). Có thể chạy từng bước, ví dụ:
+Lệnh này chạy lần lượt các bước 1–8 theo mục 11 của kế hoạch, phần mở rộng (bước 10–14), rồi bước 9 (mô hình demo, báo cáo, slide); ghi lại mọi bảng, hình, mô hình, báo cáo và slide. Vì trọng số đã có trong `checkpoints/`, các bước huấn luyện CNN không huấn luyện lại: mỗi lệnh nạp trọng số đã lưu rồi chấm lại. Muốn huấn luyện lại từ đầu:
+
+```bash
+RETRAIN=1 bash scripts/run_all.sh
+```
+
+Khi huấn luyện lại từ đầu, tổng cộng khoảng 8 giờ trên CPU 4 nhân (bước 1–9: khoảng 3 giờ; phần mở rộng: khoảng 5 giờ); cột thời gian trong bảng dưới là của trường hợp này. Có thể chạy từng bước, ví dụ:
 
 ```bash
 bash scripts/run_all.sh 2 3
@@ -91,7 +116,7 @@ bash scripts/run_all.sh 2 3
 | 7 | Phân đoạn S1–S2 | `src.exp_segment` | khoảng 10 phút |
 | 8 | Đánh giá cuối trên test, phân tích lỗi, tổng hợp | `src.final_eval`, `src.error_analysis`, `src.summarize` | khoảng 2 phút |
 | 10 | Bộ kiểm tra khó; nhánh G chấm lại | `src.stress`, `src.pipeline` | khoảng 10 phút |
-| 11 | Nhánh T: bản Augmented của tác giả (tự tải về `data/aug_author/`) | `src.exp_arm_t` | khoảng 100 phút |
+| 11 | Nhánh T: bản Augmented của tác giả (có sẵn trong `data/aug_author/`) | `src.exp_arm_t` | khoảng 100 phút |
 | 12 | Nhánh B: phương pháp của bài báo | `src.exp_papers` | khoảng 45 phút |
 | 13 | Nhánh X: làm sạch, tiền xử lý, tăng cường; S2 chạy lại | `src.exp_arm_x`, `src.exp_segment --only S2V2` | khoảng 130 phút |
 | 14 | So sánh bốn nhánh, tổng hợp | `src.compare_arms`, `src.summarize` | khoảng 1 phút |
@@ -101,8 +126,9 @@ Ghi chú:
 
 - Seed cố định (42) cho `random`, `numpy`, TensorFlow; TensorFlow bật chế độ tính toán tất định. Bước 1–3 (truyền thống) cho lại đúng các con số đã commit. CNN huấn luyện trên máy hoặc phiên bản thư viện khác có thể lệch nhẹ ở chữ số cuối.
 - Bảng trong báo cáo, slide và README được sinh lại từ `results/` ở bước 9 (`python -m src.build_report`, `python -m src.make_slides`), nên sau khi chạy lại thí nghiệm thì tài liệu tự khớp với số liệu mới.
-- Đặc trưng đã rút và đầu ra của các thân CNN đóng băng được lưu ở `data/cache/` (không commit). `FRESH=1 bash scripts/run_all.sh` xóa cache trước khi chạy.
-- Huấn luyện CNN lưu checkpoint mỗi epoch vào `checkpoints/<run>/`. Nếu bị ngắt, chạy lại đúng lệnh cũ sẽ tiếp tục từ epoch dở dang (`--resume`). Log nằm trong `logs/`.
+- Đặc trưng đã rút và đầu ra của các thân CNN đóng băng được lưu ở `data/cache/`. Thư mục này không commit (khoảng 8 GB, có file trên 1 GB) và tự sinh lại khi chạy, không cần huấn luyện. `FRESH=1 bash scripts/run_all.sh` xóa cache trước khi chạy.
+- Huấn luyện CNN lưu checkpoint mỗi epoch vào `checkpoints/<run>/`. Nếu bị ngắt, chạy lại đúng lệnh cũ sẽ tiếp tục từ epoch dở dang (`--resume`); run đã xong thì dùng lại `best.keras`. Log nằm trong `logs/`.
+- Bước 11 và 13 mặc định tính lại mọi cấu hình của nhánh. `SKIP_DONE=1 bash scripts/run_all.sh 11 13` bỏ qua cấu hình đã có kết quả, dùng khi chạy tiếp một lần chạy bị ngắt.
 - Mỗi module có hướng dẫn riêng: `python -m src.<module> --help`. Ví dụ huấn luyện một CNN:
 
 ```bash
@@ -135,19 +161,22 @@ Mô hình nằm trong `models/` (`b_mobilenetv3`; `b_mobilenetv3_thay_nen` là b
 
 Ảnh nằm trong `data/raw/<lớp>/`; danh sách chia tập cố định (stratified 70/15/15, seed 42) nằm trong `data/splits/`. Tên thư mục lớp đã được đổi sang dạng `snake_case` so với bản gốc; nội dung ảnh giữ nguyên.
 
-**Nguồn và giấy phép.** Dữ liệu thuộc bộ *BananaImageBD: A Comprehensive Image Dataset of Common Banana Varieties with Different Ripeness Stages in Bangladesh* (Ferdaus và cộng sự, Mendeley Data, Version 2, DOI: [10.17632/ptfscwtnyz.2](https://doi.org/10.17632/ptfscwtnyz.2); bài báo mô tả: *Data in Brief* 58, 111239), phát hành theo giấy phép [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Repo chứa phần ảnh gốc phân loại giống chuối; bản Augmented của tác giả (dùng ở bước 11–12) không nằm trong repo, tải bằng `bash scripts/download_data.sh augmented`. Logo trong `slides/figures/uit-logo.png` là logo của Trường ĐH Công nghệ Thông tin, lấy từ trang uit.edu.vn, chỉ dùng cho slide của đồ án. Bốn ảnh trong `app/examples/` được sao từ tập test của bộ dữ liệu này.
+**Nguồn và giấy phép.** Dữ liệu thuộc bộ *BananaImageBD: A Comprehensive Image Dataset of Common Banana Varieties with Different Ripeness Stages in Bangladesh* (Ferdaus và cộng sự, Mendeley Data, Version 2, DOI: [10.17632/ptfscwtnyz.2](https://doi.org/10.17632/ptfscwtnyz.2); bài báo mô tả: *Data in Brief* 58, 111239), phát hành theo giấy phép [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Repo chứa phần ảnh gốc phân loại giống chuối (`data/raw/`) và bản Augmented của tác giả dùng ở bước 11–12 (`data/aug_author/`, 7.413 ảnh, cùng nguồn và giấy phép); tải lại bản Augmented từ nguồn và kiểm tra mã băm bằng `bash scripts/download_data.sh augmented`. Logo trong `slides/figures/uit-logo.png` là logo của Trường ĐH Công nghệ Thông tin, lấy từ trang uit.edu.vn, chỉ dùng cho slide của đồ án. Bốn ảnh trong `app/examples/` được sao từ tập test của bộ dữ liệu này.
 
 ## Cấu trúc thư mục
 
 ```
 data/raw/         ảnh gốc theo lớp
 data/splits/      danh sách train/val/test cố định
-data/aug_author/  bản Augmented của tác giả (không commit; tải bằng scripts/download_data.sh augmented)
+data/aug_author/  bản Augmented của tác giả (7.413 ảnh)
+data/cache/       đặc trưng đã rút (không commit; tự sinh lại khi chạy)
 src/              code: rút đặc trưng, huấn luyện, đánh giá, các thí nghiệm (python -m src.<module>)
 src/features/     đặc trưng màu, cạnh, HOG
 src/cnn/          kiến trúc, huấn luyện, dự đoán CNN
 results/          kết quả từng thí nghiệm (results/<mã>/), hình (results/figures/), tổng hợp (summary.*)
 models/           mô hình dùng cho demo
+checkpoints/      trọng số của từng lần huấn luyện CNN: <run>/best.keras, <run>/state.json
+logs/             log của các lần chạy
 app/              demo (app.py), thông tin giống chuối, ảnh ví dụ
 report/           báo cáo (report_template.md → report.md, report.docx)
 slides/           slide trình bày: Beamer LaTeX style UIT (.tex, .pdf, theme beamerthemeUIT.sty) và bản .pptx

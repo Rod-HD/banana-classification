@@ -6,7 +6,7 @@
     "file": "b_mobilenetv3.keras",
     "input_size": 224,
     "run": "b_mobilenetv3_lr1e-4",
-    "size_mb": 11.73,
+    "size_mb": 4.34,
     "test": {
       "macro_f1_test": 1.0,
       "accuracy_test": 1.0
@@ -19,7 +19,7 @@
     "file": "a_lenet.keras",
     "input_size": 64,
     "run": "a_lenet",
-    "size_mb": 4.1,
+    "size_mb": 1.39,
     "test": {
       "macro_f1_test": 0.9777,
       "accuracy_test": 0.9811
@@ -32,7 +32,7 @@
     "file": "b_mobilenetv3_thay_nen.keras",
     "input_size": 224,
     "run": "Xb__b_mobilenetv3",
-    "size_mb": 11.73,
+    "size_mb": 4.34,
     "test": {
       "macro_f1_test": 1.0,
       "accuracy_test": 1.0

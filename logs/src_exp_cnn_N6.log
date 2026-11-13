@@ -1,0 +1,54 @@
+===== N4BN =====
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794504785.826750    2656 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794504786.873425    2656 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+### N4 (phụ) — BatchNorm khi fine-tune: 64 ảnh train, lô 64
+
+| Thân mạng | Cách mở băng | Thay đổi tương đối của embedding (training=True so với suy luận) | Accuracy đầu phân lớp GĐ1, embedding chế độ suy luận | Accuracy đầu phân lớp GĐ1, embedding chế độ huấn luyện |
+|---|---|---|---|---|
+| b_mobilenetv3 | BN mở (trainable=True) | 0.820 | 1.000 | 0.047 |
+| b_mobilenetv3 | BN đóng băng (cách đồ án dùng) | 0.000 | 1.000 | 1.000 |
+| b_resnet50 | BN mở (trainable=True) | 0.838 | 1.000 | 0.125 |
+| b_resnet50 | BN đóng băng (cách đồ án dùng) | 0.000 | 1.000 | 1.000 |
+
+===== N6 =====
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+{'Hướng': 'A', 'Mô hình': 'a_lenet', 'Biến thể được chốt': 'a_lenet', 'Macro-F1 val': '0.973', 'Accuracy val': '0.978', 'Số tham số': 337976, 'File mô hình (MB)': '4.1', 'Thời gian huấn luyện (s)': '30', 'Dự đoán 1 ảnh (ms, CPU)': '1.4', 'Dự đoán theo lô 32 (ms/ảnh)': '0.2', 'Cách tính thời gian huấn luyện': '50 epoch × 0.6 s'}
+{'Hướng': 'A', 'Mô hình': 'a_dropout', 'Biến thể được chốt': 'a_dropout_aug', 'Macro-F1 val': '0.948', 'Accuracy val': '0.954', 'Số tham số': 1746260, 'File mô hình (MB)': '21.0', 'Thời gian huấn luyện (s)': '192', 'Dự đoán 1 ảnh (ms, CPU)': '2.5', 'Dự đoán theo lô 32 (ms/ảnh)': '0.7', 'Cách tính thời gian huấn luyện': '40 epoch × 4.8 s'}
+{'Hướng': 'A', 'Mô hình': 'a_vgg16', 'Biến thể được chốt': 'a_vgg16_lr1e-3', 'Macro-F1 val': '0.990', 'Accuracy val': '0.992', 'Số tham số': 40669252, 'File mô hình (MB)': '370.4', 'Thời gian huấn luyện (s)': '226', 'Dự đoán 1 ảnh (ms, CPU)': '130.4', 'Dự đoán theo lô 32 (ms/ảnh)': '67.5', 'Cách tính thời gian huấn luyện': 'tính đặc trưng thân đóng băng cho 1729 ảnh train: 129 s; đầu phân lớp 24 epoch × 4.0 s'}
+{'Hướng': 'B', 'Mô hình': 'b_mobilenetv3', 'Biến thể được chốt': 'b_mobilenetv3_lr1e-4', 'Macro-F1 val': '1.000', 'Accuracy val': '1.000', 'Số tham số': 941428, 'File mô hình (MB)': '11.7', 'Thời gian huấn luyện (s)': '216', 'Dự đoán 1 ảnh (ms, CPU)': '12.5', 'Dự đoán theo lô 32 (ms/ảnh)': '2.6', 'Cách tính thời gian huấn luyện': 'tính đặc trưng thân đóng băng cho 1729 ảnh train: 25 s; giai đoạn 1: 31 epoch, 4 s; giai đoạn 2: 12 epoch × 15.6 s'}
+WARNING:tensorflow:5 out of the last 7 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7fe597da7060> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+WARNING:tensorflow:6 out of the last 8 calls to <function TensorFlowTrainer.make_predict_function.<locals>.one_step_on_data_distributed at 0x7fe597da7060> triggered tf.function retracing. Tracing is expensive and the excessive number of tracings could be due to (1) creating @tf.function repeatedly in a loop, (2) passing tensors with different shapes, (3) passing Python objects instead of tensors. For (1), please define your @tf.function outside of the loop. For (2), @tf.function has reduce_retracing=True option that can avoid unnecessary retracing. For (3), please refer to https://www.tensorflow.org/guide/function#controlling_retracing and https://www.tensorflow.org/api_docs/python/tf/function for  more details.
+{'Hướng': 'B', 'Mô hình': 'b_resnet50', 'Biến thể được chốt': 'b_resnet50', 'Macro-F1 val': '0.998', 'Accuracy val': '0.997', 'Số tham số': 23595908, 'File mô hình (MB)': '214.8', 'Thời gian huấn luyện (s)': '591', 'Dự đoán 1 ảnh (ms, CPU)': '61.1', 'Dự đoán theo lô 32 (ms/ảnh)': '28.0', 'Cách tính thời gian huấn luyện': 'tính đặc trưng thân đóng băng cho 1729 ảnh train: 98 s; giai đoạn 1: 20 epoch, 4 s; giai đoạn 2: 8 epoch × 61.2 s'}
+### N6 — So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)
+
+| Hướng | Mô hình | Biến thể được chốt | Macro-F1 val | Accuracy val | Số tham số | File mô hình (MB) | Thời gian huấn luyện (s) | Dự đoán 1 ảnh (ms, CPU) | Dự đoán theo lô 32 (ms/ảnh) | Cách tính thời gian huấn luyện |
+|---|---|---|---|---|---|---|---|---|---|---|
+| A | a_lenet | a_lenet | 0.973 | 0.978 | 337976 | 4.1 | 30 | 1.4 | 0.2 | 50 epoch × 0.6 s |
+| A | a_dropout | a_dropout_aug | 0.948 | 0.954 | 1746260 | 21.0 | 192 | 2.5 | 0.7 | 40 epoch × 4.8 s |
+| A | a_vgg16 | a_vgg16_lr1e-3 | 0.990 | 0.992 | 40669252 | 370.4 | 226 | 130.4 | 67.5 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 129 s; đầu phân lớp 24 epoch × 4.0 s |
+| B | b_mobilenetv3 | b_mobilenetv3_lr1e-4 | 1.000 | 1.000 | 941428 | 11.7 | 216 | 12.5 | 2.6 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 25 s; giai đoạn 1: 31 epoch, 4 s; giai đoạn 2: 12 epoch × 15.6 s |
+| B | b_resnet50 | b_resnet50 | 0.998 | 0.997 | 23595908 | 214.8 | 591 | 61.1 | 28.0 | tính đặc trưng thân đóng băng cho 1729 ảnh train: 98 s; giai đoạn 1: 20 epoch, 4 s; giai đoạn 2: 8 epoch × 61.2 s |
+
+===== N8 =====
+{'Mô hình': 'Truyền thống: Hist HSV (8,8,8)', 'Ảnh gốc': '0.997', 'Xáo trộn 4×4': '0.997', 'V×0,6': '0.280', 'V×1,4': '0.705', 'Ảnh xám': '0.145', 'Nhiễu σ=5': '0.451', 'Nhiễu σ=10': '0.085', 'Nhiễu σ=20': '0.085', 'Che 25%': '0.076', 'Xoay −30°': '0.987', 'Xoay −15°': '0.993', 'Xoay +15°': '0.992', 'Xoay +30°': '0.994'}
+{'Mô hình': 'Truyền thống: HOG 64×128', 'Ảnh gốc': '0.983', 'Xáo trộn 4×4': '0.302', 'V×0,6': '0.984', 'V×1,4': '0.800', 'Ảnh xám': '0.981', 'Nhiễu σ=5': '0.537', 'Nhiễu σ=10': '0.461', 'Nhiễu σ=20': '0.318', 'Che 25%': '0.801', 'Xoay −30°': '0.679', 'Xoay −15°': '0.929', 'Xoay +15°': '0.886', 'Xoay +30°': '0.550'}
+{'Mô hình': 'Truyền thống: Hist H-S + HOG', 'Ảnh gốc': '0.998', 'Xáo trộn 4×4': '0.898', 'V×0,6': '0.995', 'V×1,4': '0.888', 'Ảnh xám': '0.770', 'Nhiễu σ=5': '0.706', 'Nhiễu σ=10': '0.180', 'Nhiễu σ=20': '0.101', 'Che 25%': '0.918', 'Xoay −30°': '0.978', 'Xoay −15°': '0.987', 'Xoay +15°': '0.988', 'Xoay +30°': '0.974'}
+{'Mô hình': 'Hướng A tốt nhất: a_vgg16_lr1e-3', 'Ảnh gốc': '0.990', 'Xáo trộn 4×4': '0.097', 'V×0,6': '0.984', 'V×1,4': '0.969', 'Ảnh xám': '0.953', 'Nhiễu σ=5': '0.981', 'Nhiễu σ=10': '0.976', 'Nhiễu σ=20': '0.932', 'Che 25%': '0.850', 'Xoay −30°': '0.888', 'Xoay −15°': '0.973', 'Xoay +15°': '0.980', 'Xoay +30°': '0.906'}
+{'Mô hình': 'Hướng B tốt nhất: b_mobilenetv3_lr1e-4', 'Ảnh gốc': '1.000', 'Xáo trộn 4×4': '0.850', 'V×0,6': '0.913', 'V×1,4': '0.907', 'Ảnh xám': '0.963', 'Nhiễu σ=5': '0.997', 'Nhiễu σ=10': '0.987', 'Nhiễu σ=20': '0.953', 'Che 25%': '0.659', 'Xoay −30°': '0.993', 'Xoay −15°': '1.000', 'Xoay +15°': '0.997', 'Xoay +30°': '0.996'}
+{'Mô hình': 'Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3', 'Ảnh gốc': '0.993', 'Xáo trộn 4×4': '0.775', 'V×0,6': '0.899', 'V×1,4': '0.936', 'Ảnh xám': '0.914', 'Nhiễu σ=5': '0.980', 'Nhiễu σ=10': '0.972', 'Nhiễu σ=20': '0.949', 'Che 25%': '0.506', 'Xoay −30°': '0.987', 'Xoay −15°': '0.990', 'Xoay +15°': '0.993', 'Xoay +30°': '0.993'}
+{'Mô hình': 'Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug', 'Ảnh gốc': '0.997', 'Xáo trộn 4×4': '0.717', 'V×0,6': '0.952', 'V×1,4': '0.911', 'Ảnh xám': '0.959', 'Nhiễu σ=5': '0.977', 'Nhiễu σ=10': '0.955', 'Nhiễu σ=20': '0.908', 'Che 25%': '0.555', 'Xoay −30°': '0.958', 'Xoay −15°': '0.977', 'Xoay +15°': '0.993', 'Xoay +30°': '0.978'}
+### N8 — Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)
+
+| Mô hình | Ảnh gốc | Xáo trộn 4×4 | V×0,6 | V×1,4 | Ảnh xám | Nhiễu σ=5 | Nhiễu σ=10 | Nhiễu σ=20 | Che 25% | Xoay −30° | Xoay −15° | Xoay +15° | Xoay +30° |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống: Hist HSV (8,8,8) | 0.997 | 0.997 | 0.280 | 0.705 | 0.145 | 0.451 | 0.085 | 0.085 | 0.076 | 0.987 | 0.993 | 0.992 | 0.994 |
+| Truyền thống: HOG 64×128 | 0.983 | 0.302 | 0.984 | 0.800 | 0.981 | 0.537 | 0.461 | 0.318 | 0.801 | 0.679 | 0.929 | 0.886 | 0.550 |
+| Truyền thống: Hist H-S + HOG | 0.998 | 0.898 | 0.995 | 0.888 | 0.770 | 0.706 | 0.180 | 0.101 | 0.918 | 0.978 | 0.987 | 0.988 | 0.974 |
+| Hướng A tốt nhất: a_vgg16_lr1e-3 | 0.990 | 0.097 | 0.984 | 0.969 | 0.953 | 0.981 | 0.976 | 0.932 | 0.850 | 0.888 | 0.973 | 0.980 | 0.906 |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | 1.000 | 0.850 | 0.913 | 0.907 | 0.963 | 0.997 | 0.987 | 0.953 | 0.659 | 0.993 | 1.000 | 0.997 | 0.996 |
+| Hướng B, lr 1e-5, có tăng cường (N5): b_mobilenetv3 | 0.993 | 0.775 | 0.899 | 0.936 | 0.914 | 0.980 | 0.972 | 0.949 | 0.506 | 0.987 | 0.990 | 0.993 | 0.993 |
+| Hướng B, lr 1e-5, không tăng cường (N5): b_mobilenetv3_noaug | 0.997 | 0.717 | 0.952 | 0.911 | 0.959 | 0.977 | 0.955 | 0.908 | 0.555 | 0.958 | 0.977 | 0.993 | 0.978 |
+

@@ -1,0 +1,26 @@
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794507309.032563    5677 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794507313.139671    5677 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+python 3.13.18
+platform Linux-6.18.44-fc-v378-x86_64-with-glibc2.39
+cpu_count 4
+ram_gb 16.5
+gpu none (chỉ dùng CPU)
+seed 42
+
+numpy==2.5.3
+pandas==3.0.5
+scikit-learn==1.9.1
+scikit-image==0.26.0
+imbalanced-learn==0.14.2
+opencv-python-headless==5.0.0
+pillow==12.3.0
+imagehash==4.3.2
+matplotlib==3.11.2
+joblib==1.6.0
+tensorflow==2.21.0
+keras==3.15.1
+gradio==6.31.0
+python-docx==1.2.0
+python-pptx==1.0.2

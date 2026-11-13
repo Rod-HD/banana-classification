@@ -83,7 +83,7 @@ lr 1e-3 làm quá trình huấn luyện dao động: macro-F1 trên val tụt xu
 Ở chế độ huấn luyện, BN dùng thống kê của lô thay cho thống kê ImageNet: embedding đổi 82–84%, đầu phân lớp học ở giai đoạn 1 chỉ còn đúng 4,7–12,5%. Lần fine-tune đầu (BN mở) có accuracy train ở epoch 1 chỉ 0,356. → `results/N4/table_batchnorm.md`.
 
 **25. Mạng lớn hơn có luôn tốn tài nguyên hơn không?**
-Không. MobileNetV3-Small (hướng B): 0,94 triệu tham số, 11,7 MB, 12,5 ms mỗi ảnh, đạt 1,000 trên val. `a_vgg16` (hướng A): 40,7 triệu tham số, 370 MB, 130 ms mỗi ảnh. → `results/N6/table.md`, `results/figures/N6_a_vs_b.png`.
+Không. MobileNetV3-Small (hướng B): 0,94 triệu tham số, 4,3 MB, 12,5 ms mỗi ảnh, đạt 1,000 trên val. `a_vgg16` (hướng A): 40,7 triệu tham số, 163 MB, 130 ms mỗi ảnh. Dung lượng là của file chỉ gồm kiến trúc và trọng số, khoảng 4 byte mỗi tham số. → `results/N6/table.md`, `results/figures/N6_a_vs_b.png`.
 
 **26. Embedding của CNN có tốt hơn đặc trưng thủ công không?**
 Chỉ sau khi được học trên dữ liệu chuối. Embedding MobileNetV3 đã fine-tune + KNN đạt 1,000; embedding VGG16 ImageNet chưa học trên chuối + KNN chỉ 0,932, kém histogram HSV (0,982). Với LogReg, đặc trưng thủ công tốt nhất (0,998) ngang embedding (0,996). → `results/N7/table.md`.
@@ -167,4 +167,4 @@ Trên ảnh gốc không nhánh nào hơn pipeline gốc: cấu hình đại di�
 `bash scripts/setup_env.sh` rồi `bash scripts/run_all.sh` (hoặc từng bước, ví dụ `bash scripts/run_all.sh 2 3`; phần mở rộng là các bước 10–14). Seed cố định, phiên bản thư viện ghi ở `results/environment.txt`. Huấn luyện CNN có checkpoint mỗi epoch và `--resume`. → `README.md`.
 
 **51. Demo chạy thế nào?**
-`python app/app.py` mở giao diện web; `python app/app.py --image <ảnh>` dự đoán trên dòng lệnh. Mô hình mặc định là `b_mobilenetv3` (11,7 MB); có thêm bản huấn luyện với nền thay ngẫu nhiên (nhánh X-b), bền hơn khi nền ảnh khác bộ dữ liệu. `a_vgg16` không đưa vào demo vì file 370 MB vượt giới hạn 50 MB. → `results/figures/demo_screenshot.png`, `models/models.json`.
+`python app/app.py` mở giao diện web; `python app/app.py --image <ảnh>` dự đoán trên dòng lệnh. Mô hình mặc định là `b_mobilenetv3` (4,3 MB); có thêm bản huấn luyện với nền thay ngẫu nhiên (nhánh X-b), bền hơn khi nền ảnh khác bộ dữ liệu. `a_vgg16` không đưa vào demo vì file 163 MB vượt giới hạn 50 MB. → `results/figures/demo_screenshot.png`, `models/models.json`.

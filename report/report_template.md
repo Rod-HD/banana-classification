@@ -360,7 +360,7 @@ Khi BN ở chế độ huấn luyện, nó dùng thống kê của từng lô th
 
 ![N6 — Hướng A và hướng B](../results/figures/N6_a_vs_b.png)
 
-*Kết luận:* vế "tốt hơn" khớp: hướng B đạt 0,998–1,000 trên val, hướng A 0,948–0,990. Vế "tốn tài nguyên hơn" chỉ đúng với ResNet50. MobileNetV3-Small có 0,94 triệu tham số, file 11,7 MB, dự đoán 12,5 ms mỗi ảnh; trong khi `a_vgg16` của hướng A có 40,7 triệu tham số, file 370 MB, dự đoán 130 ms mỗi ảnh. Một kiến trúc được thiết kế cho thiết bị di động có thể vừa chính xác hơn vừa nhẹ hơn mô hình theo bài giảng.
+*Kết luận:* vế "tốt hơn" khớp: hướng B đạt 0,998–1,000 trên val, hướng A 0,948–0,990. Vế "tốn tài nguyên hơn" chỉ đúng với ResNet50. MobileNetV3-Small có 0,94 triệu tham số, file 4,3 MB, dự đoán 12,5 ms mỗi ảnh; trong khi `a_vgg16` của hướng A có 40,7 triệu tham số, file 163 MB, dự đoán 130 ms mỗi ảnh. Dung lượng là của file `.keras` chỉ gồm kiến trúc và trọng số (khoảng 4 byte mỗi tham số), không kèm trạng thái của bộ tối ưu. Một kiến trúc được thiết kế cho thiết bị di động có thể vừa chính xác hơn vừa nhẹ hơn mô hình theo bài giảng.
 
 **N7 — Feature vector thủ công và embedding.** *Dự đoán:* embedding do mạng học tốt hơn đặc trưng thủ công với cùng bộ phân lớp.
 
@@ -642,7 +642,7 @@ Phép che 25% tách theo mức quả chuối bị che (`results/so_sanh_nhanh/ta
 - Quy trình đánh giá chặt: chia tập cố định, test dùng một lần, chọn siêu tham số bằng cross-validation, báo cáo độ lệch chuẩn và khoảng tin cậy, chỉ số chính là macro-F1.
 - Ghi nhận cả các kết quả trái dự đoán và thử giải thích (D1 với HOG, M5, P1, C2, C4, N3, N8).
 - Phát hiện và đo được thiên lệch theo bối cảnh chụp của bộ dữ liệu (S2), một điều mà chỉ nhìn con số accuracy sẽ không thấy.
-- Có hai mô hình đúng 371/371 ảnh test, trong đó một mô hình chỉ 11,7 MB và dự đoán 12,5 ms mỗi ảnh trên CPU.
+- Có hai mô hình đúng 371/371 ảnh test, trong đó một mô hình chỉ 4,3 MB và dự đoán 12,5 ms mỗi ảnh trên CPU.
 - Chạy lại được toàn bộ bằng một lệnh; seed cố định; checkpoint và `--resume` cho huấn luyện dài.
 - Đối chiếu với bên ngoài: chạy lại phương pháp của bài báo trên cùng bộ dữ liệu (tái hiện 99,49% so với 99,70% công bố) và bản Augmented của tác giả, trên cùng tập test và cùng bộ kiểm tra khó (mục 5.13).
 

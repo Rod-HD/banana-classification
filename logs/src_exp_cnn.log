@@ -1,0 +1,144 @@
+===== RUNS =====
+### Tất cả các lần huấn luyện CNN (chấm trên val, 371 ảnh)
+
+| Run | Mô hình | Ảnh vào | Số ảnh train | lr | Tăng cường | Tham số huấn luyện | Epoch chọn / tổng | Macro-F1 val | Accuracy val | Accuracy train | Giây / epoch | Thời gian huấn luyện (s) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| a_dropout | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 25 / 40 | 0.940 | 0.946 | 0.999 | 4.2 | 168 |
+| a_dropout_aug | a_dropout | 128×128 | 1729 | 0.001 | có | 1746260 | 25 / 40 | 0.948 | 0.954 | 0.967 | 4.8 | 194 |
+| a_dropout_nodrop | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 33 / 40 | 0.951 | 0.957 | 1.000 | 3.8 | 150 |
+| a_dropout_nodrop_seed43 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 18 / 40 | 0.960 | 0.968 | 1.000 | 5.8 | 234 |
+| a_dropout_nodrop_seed44 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 37 / 40 | 0.947 | 0.951 | 1.000 | 6.0 | 242 |
+| a_dropout_seed43 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 22 / 40 | 0.947 | 0.954 | 0.997 | 6.3 | 253 |
+| a_dropout_seed44 | a_dropout | 128×128 | 1729 | 0.001 | không | 1746260 | 39 / 40 | 0.935 | 0.943 | 0.999 | 5.8 | 233 |
+| a_lenet | a_lenet | 64×64 | 1729 | 0.001 | không | 337976 | 40 / 50 | 0.973 | 0.978 | 1.000 | 0.6 | 31 |
+| a_lenet_frac25 | a_lenet | 64×64 | 432 | 0.001 | không | 337976 | 22 / 32 | 0.924 | 0.930 | 1.000 | 0.2 | 7 |
+| a_lenet_frac50 | a_lenet | 64×64 | 864 | 0.001 | không | 337976 | 13 / 23 | 0.950 | 0.957 | 0.995 | 0.4 | 8 |
+| a_lenet_s128 | a_lenet | 128×128 | 1729 | 0.001 | không | 1628216 | 13 / 23 | 0.956 | 0.962 | 1.000 | 1.7 | 40 |
+| a_lenet_s32 | a_lenet | 32×32 | 1729 | 0.001 | không | 61496 | 20 / 30 | 0.954 | 0.960 | 0.984 | 0.3 | 9 |
+| a_vgg16 | a_vgg16 | 224×224 | 1729 | 0.0001 | không | 25954564 | 7 / 15 | 0.984 | 0.987 | 1.000 | 3.9 | 59 |
+| a_vgg16_frac25 | a_vgg16 | 224×224 | 432 | 0.0001 | không | 25954564 | 3 / 11 | 0.967 | 0.973 | 0.995 | 1.2 | 13 |
+| a_vgg16_frac50 | a_vgg16 | 224×224 | 864 | 0.0001 | không | 25954564 | 3 / 11 | 0.963 | 0.968 | 1.000 | 2.1 | 23 |
+| a_vgg16_lr1e-3 | a_vgg16 | 224×224 | 1729 | 0.001 | không | 25954564 | 16 / 24 | 0.990 | 0.992 | 0.999 | 3.9 | 94 |
+| b_mobilenetv3 | b_mobilenetv3 | 224×224 | 1729 | 1e-05 | có | 917204 | 12 / 17 | 0.993 | 0.995 | 0.997 | 20.1 | 341 |
+| b_mobilenetv3_frac25 | b_mobilenetv3 | 224×224 | 432 | 1e-05 | có | 917204 | 12 / 17 | 0.975 | 0.978 | 0.998 | 7.3 | 124 |
+| b_mobilenetv3_frac50 | b_mobilenetv3 | 224×224 | 864 | 1e-05 | có | 917204 | 2 / 7 | 0.974 | 0.978 | 0.994 | 16.2 | 114 |
+| b_mobilenetv3_lr1e-3 | b_mobilenetv3 | 224×224 | 1729 | 0.001 | có | 917204 | 4 / 9 | 0.993 | 0.995 | 0.998 | 26.3 | 236 |
+| b_mobilenetv3_lr1e-4 | b_mobilenetv3 | 224×224 | 1729 | 0.0001 | có | 917204 | 7 / 12 | 1.000 | 1.000 | 1.000 | 26.9 | 323 |
+| b_mobilenetv3_noaug | b_mobilenetv3 | 224×224 | 1729 | 1e-05 | không | 917204 | 4 / 9 | 0.997 | 0.997 | 0.999 | 23.1 | 208 |
+| b_mobilenetv3_s1 | b_mobilenetv3 | 224×224 | 1729 | 0.001 | không | 2308 | 21 / 31 | 0.987 | 0.989 | 0.997 | 0.1 | 4 |
+| b_mobilenetv3_s1_frac25 | b_mobilenetv3 | 224×224 | 432 | 0.001 | không | 2308 | 41 / 51 | 0.974 | 0.978 | 1.000 | 0.1 | 3 |
+| b_mobilenetv3_s1_frac50 | b_mobilenetv3 | 224×224 | 864 | 0.001 | không | 2308 | 17 / 27 | 0.980 | 0.984 | 0.993 | 0.1 | 2 |
+| b_resnet50 | b_resnet50 | 224×224 | 1729 | 1e-05 | có | 14961668 | 3 / 8 | 0.998 | 0.997 | 1.000 | 91.2 | 730 |
+| b_resnet50_s1 | b_resnet50 | 224×224 | 1729 | 0.001 | không | 8196 | 10 / 20 | 0.996 | 0.997 | 1.000 | 0.2 | 4 |
+
+===== N1 =====
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794501658.136177   29555 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794501659.311784   29555 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+### N1 — Số tham số từng lớp: tính tay theo công thức so với Keras
+
+| Mô hình | Lớp | Công thức | Tính tay | model.summary() | Khớp | Ghi chú |
+|---|---|---|---|---|---|---|
+| a_lenet | conv1 | (5×5×3+1)×6 | 456 | 456 | có |  |
+| a_lenet | conv2 | (5×5×6+1)×16 | 2416 | 2416 | có |  |
+| a_lenet | fc1 | (2704+1)×120 | 324600 | 324600 | có | Flatten: 13×13×16 = 2704 |
+| a_lenet | fc2 | (120+1)×84 | 10164 | 10164 | có |  |
+| a_lenet | softmax | (84+1)×4 | 340 | 340 | có |  |
+| a_lenet | Tổng |  | 337976 | 337976 | có | đầu vào 64×64×3 |
+| a_dropout | conv1 | (5×5×3+1)×32 | 2432 | 2432 | có |  |
+| a_dropout | conv2 | (5×5×32+1)×16 | 12816 | 12816 | có |  |
+| a_dropout | fc1 | (13456+1)×128 | 1722496 | 1722496 | có | Flatten: 29×29×16 = 13456 |
+| a_dropout | fc2 | (128+1)×64 | 8256 | 8256 | có |  |
+| a_dropout | softmax | (64+1)×4 | 260 | 260 | có |  |
+| a_dropout | Tổng |  | 1746260 | 1746260 | có | đầu vào 128×128×3 |
+
+### N1 — Tổng số tham số của năm mô hình
+
+| Mô hình | Tổng số tham số | Tham số được huấn luyện |
+|---|---|---|
+| a_lenet | 337976 | 337976 |
+| a_dropout | 1746260 | 1746260 |
+| a_vgg16 | 40669252 | 25954564 |
+| b_mobilenetv3 | 941428 | giai đoạn 1: 2308; giai đoạn 2: 917204 |
+| b_resnet50 | 23595908 | giai đoạn 1: 8196; giai đoạn 2: 14961668 |
+
+===== N2 =====
+### N2 — Macro-F1 trên val theo tỉ lệ tập train được dùng
+
+| Mô hình | 25% train (432 ảnh) | 50% train (864 ảnh) | 100% train (1729 ảnh) | Tăng từ 25% lên 100% |
+|---|---|---|---|---|
+| a_lenet (LeNet, từ đầu) | 0.924 | 0.950 | 0.973 | +0.050 |
+| a_vgg16 (đóng băng) | 0.967 | 0.963 | 0.984 | +0.016 |
+| b_mobilenetv3 (fine-tune) | 0.975 | 0.974 | 0.993 | +0.018 |
+
+===== N3 =====
+### N3 — Dropout và khoảng cách train–val (40 epoch, train chấm ở chế độ suy luận)
+
+| Cấu hình | Epoch chọn / tổng | Macro-F1 val | Accuracy train (epoch chọn) | Accuracy val (epoch chọn) | Loss train (epoch cuối) | Loss val (epoch cuối) | Khoảng cách loss val − train (epoch cuối) | Loss val thấp nhất |
+|---|---|---|---|---|---|---|---|---|
+| a_dropout có Dropout(0,5) | 25 / 40 | 0.940 | 0.999 | 0.946 | 0.0022 | 0.5444 | 0.5422 | 0.2713 |
+| a_dropout không Dropout | 33 / 40 | 0.951 | 1.000 | 0.957 | 0.0000 | 0.3486 | 0.3486 | 0.1584 |
+
+===== N4 =====
+### N4 — Đóng băng (giai đoạn 1) so với fine-tune (giai đoạn 2) và ảnh hưởng của learning rate
+
+| Cấu hình | Tham số được huấn luyện | Macro-F1 val | Accuracy val | Loss val (epoch chọn) | Macro-F1 val sau epoch 1 | Macro-F1 val thấp nhất | Epoch chọn / tổng | Thời gian mỗi epoch (s) |
+|---|---|---|---|---|---|---|---|---|
+| MobileNetV3-Small, giai đoạn 1 (đóng băng thân) | 2308 | 0.987 | 0.989 | 0.0505 | 0.872 | 0.872 | 21 / 31 | 0.1 |
+| MobileNetV3-Small, giai đoạn 2, lr = 1e-5 | 917204 | 0.993 | 0.995 | 0.0203 | 0.981 | 0.978 | 12 / 17 | 20.1 |
+| MobileNetV3-Small, giai đoạn 2, lr = 1e-4 | 917204 | 1.000 | 1.000 | 0.0045 | 0.974 | 0.974 | 7 / 12 | 26.9 |
+| MobileNetV3-Small, giai đoạn 2, lr = 1e-3 | 917204 | 0.993 | 0.995 | 0.0184 | 0.964 | 0.917 | 4 / 9 | 26.3 |
+| ResNet50, giai đoạn 1 (đóng băng thân) | 8196 | 0.996 | 0.997 | 0.0269 | 0.942 | 0.942 | 10 / 20 | 0.2 |
+| ResNet50, giai đoạn 2 (mở băng conv5), lr = 1e-5 | 14961668 | 0.998 | 0.997 | 0.0140 | 0.984 | 0.984 | 3 / 8 | 91.2 |
+
+===== N5 =====
+### N5 — Tăng cường ảnh (lật, xoay ±30°, zoom ±10%) lúc huấn luyện
+
+| Cấu hình | Epoch chọn / tổng | Macro-F1 val | Accuracy train (epoch chọn) | Accuracy val (epoch chọn) | Loss train (epoch cuối) | Loss val (epoch cuối) | Khoảng cách loss val − train (epoch cuối) | Loss val thấp nhất |
+|---|---|---|---|---|---|---|---|---|
+| a_dropout, không tăng cường | 25 / 40 | 0.940 | 0.999 | 0.946 | 0.0022 | 0.5444 | 0.5422 | 0.2713 |
+| a_dropout, có tăng cường | 25 / 40 | 0.948 | 0.967 | 0.954 | 0.2613 | 0.3150 | 0.0536 | 0.1286 |
+| b_mobilenetv3 giai đoạn 2, không tăng cường | 4 / 9 | 0.997 | 0.999 | 0.997 | 0.0045 | 0.0107 | 0.0062 | 0.0107 |
+| b_mobilenetv3 giai đoạn 2, có tăng cường | 12 / 17 | 0.993 | 0.997 | 0.995 | 0.0125 | 0.0183 | 0.0058 | 0.0183 |
+
+===== N6 =====
+### N6 — So sánh hướng A với hướng B (chấm trên val; thời gian đo trên CPU 4 nhân)
+
+| Hướng | Mô hình | Biến thể được chốt | Macro-F1 val | Accuracy val | Số tham số | File mô hình (MB) | Thời gian huấn luyện (s) | Dự đoán 1 ảnh (ms, CPU) | Ghi chú |
+|---|---|---|---|---|---|---|---|---|---|
+| A | a_lenet | a_lenet | 0.973 | 0.978 | 337976 | 4.1 | 31 | 8.6 |  |
+| A | a_dropout | a_dropout_aug | 0.948 | 0.954 | 1746260 | 21.0 | 194 | 12.2 |  |
+| A | a_vgg16 | a_vgg16 | 0.984 | 0.987 | 40669252 | 370.4 | 184 | 171.6 | gồm 125 s tính đặc trưng thân đóng băng cho ảnh train |
+| B | b_mobilenetv3 | b_mobilenetv3_lr1e-4 | 1.000 | 1.000 | 941428 | 11.7 | 336 | 141.2 | gồm giai đoạn 1: 13 s |
+| B | b_resnet50 | b_resnet50 | 0.998 | 0.997 | 23595908 | 214.8 | 838 | 282.1 | gồm giai đoạn 1: 108 s |
+
+===== N7 =====
+### N7 — Feature vector thủ công so với embedding của CNN: học trên train (1729 ảnh), macro-F1 trên val (371 ảnh)
+
+| Đặc trưng | Loại | Số chiều | KNN (k=5) | LogReg |
+|---|---|---|---|---|
+| Hist HSV (8,8,8) | thủ công | 512 | 0.982 | 0.997 |
+| HOG 64×128 | thủ công | 3780 | 0.945 | 0.987 |
+| Hist H-S + HOG (ghép, chuẩn hóa từng phần) | thủ công | 3844 | 0.990 | 0.998 |
+| VGG16 ImageNet, trung bình 7×7 (chưa học trên chuối) | embedding | 512 | 0.932 | 0.986 |
+| a_vgg16, lớp Dense(256) áp chót | embedding | 256 | 0.984 | 0.982 |
+| MobileNetV3 ImageNet, sau GAP (chưa fine-tune) | embedding | 576 | 0.981 | 0.993 |
+| b_mobilenetv3_lr1e-4, sau GAP (đã fine-tune) | embedding | 576 | 1.000 | 0.996 |
+
+===== N8 =====
+{'Mô hình': 'Truyền thống: Hist HSV (8,8,8)', 'Ảnh gốc': '0.997', 'Xáo trộn 4×4': '0.997', 'V×0,6': '0.280', 'V×1,4': '0.705', 'Ảnh xám': '0.145', 'Nhiễu σ=5': '0.451', 'Nhiễu σ=10': '0.085', 'Nhiễu σ=20': '0.085', 'Che 25%': '0.076', 'Xoay −30°': '0.987', 'Xoay −15°': '0.993', 'Xoay +15°': '0.992', 'Xoay +30°': '0.994'}
+{'Mô hình': 'Truyền thống: HOG 64×128', 'Ảnh gốc': '0.983', 'Xáo trộn 4×4': '0.302', 'V×0,6': '0.984', 'V×1,4': '0.800', 'Ảnh xám': '0.981', 'Nhiễu σ=5': '0.537', 'Nhiễu σ=10': '0.461', 'Nhiễu σ=20': '0.318', 'Che 25%': '0.801', 'Xoay −30°': '0.679', 'Xoay −15°': '0.929', 'Xoay +15°': '0.886', 'Xoay +30°': '0.550'}
+{'Mô hình': 'Truyền thống: Hist H-S + HOG', 'Ảnh gốc': '0.998', 'Xáo trộn 4×4': '0.898', 'V×0,6': '0.995', 'V×1,4': '0.888', 'Ảnh xám': '0.770', 'Nhiễu σ=5': '0.706', 'Nhiễu σ=10': '0.180', 'Nhiễu σ=20': '0.101', 'Che 25%': '0.918', 'Xoay −30°': '0.978', 'Xoay −15°': '0.987', 'Xoay +15°': '0.988', 'Xoay +30°': '0.974'}
+{'Mô hình': 'Hướng A tốt nhất: a_vgg16', 'Ảnh gốc': '0.984', 'Xáo trộn 4×4': '0.118', 'V×0,6': '0.967', 'V×1,4': '0.947', 'Ảnh xám': '0.954', 'Nhiễu σ=5': '0.967', 'Nhiễu σ=10': '0.965', 'Nhiễu σ=20': '0.961', 'Che 25%': '0.751', 'Xoay −30°': '0.943', 'Xoay −15°': '0.976', 'Xoay +15°': '0.967', 'Xoay +30°': '0.942'}
+{'Mô hình': 'Hướng B tốt nhất: b_mobilenetv3_lr1e-4', 'Ảnh gốc': '1.000', 'Xáo trộn 4×4': '0.850', 'V×0,6': '0.913', 'V×1,4': '0.907', 'Ảnh xám': '0.963', 'Nhiễu σ=5': '0.997', 'Nhiễu σ=10': '0.987', 'Nhiễu σ=20': '0.953', 'Che 25%': '0.659', 'Xoay −30°': '0.993', 'Xoay −15°': '1.000', 'Xoay +15°': '0.997', 'Xoay +30°': '0.996'}
+### N8 — Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)
+
+| Mô hình | Ảnh gốc | Xáo trộn 4×4 | V×0,6 | V×1,4 | Ảnh xám | Nhiễu σ=5 | Nhiễu σ=10 | Nhiễu σ=20 | Che 25% | Xoay −30° | Xoay −15° | Xoay +15° | Xoay +30° |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Truyền thống: Hist HSV (8,8,8) | 0.997 | 0.997 | 0.280 | 0.705 | 0.145 | 0.451 | 0.085 | 0.085 | 0.076 | 0.987 | 0.993 | 0.992 | 0.994 |
+| Truyền thống: HOG 64×128 | 0.983 | 0.302 | 0.984 | 0.800 | 0.981 | 0.537 | 0.461 | 0.318 | 0.801 | 0.679 | 0.929 | 0.886 | 0.550 |
+| Truyền thống: Hist H-S + HOG | 0.998 | 0.898 | 0.995 | 0.888 | 0.770 | 0.706 | 0.180 | 0.101 | 0.918 | 0.978 | 0.987 | 0.988 | 0.974 |
+| Hướng A tốt nhất: a_vgg16 | 0.984 | 0.118 | 0.967 | 0.947 | 0.954 | 0.967 | 0.965 | 0.961 | 0.751 | 0.943 | 0.976 | 0.967 | 0.942 |
+| Hướng B tốt nhất: b_mobilenetv3_lr1e-4 | 1.000 | 0.850 | 0.913 | 0.907 | 0.963 | 0.997 | 0.987 | 0.953 | 0.659 | 0.993 | 1.000 | 0.997 | 0.996 |
+

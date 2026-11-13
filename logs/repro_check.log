@@ -1,0 +1,576 @@
+>>> python -m src.env_info
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794507309.032563    5677 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794507313.139671    5677 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+python 3.13.18
+platform Linux-6.18.44-fc-v378-x86_64-with-glibc2.39
+cpu_count 4
+ram_gb 16.5
+gpu none (chỉ dùng CPU)
+seed 42
+
+numpy==2.5.3
+pandas==3.0.5
+scikit-learn==1.9.1
+scikit-image==0.26.0
+imbalanced-learn==0.14.2
+opencv-python-headless==5.0.0
+pillow==12.3.0
+imagehash==4.3.2
+matplotlib==3.11.2
+joblib==1.6.0
+tensorflow==2.21.0
+keras==3.15.1
+gradio==6.31.0
+python-docx==1.2.0
+python-pptx==1.0.2
+>>> python -m src.split_data
+{"train": [311, 695, 356, 367], "val": [66, 150, 76, 79], "test": [67, 149, 77, 78]} {
+ "<= 0": {
+  "pairs_total": 3,
+  "pairs_same_class": 3,
+  "pairs_diff_class": 0,
+  "pairs_cross_split": 1,
+  "pairs_train_test": 0,
+  "pairs_train_val": 1,
+  "pairs_val_test": 0,
+  "test_images_with_neighbor_in_train": 0
+ },
+ "<= 2": {
+  "pairs_total": 42,
+  "pairs_same_class": 41,
+  "pairs_diff_class": 1,
+  "pairs_cross_split": 17,
+  "pairs_train_test": 7,
+  "pairs_train_val": 8,
+  "pairs_val_test": 2,
+  "test_images_with_neighbor_in_train": 7
+ },
+ "<= 4": {
+  "pairs_total": 383,
+  "pairs_same_class": 373,
+  "pairs_diff_class": 10,
+  "pairs_cross_split": 184,
+  "pairs_train_test": 83,
+  "pairs_train_val": 86,
+  "pairs_val_test": 15,
+  "test_images_with_neighbor_in_train": 44
+ },
+ "<= 6": {
+  "pairs_total": 1527,
+  "pairs_same_class": 1471,
+  "pairs_diff_class": 56,
+  "pairs_cross_split": 753,
+  "pairs_train_test": 336,
+  "pairs_train_val": 355,
+  "pairs_val_test": 62,
+  "test_images_with_neighbor_in_train": 103
+ },
+ "<= 8": {
+  "pairs_total": 4367,
+  "pairs_same_class": 4092,
+  "pairs_diff_class": 275,
+  "pairs_cross_split": 2138,
+  "pairs_train_test": 957,
+  "pairs_train_val": 960,
+  "pairs_val_test": 221,
+  "test_images_with_neighbor_in_train": 180
+ }
+}
+>>> python -m src.exp_d1
+{'Mô hình': 'hsv_hist + knn (k=1)', '(a) tăng cường rồi chia': '0.999 ± 0.001', '(b) chia rồi tăng cường train': '0.978 ± 0.010', '(c) chia theo ảnh gốc, tăng cường 2 phía': '0.978 ± 0.008', 'Thổi phồng (a)−(b)': '+0.022 ± 0.010', 'Thổi phồng (a)−(c)': '+0.021 ± 0.009', 'Macro-F1 (a)': '0.999 ± 0.001', 'Macro-F1 (b)': '0.974 ± 0.011'}
+{'Mô hình': 'hsv_hist + logreg', '(a) tăng cường rồi chia': '0.999 ± 0.001', '(b) chia rồi tăng cường train': '0.991 ± 0.002', '(c) chia theo ảnh gốc, tăng cường 2 phía': '0.990 ± 0.002', 'Thổi phồng (a)−(b)': '+0.008 ± 0.002', 'Thổi phồng (a)−(c)': '+0.009 ± 0.002', 'Macro-F1 (a)': '0.999 ± 0.001', 'Macro-F1 (b)': '0.989 ± 0.003'}
+{'Mô hình': 'hog + knn (k=1)', '(a) tăng cường rồi chia': '0.974 ± 0.003', '(b) chia rồi tăng cường train': '0.974 ± 0.003', '(c) chia theo ảnh gốc, tăng cường 2 phía': '0.970 ± 0.002', 'Thổi phồng (a)−(b)': '+0.000 ± 0.003', 'Thổi phồng (a)−(c)': '+0.005 ± 0.004', 'Macro-F1 (a)': '0.972 ± 0.003', 'Macro-F1 (b)': '0.974 ± 0.004'}
+{'Mô hình': 'hog + logreg', '(a) tăng cường rồi chia': '0.973 ± 0.006', '(b) chia rồi tăng cường train': '0.981 ± 0.003', '(c) chia theo ảnh gốc, tăng cường 2 phía': '0.973 ± 0.003', 'Thổi phồng (a)−(b)': '-0.008 ± 0.004', 'Thổi phồng (a)−(c)': '+0.000 ± 0.004', 'Macro-F1 (a)': '0.969 ± 0.006', 'Macro-F1 (b)': '0.978 ± 0.004'}
+{'Mô hình': 'edge + knn (k=1)', '(a) tăng cường rồi chia': '0.896 ± 0.012', '(b) chia rồi tăng cường train': '0.889 ± 0.014', '(c) chia theo ảnh gốc, tăng cường 2 phía': '0.862 ± 0.012', 'Thổi phồng (a)−(b)': '+0.007 ± 0.020', 'Thổi phồng (a)−(c)': '+0.034 ± 0.020', 'Macro-F1 (a)': '0.895 ± 0.013', 'Macro-F1 (b)': '0.885 ± 0.016'}
+{'Mô hình': 'hsv_hist + knn (k=1)', 'StratifiedKFold': '0.975 ± 0.005', 'GroupKFold (Hamming ≤ 2)': '0.975 ± 0.003', 'Chênh (≤ 2)': '+0.001', 'GroupKFold (Hamming ≤ 4)': '0.973 ± 0.008', 'Chênh (≤ 4)': '+0.002'}
+{'Mô hình': 'hsv_hist + logreg', 'StratifiedKFold': '0.991 ± 0.005', 'GroupKFold (Hamming ≤ 2)': '0.991 ± 0.003', 'Chênh (≤ 2)': '+0.000', 'GroupKFold (Hamming ≤ 4)': '0.993 ± 0.003', 'Chênh (≤ 4)': '-0.001'}
+{'Mô hình': 'hog + knn (k=1)', 'StratifiedKFold': '0.967 ± 0.011', 'GroupKFold (Hamming ≤ 2)': '0.968 ± 0.004', 'Chênh (≤ 2)': '-0.002', 'GroupKFold (Hamming ≤ 4)': '0.970 ± 0.005', 'Chênh (≤ 4)': '-0.004'}
+{'Mô hình': 'hog + logreg', 'StratifiedKFold': '0.985 ± 0.004', 'GroupKFold (Hamming ≤ 2)': '0.986 ± 0.006', 'Chênh (≤ 2)': '-0.000', 'GroupKFold (Hamming ≤ 4)': '0.986 ± 0.005', 'Chênh (≤ 4)': '-0.001'}
+{'Mô hình': 'edge + knn (k=1)', 'StratifiedKFold': '0.902 ± 0.019', 'GroupKFold (Hamming ≤ 2)': '0.902 ± 0.015', 'Chênh (≤ 2)': '-0.000', 'GroupKFold (Hamming ≤ 4)': '0.909 ± 0.007', 'Chênh (≤ 4)': '-0.007'}
+>>> python -m src.exp_color
+===== M1 =====
+### M1 — Xáo trộn lưới 4×4 trên ảnh chấm
+
+| Đặc trưng | Bộ phân lớp | Macro-F1 ảnh gốc | Macro-F1 ảnh xáo trộn 4×4 | Độ sụt |
+|---|---|---|---|---|
+| Hist RGB (3×32) | KNN (k=5) | 0.964 ± 0.012 | 0.964 ± 0.012 | +0.000 ± 0.000 |
+| Hist RGB (3×32) | LogReg | 0.976 ± 0.013 | 0.976 ± 0.013 | +0.000 ± 0.000 |
+| Hist HSV (8,8,8) | KNN (k=5) | 0.965 ± 0.014 | 0.965 ± 0.014 | +0.000 ± 0.000 |
+| Hist HSV (8,8,8) | LogReg | 0.991 ± 0.005 | 0.991 ± 0.005 | +0.000 ± 0.000 |
+| Moment màu | KNN (k=5) | 0.972 ± 0.008 | 0.972 ± 0.008 | +0.000 ± 0.000 |
+| Moment màu | LogReg | 0.908 ± 0.009 | 0.908 ± 0.009 | +0.000 ± 0.000 |
+| CCV (64 màu) | KNN (k=5) | 0.946 ± 0.011 | 0.864 ± 0.018 | +0.082 ± 0.015 |
+| CCV (64 màu) | LogReg | 0.975 ± 0.006 | 0.922 ± 0.011 | +0.053 ± 0.009 |
+| Cạnh Sobel | KNN (k=5) | 0.890 ± 0.019 | 0.231 ± 0.021 | +0.658 ± 0.028 |
+| Cạnh Sobel | LogReg | 0.894 ± 0.008 | 0.201 ± 0.040 | +0.692 ± 0.042 |
+| HOG 64×128 | KNN (k=5) | 0.946 ± 0.007 | 0.260 ± 0.017 | +0.687 ± 0.011 |
+| HOG 64×128 | LogReg | 0.985 ± 0.004 | 0.287 ± 0.020 | +0.699 ± 0.024 |
+
+===== M2 =====
+### M2 — Đổi độ sáng (nhân kênh V) trên ảnh chấm; macro-F1 5-fold
+
+| Đặc trưng | Bộ phân lớp | Ảnh gốc | V×0,6 | Sụt (V×0,6) | V×1,4 | Sụt (V×1,4) |
+|---|---|---|---|---|---|---|
+| Hist RGB (3×32) | KNN (k=5) | 0.964 ± 0.012 | 0.092 ± 0.002 | +0.873 ± 0.013 | 0.205 ± 0.019 | +0.760 ± 0.024 |
+| Hist RGB (3×32) | LogReg | 0.976 ± 0.013 | 0.212 ± 0.054 | +0.763 ± 0.064 | 0.279 ± 0.038 | +0.696 ± 0.036 |
+| Hist HSV (8,8,8) | KNN (k=5) | 0.965 ± 0.014 | 0.302 ± 0.042 | +0.663 ± 0.043 | 0.589 ± 0.020 | +0.376 ± 0.025 |
+| Hist HSV (8,8,8) | LogReg | 0.991 ± 0.005 | 0.318 ± 0.035 | +0.673 ± 0.035 | 0.662 ± 0.004 | +0.329 ± 0.009 |
+| Hist H-S (8,8) | KNN (k=5) | 0.976 ± 0.006 | 0.975 ± 0.009 | +0.000 ± 0.008 | 0.975 ± 0.006 | +0.001 ± 0.002 |
+| Hist H-S (8,8) | LogReg | 0.985 ± 0.008 | 0.959 ± 0.014 | +0.027 ± 0.011 | 0.974 ± 0.007 | +0.011 ± 0.004 |
+
+===== M3 =====
+### M3 — Quét số bin; macro-F1 5-fold
+
+| Đặc trưng | Số bin mỗi kênh | Số chiều | KNN (k=5) | LogReg | Tỉ lệ phần tử bằng 0 |
+|---|---|---|---|---|---|
+| Hist RGB từng kênh | 4 | 12 | 0.936 ± 0.015 | 0.914 ± 0.015 | 0.00 |
+| Hist RGB từng kênh | 8 | 24 | 0.966 ± 0.010 | 0.968 ± 0.007 | 0.03 |
+| Hist RGB từng kênh | 16 | 48 | 0.969 ± 0.011 | 0.979 ± 0.012 | 0.06 |
+| Hist RGB từng kênh | 32 | 96 | 0.964 ± 0.012 | 0.976 ± 0.013 | 0.08 |
+| Hist RGB từng kênh | 64 | 192 | 0.963 ± 0.015 | 0.977 ± 0.012 | 0.09 |
+| Hist RGB từng kênh | 256 | 768 | 0.962 ± 0.015 | 0.975 ± 0.011 | 0.12 |
+| Hist HSV 3 chiều | 2 | 8 | 0.932 ± 0.011 | 0.885 ± 0.012 | 0.20 |
+| Hist HSV 3 chiều | 4 | 64 | 0.963 ± 0.009 | 0.965 ± 0.012 | 0.55 |
+| Hist HSV 3 chiều | 8 | 512 | 0.965 ± 0.014 | 0.991 ± 0.005 | 0.72 |
+| Hist HSV 3 chiều | 16 | 4096 | 0.917 ± 0.015 | 0.992 ± 0.004 | 0.87 |
+
+===== M4 =====
+### M4 — So sánh các đặc trưng màu: macro-F1 5-fold, số chiều, thời gian
+
+| Đặc trưng | Số chiều | Rút đặc trưng (ms/ảnh) | KNN (k=5) | Huấn luyện KNN (k=5) (s) | Dự đoán KNN (k=5) (ms/ảnh) | LogReg | Huấn luyện LogReg (s) | Dự đoán LogReg (ms/ảnh) | Linear SVM |
+|---|---|---|---|---|---|---|---|---|---|
+| Hist RGB (3×32) | 96 | 0.15 | 0.964 ± 0.012 | 0.003 | 0.010 | 0.976 ± 0.013 | 0.038 | 0.002 | 0.960 ± 0.012 |
+| Hist HSV (8,8,8) | 512 | 0.23 | 0.965 ± 0.014 | 0.008 | 0.024 | 0.991 ± 0.005 | 0.774 | 0.007 | 0.989 ± 0.008 |
+| Hist H-S (8,8) | 64 | 0.20 | 0.976 ± 0.006 | 0.002 | 0.009 | 0.985 ± 0.008 | 0.017 | 0.001 | 0.958 ± 0.007 |
+| Moment màu | 9 | 4.04 | 0.972 ± 0.008 | 0.002 | 0.007 | 0.908 ± 0.009 | 0.017 | 0.001 | 0.838 ± 0.011 |
+| Màu chủ đạo (k=3) | 12 | 1.58 | 0.945 ± 0.005 | 0.002 | 0.007 | 0.899 ± 0.009 | 0.018 | 0.001 | 0.826 ± 0.013 |
+| CCV (64 màu) | 128 | 1.90 | 0.946 ± 0.011 | 0.003 | 0.012 | 0.975 ± 0.006 | 0.016 | 0.001 | 0.965 ± 0.014 |
+| Hist 64 màu | 64 | 0.50 | 0.966 ± 0.010 | 0.002 | 0.008 | 0.968 ± 0.008 | 0.014 | 0.001 | 0.945 ± 0.020 |
+
+===== M5 =====
+### M5 — CCV so với histogram cùng mức lượng tử hóa (64 màu); macro-F1 5-fold
+
+| Đặc trưng | Số chiều | Bộ phân lớp | Ảnh gốc | Xáo trộn 4×4 | Độ sụt |
+|---|---|---|---|---|---|
+| Hist 64 màu | 64 | KNN (k=5) | 0.966 ± 0.010 | 0.962 ± 0.008 | +0.003 ± 0.004 |
+| Hist 64 màu | 64 | LogReg | 0.968 ± 0.008 | 0.966 ± 0.009 | +0.002 ± 0.004 |
+| CCV (64 màu) | 128 | KNN (k=5) | 0.946 ± 0.011 | 0.864 ± 0.018 | +0.082 ± 0.015 |
+| CCV (64 màu) | 128 | LogReg | 0.975 ± 0.006 | 0.922 ± 0.011 | +0.053 ± 0.009 |
+ {'quant_hist': 0.018985217437148094, 'ccv': 0.14382536709308624}
+===== M6 =====
+### M6 — Bỏ thông tin màu (ảnh xám); macro-F1 5-fold
+
+| Đặc trưng | Bộ phân lớp | Học màu, chấm màu | Học màu, chấm xám | Học xám, chấm xám | Sụt khi bỏ màu (học lại) |
+|---|---|---|---|---|---|
+| Hist RGB (3×32) | KNN (k=5) | 0.964 ± 0.012 | 0.631 ± 0.026 | 0.927 ± 0.015 | +0.038 |
+| Hist RGB (3×32) | LogReg | 0.976 ± 0.013 | 0.456 ± 0.030 | 0.865 ± 0.012 | +0.111 |
+| Hist HSV (8,8,8) | KNN (k=5) | 0.965 ± 0.014 | 0.121 ± 0.021 | 0.912 ± 0.020 | +0.052 |
+| Hist HSV (8,8,8) | LogReg | 0.991 ± 0.005 | 0.154 ± 0.022 | 0.804 ± 0.010 | +0.187 |
+| Moment màu | KNN (k=5) | 0.972 ± 0.008 | 0.120 ± 0.041 | 0.748 ± 0.038 | +0.223 |
+| Moment màu | LogReg | 0.908 ± 0.009 | 0.320 ± 0.063 | 0.676 ± 0.018 | +0.232 |
+| CCV (64 màu) | KNN (k=5) | 0.946 ± 0.011 | 0.403 ± 0.014 | 0.782 ± 0.028 | +0.164 |
+| CCV (64 màu) | LogReg | 0.975 ± 0.006 | 0.292 ± 0.035 | 0.762 ± 0.020 | +0.213 |
+| Cạnh Sobel | KNN (k=5) | 0.890 ± 0.019 | 0.890 ± 0.019 | 0.890 ± 0.019 | +0.000 |
+| Cạnh Sobel | LogReg | 0.894 ± 0.008 | 0.894 ± 0.008 | 0.894 ± 0.008 | +0.000 |
+| HOG 64×128 | KNN (k=5) | 0.946 ± 0.007 | 0.946 ± 0.012 | 0.945 ± 0.012 | +0.001 |
+| HOG 64×128 | LogReg | 0.985 ± 0.004 | 0.987 ± 0.006 | 0.986 ± 0.005 | -0.001 |
+| HOG 64×128 (màu, kênh gradient lớn nhất) | KNN (k=5) | 0.944 ± 0.013 | 0.943 ± 0.012 | 0.945 ± 0.012 | -0.001 |
+| HOG 64×128 (màu, kênh gradient lớn nhất) | LogReg | 0.982 ± 0.005 | 0.984 ± 0.005 | 0.986 ± 0.005 | -0.005 |
+
+>>> python -m src.exp_classifier
+===== P1 =====
+### P1 — Quy tắc k = số lớp + 1 so với k chọn bằng cross-validation
+
+| Đặc trưng | k = số lớp + 1 = 5 | k tốt nhất theo CV | Macro-F1 tại k tốt nhất | Chênh so với k=5 | k=1 | k=31 |
+|---|---|---|---|---|---|---|
+| Moment màu (9 chiều) | 0.972 ± 0.008 | 1 | 0.977 ± 0.003 | +0.006 | 0.977 ± 0.003 | 0.937 ± 0.012 |
+| Hist HSV (512 chiều) | 0.965 ± 0.014 | 1 | 0.975 ± 0.005 | +0.011 | 0.975 ± 0.005 | 0.867 ± 0.026 |
+| HOG 64×128 (3780 chiều) | 0.946 ± 0.007 | 1 | 0.967 ± 0.011 | +0.020 | 0.967 ± 0.011 | 0.871 ± 0.012 |
+
+===== P2 =====
+### P2 — KNN (k=5) theo độ đo và cách chuẩn hóa; macro-F1 5-fold
+
+| Độ đo | Chuẩn hóa | Moment màu (9 chiều) | Hist HSV (512 chiều) | HOG 64×128 (3780 chiều) |
+|---|---|---|---|---|
+| Euclidean | không | 0.977 ± 0.005 | 0.953 ± 0.006 | 0.954 ± 0.008 |
+| Euclidean | vector đơn vị (L2) | 0.970 ± 0.005 | 0.936 ± 0.011 | 0.954 ± 0.008 |
+| Euclidean | z-score | 0.972 ± 0.008 | 0.965 ± 0.014 | 0.946 ± 0.007 |
+| Manhattan | không | 0.977 ± 0.004 | 0.964 ± 0.009 | 0.978 ± 0.007 |
+| Manhattan | vector đơn vị (L2) | 0.967 ± 0.006 | 0.956 ± 0.013 | 0.978 ± 0.007 |
+| Manhattan | z-score | 0.974 ± 0.008 | 0.961 ± 0.009 | 0.975 ± 0.010 |
+| Cosine | không | 0.970 ± 0.005 | 0.936 ± 0.011 | 0.954 ± 0.008 |
+| Cosine | vector đơn vị (L2) | 0.970 ± 0.005 | 0.936 ± 0.011 | 0.954 ± 0.008 |
+| Hellinger | L1 rồi lấy căn | không áp dụng (có giá trị âm) | 0.976 ± 0.015 | 0.957 ± 0.011 |
+
+### P2 — Euclidean so với cosine: tỉ lệ ảnh truy vấn có cùng 10 láng giềng gần nhất (420 ảnh truy vấn, 1680 ảnh tham chiếu)
+
+| Đặc trưng | Đã chuẩn hóa đơn vị: cùng 10 láng giềng, cùng thứ tự | Đã chuẩn hóa đơn vị: cùng tập 10 láng giềng | Chưa chuẩn hóa: cùng tập 10 láng giềng |
+|---|---|---|---|
+| Moment màu (9 chiều) | 99.5% | 100.0% | 11.2% |
+| Hist HSV (512 chiều) | 100.0% | 100.0% | 18.1% |
+| HOG 64×128 (3780 chiều) | 100.0% | 100.0% | 99.3% |
+
+===== P3 =====
+### P3 — Bình chọn đa số (uniform) so với ưu tiên điểm gần (distance); 5-fold
+
+| Đặc trưng | k | Macro-F1 uniform | Macro-F1 distance | Recall Bangla Kola (lớp ít ảnh nhất) uniform | Recall Bangla Kola distance | Recall thấp nhất trong 4 lớp uniform → distance |
+|---|---|---|---|---|---|---|
+| Moment màu (9 chiều) | 5 | 0.972 ± 0.008 | 0.972 ± 0.008 | 0.984 ± 0.013 | 0.984 ± 0.013 | 0.922 → 0.924 |
+| Moment màu (9 chiều) | 15 | 0.955 ± 0.008 | 0.961 ± 0.006 | 0.942 ± 0.026 | 0.968 ± 0.018 | 0.888 → 0.888 |
+| Hist HSV (512 chiều) | 5 | 0.965 ± 0.014 | 0.966 ± 0.013 | 0.981 ± 0.007 | 0.981 ± 0.007 | 0.879 → 0.888 |
+| Hist HSV (512 chiều) | 15 | 0.931 ± 0.013 | 0.933 ± 0.014 | 0.952 ± 0.018 | 0.955 ± 0.022 | 0.756 → 0.765 |
+| HOG 64×128 (3780 chiều) | 5 | 0.946 ± 0.007 | 0.949 ± 0.008 | 0.955 ± 0.021 | 0.952 ± 0.026 | 0.816 → 0.830 |
+| HOG 64×128 (3780 chiều) | 15 | 0.912 ± 0.011 | 0.914 ± 0.010 | 0.920 ± 0.033 | 0.923 ± 0.036 | 0.697 → 0.706 |
+
+===== P4 =====
+### P4 (phụ) — Đặc trưng 9 chiều, tập tham chiếu nhân bản kèm nhiễu Gauss σ=0,05 (dữ liệu tổng hợp, chỉ để đo thời gian)
+
+| Số điểm tham chiếu | brute: dự đoán 420 ảnh (ms) | kd_tree: dự đoán 420 ảnh (ms) | ball_tree: dự đoán 420 ảnh (ms) |
+|---|---|---|---|
+| 1680 | 1.9 | 3.7 | 4.5 |
+| 8400 | 21.3 | 5.8 | 8.4 |
+| 33600 | 111.3 | 10.6 | 24.0 |
+| 100800 | 487.0 | 20.6 | 68.3 |
+
+### P4 — Brute Force, K-D Tree, Ball Tree (k=5, 1680 ảnh tham chiếu, 420 ảnh truy vấn, 1 luồng, trung vị 3 lần)
+
+| Đặc trưng | brute: dựng (ms) | brute: dự đoán 420 ảnh (ms) | kd_tree: dựng (ms) | kd_tree: dự đoán 420 ảnh (ms) | kd_tree: kết quả trùng brute | ball_tree: dựng (ms) | ball_tree: dự đoán 420 ảnh (ms) | ball_tree: kết quả trùng brute |
+|---|---|---|---|---|---|---|---|---|
+| Moment màu (9 chiều) | 0.7 | 1.8 | 1.5 | 4.0 | có | 1.6 | 4.9 | có |
+| Hist HSV (512 chiều) | 1.5 | 8.1 | 38.1 | 363.7 | có | 32.7 | 271.6 | có |
+| HOG 64×128 (3780 chiều) | 7.3 | 63.3 | 276.2 | 3795.9 | có | 303.9 | 3196.5 | có |
+
+===== P5 =====
+### P5 — Thời gian huấn luyện và dự đoán (trung bình mỗi fold, đặc trưng đã rút sẵn)
+
+| Đặc trưng | Bộ phân lớp | Huấn luyện 1680 ảnh (ms) | Dự đoán 420 ảnh (ms) | Dự đoán (ms/ảnh) | Macro-F1 |
+|---|---|---|---|---|---|
+| Moment màu (9 chiều) | KNN (k=5) | 2.2 | 3.9 | 0.0094 | 0.972 ± 0.008 |
+| Moment màu (9 chiều) | Logistic Regression | 14.7 | 0.4 | 0.0010 | 0.908 ± 0.009 |
+| Moment màu (9 chiều) | Linear SVM | 5.0 | 0.4 | 0.0011 | 0.838 ± 0.011 |
+| Hist HSV (512 chiều) | KNN (k=5) | 8.0 | 21.7 | 0.0518 | 0.965 ± 0.014 |
+| Hist HSV (512 chiều) | Logistic Regression | 479.1 | 4.0 | 0.0095 | 0.991 ± 0.005 |
+| Hist HSV (512 chiều) | Linear SVM | 464.2 | 2.7 | 0.0065 | 0.989 ± 0.008 |
+| HOG 64×128 (3780 chiều) | KNN (k=5) | 70.7 | 84.6 | 0.2014 | 0.946 ± 0.007 |
+| HOG 64×128 (3780 chiều) | Logistic Regression | 1019.2 | 13.8 | 0.0328 | 0.985 ± 0.004 |
+| HOG 64×128 (3780 chiều) | Linear SVM | 2211.7 | 8.3 | 0.0197 | 0.982 ± 0.004 |
+
+### P6 — Bộ phân lớp tuyến tính so với KNN theo số chiều của đặc trưng; macro-F1 5-fold
+
+| Đặc trưng | KNN (k=5) | Logistic Regression | Linear SVM | LogReg − KNN |
+|---|---|---|---|---|
+| Moment màu (9 chiều) | 0.972 ± 0.008 | 0.908 ± 0.009 | 0.838 ± 0.011 | -0.064 |
+| Hist HSV (512 chiều) | 0.965 ± 0.014 | 0.991 ± 0.005 | 0.989 ± 0.008 | +0.027 |
+| HOG 64×128 (3780 chiều) | 0.946 ± 0.007 | 0.985 ± 0.004 | 0.982 ± 0.004 | +0.039 |
+
+>>> python -m src.exp_shape
+===== C1 =====
+### C1 — Vector cạnh (512 chiều) theo toán tử; nhiễu Gauss trên ảnh chấm; macro-F1 5-fold
+
+| Toán tử | Bộ phân lớp | Ảnh gốc | Sụt σ=2 | Sụt σ=5 | Sụt σ=10 | Sụt σ=20 |
+|---|---|---|---|---|---|---|
+| Roberts (2×2) | KNN (k=5) | 0.901 ± 0.019 | +0.461 ± 0.017 | +0.789 ± 0.019 | +0.813 ± 0.019 | +0.813 ± 0.019 |
+| Roberts (2×2) | LogReg | 0.932 ± 0.011 | +0.669 ± 0.015 | +0.839 ± 0.007 | +0.844 ± 0.010 | +0.844 ± 0.010 |
+| Prewitt (3×3) | KNN (k=5) | 0.890 ± 0.019 | +0.026 ± 0.020 | +0.523 ± 0.025 | +0.799 ± 0.014 | +0.803 ± 0.019 |
+| Prewitt (3×3) | LogReg | 0.892 ± 0.007 | +0.198 ± 0.019 | +0.768 ± 0.013 | +0.805 ± 0.007 | +0.805 ± 0.007 |
+| Sobel (3×3) | KNN (k=5) | 0.890 ± 0.019 | +0.023 ± 0.022 | +0.535 ± 0.021 | +0.800 ± 0.017 | +0.802 ± 0.019 |
+| Sobel (3×3) | LogReg | 0.894 ± 0.008 | +0.226 ± 0.020 | +0.776 ± 0.013 | +0.806 ± 0.007 | +0.806 ± 0.007 |
+| Laplacian (bậc hai) | KNN (k=5) | 0.886 ± 0.014 | +0.601 ± 0.008 | +0.797 ± 0.014 | +0.798 ± 0.014 | +0.798 ± 0.014 |
+| Laplacian (bậc hai) | LogReg | 0.914 ± 0.015 | +0.826 ± 0.015 | +0.827 ± 0.015 | +0.827 ± 0.015 | +0.827 ± 0.015 |
+
+### C1 — Thay đổi tương đối của vector đặc trưng khi thêm nhiễu (‖f(nhiễu) − f(gốc)‖ / ‖f(gốc)‖)
+
+| Toán tử | σ=2 | σ=5 | σ=10 | σ=20 |
+|---|---|---|---|---|
+| Roberts (2×2) | 0.35 | 1.00 | 2.14 | 4.47 |
+| Prewitt (3×3) | 0.14 | 0.43 | 0.98 | 2.11 |
+| Sobel (3×3) | 0.15 | 0.46 | 1.03 | 2.22 |
+| Laplacian (bậc hai) | 0.78 | 2.16 | 4.55 | 9.37 |
+
+===== C2 =====
+### C2 — Thay đổi tương đối của vector HOG khi đổi độ sáng
+
+| Đặc trưng | Thay đổi tương đối của vector (V×0,6) | Thay đổi tương đối của vector (V×1,4) |
+|---|---|---|
+| HOG, chuẩn hóa block L2 | 0.21 | 0.60 |
+| HOG, không chuẩn hóa block | 0.40 | 0.28 |
+
+### C2 — Bão hòa và vùng phẳng khi đổi độ sáng (tập train+val)
+
+| Ảnh | Tỉ lệ cell gần như không có gradient | Tỉ lệ điểm ảnh bão hòa (kênh lớn nhất = 255) |
+|---|---|---|
+| Ảnh gốc | 0.002 | 0.005 |
+| V×0,6 | 0.003 | 0.000 |
+| V×1,4 | 0.141 | 0.687 |
+
+### C2 — Đổi độ sáng (nhân kênh V) với HOG có và không chuẩn hóa block, so với histogram màu; macro-F1 5-fold
+
+| Đặc trưng | Số chiều | Bộ phân lớp | Ảnh gốc | Sụt (V×0,6) | Sụt (V×1,4) |
+|---|---|---|---|---|---|
+| HOG, chuẩn hóa block L2 | 3780 | KNN (k=5) | 0.946 ± 0.007 | +0.009 ± 0.007 | +0.163 ± 0.008 |
+| HOG, chuẩn hóa block L2 | 3780 | LogReg | 0.985 ± 0.004 | +0.004 ± 0.004 | +0.215 ± 0.033 |
+| HOG, không chuẩn hóa block | 1152 | KNN (k=5) | 0.845 ± 0.015 | +0.394 ± 0.023 | -0.032 ± 0.011 |
+| HOG, không chuẩn hóa block | 1152 | LogReg | 0.960 ± 0.005 | +0.080 ± 0.009 | +0.057 ± 0.006 |
+| Hist RGB (3×32) | 96 | KNN (k=5) | 0.964 ± 0.012 | +0.873 ± 0.013 | +0.760 ± 0.024 |
+| Hist RGB (3×32) | 96 | LogReg | 0.976 ± 0.013 | +0.763 ± 0.064 | +0.696 ± 0.036 |
+| Hist HSV (8,8,8) | 512 | KNN (k=5) | 0.965 ± 0.014 | +0.663 ± 0.043 | +0.376 ± 0.025 |
+| Hist HSV (8,8,8) | 512 | LogReg | 0.991 ± 0.005 | +0.673 ± 0.035 | +0.329 ± 0.009 |
+| Hist H-S (8,8) | 64 | KNN (k=5) | 0.976 ± 0.006 | +0.000 ± 0.008 | +0.001 ± 0.002 |
+| Hist H-S (8,8) | 64 | LogReg | 0.985 ± 0.008 | +0.027 ± 0.011 | +0.011 ± 0.004 |
+
+===== C3 =====
+### C3 — Quét tham số HOG (ảnh xám, block 2×2 cell, chuẩn hóa L2, chia phiếu cho hai bin gần nhất); macro-F1 5-fold
+
+| Kích thước ảnh (rộng×cao) | Cell | Số bin | Số chiều | Rút đặc trưng (ms/ảnh) | KNN (k=5) | LogReg | Linear SVM |
+|---|---|---|---|---|---|---|---|
+| 64×128 | 8×8 | 6 | 2520 | 0.76 | 0.954 ± 0.007 | 0.982 ± 0.007 | 0.977 ± 0.003 |
+| 64×128 | 8×8 | 9 | 3780 | 0.94 | 0.946 ± 0.007 | 0.985 ± 0.004 | 0.982 ± 0.004 |
+| 64×128 | 8×8 | 12 | 5040 | 1.31 | 0.939 ± 0.011 | 0.985 ± 0.006 | 0.979 ± 0.006 |
+| 64×128 | 16×16 | 6 | 504 | 0.96 | 0.920 ± 0.010 | 0.959 ± 0.006 | 0.959 ± 0.008 |
+| 64×128 | 16×16 | 9 | 756 | 0.83 | 0.911 ± 0.010 | 0.959 ± 0.005 | 0.958 ± 0.009 |
+| 64×128 | 16×16 | 12 | 1008 | 1.00 | 0.910 ± 0.008 | 0.960 ± 0.006 | 0.959 ± 0.009 |
+| 128×128 | 8×8 | 6 | 5400 | 1.86 | 0.952 ± 0.013 | 0.986 ± 0.005 | 0.978 ± 0.006 |
+| 128×128 | 8×8 | 9 | 8100 | 1.88 | 0.942 ± 0.017 | 0.986 ± 0.004 | 0.982 ± 0.007 |
+| 128×128 | 8×8 | 12 | 10800 | 2.32 | 0.941 ± 0.013 | 0.985 ± 0.005 | 0.978 ± 0.010 |
+| 128×128 | 16×16 | 6 | 1176 | 1.35 | 0.961 ± 0.007 | 0.983 ± 0.007 | 0.981 ± 0.005 |
+| 128×128 | 16×16 | 9 | 1764 | 1.96 | 0.951 ± 0.014 | 0.982 ± 0.007 | 0.981 ± 0.011 |
+| 128×128 | 16×16 | 12 | 2352 | 1.89 | 0.954 ± 0.011 | 0.984 ± 0.006 | 0.981 ± 0.010 |
+
+### C3 — Biến thể cài đặt của HOG 64×128
+
+| Biến thể | KNN (k=5) | LogReg | Linear SVM |
+|---|---|---|---|
+| 64×128, cell 8, 9 bin, phiếu cứng (như skimage) | 0.928 ± 0.009 | 0.985 ± 0.004 | 0.976 ± 0.003 |
+| 64×128, cell 8, 9 bin, ảnh màu (kênh gradient lớn nhất) | 0.944 ± 0.013 | 0.982 ± 0.005 | 0.977 ± 0.006 |
+
+===== C4 =====
+### C4 (phụ) — Histogram dưới phép che 25% theo cách chuẩn hóa của KNN
+
+| Đặc trưng | KNN (k=5), chuẩn hóa | Ảnh gốc | Che 25% | Độ sụt |
+|---|---|---|---|---|
+| Hist RGB (3×32) | z-score | 0.964 ± 0.012 | 0.085 ± 0.000 | +0.879 ± 0.012 |
+| Hist RGB (3×32) | không chuẩn hóa | 0.952 ± 0.013 | 0.859 ± 0.024 | +0.093 ± 0.027 |
+| Hist RGB (3×32) | Hellinger | 0.974 ± 0.011 | 0.870 ± 0.028 | +0.104 ± 0.026 |
+| Hist HSV (8,8,8) | z-score | 0.965 ± 0.014 | 0.077 ± 0.003 | +0.887 ± 0.013 |
+| Hist HSV (8,8,8) | không chuẩn hóa | 0.953 ± 0.006 | 0.920 ± 0.021 | +0.032 ± 0.019 |
+| Hist HSV (8,8,8) | Hellinger | 0.976 ± 0.015 | 0.964 ± 0.013 | +0.012 ± 0.002 |
+| Hist H-S (8,8) | z-score | 0.976 ± 0.006 | 0.843 ± 0.030 | +0.133 ± 0.029 |
+| Hist H-S (8,8) | không chuẩn hóa | 0.947 ± 0.011 | 0.556 ± 0.103 | +0.391 ± 0.107 |
+| Hist H-S (8,8) | Hellinger | 0.979 ± 0.005 | 0.605 ± 0.136 | +0.374 ± 0.138 |
+
+### C4 — Che một hình vuông 25% diện tích (tô đen, vị trí ngẫu nhiên) trên ảnh chấm; macro-F1 5-fold
+
+| Đặc trưng | Loại | Bộ phân lớp | Ảnh gốc | Che 25% | Độ sụt |
+|---|---|---|---|---|---|
+| Hist RGB (3×32) | toàn cục | KNN (k=5) | 0.964 ± 0.012 | 0.085 ± 0.000 | +0.879 ± 0.012 |
+| Hist RGB (3×32) | toàn cục | LogReg | 0.976 ± 0.013 | 0.085 ± 0.000 | +0.890 ± 0.014 |
+| Hist HSV (8,8,8) | toàn cục | KNN (k=5) | 0.965 ± 0.014 | 0.077 ± 0.003 | +0.887 ± 0.013 |
+| Hist HSV (8,8,8) | toàn cục | LogReg | 0.991 ± 0.005 | 0.222 ± 0.113 | +0.769 ± 0.117 |
+| Hist H-S (8,8) | toàn cục | KNN (k=5) | 0.976 ± 0.006 | 0.843 ± 0.030 | +0.133 ± 0.029 |
+| Hist H-S (8,8) | toàn cục | LogReg | 0.985 ± 0.008 | 0.762 ± 0.028 | +0.224 ± 0.021 |
+| Moment màu | toàn cục | KNN (k=5) | 0.972 ± 0.008 | 0.312 ± 0.042 | +0.659 ± 0.043 |
+| Moment màu | toàn cục | LogReg | 0.908 ± 0.009 | 0.227 ± 0.006 | +0.681 ± 0.010 |
+| HOG 64×128 | cục bộ ghép lại | KNN (k=5) | 0.946 ± 0.007 | 0.784 ± 0.030 | +0.162 ± 0.028 |
+| HOG 64×128 | cục bộ ghép lại | LogReg | 0.985 ± 0.004 | 0.794 ± 0.027 | +0.192 ± 0.026 |
+| Cạnh Sobel | cục bộ ghép lại | KNN (k=5) | 0.890 ± 0.019 | 0.322 ± 0.006 | +0.568 ± 0.023 |
+| Cạnh Sobel | cục bộ ghép lại | LogReg | 0.894 ± 0.008 | 0.272 ± 0.014 | +0.621 ± 0.017 |
+
+===== C5 =====
+### C5 — Ghép đặc trưng màu và HOG; macro-F1 5-fold
+
+| Đặc trưng | Cách ghép | Số chiều | KNN (k=5) | LogReg | Linear SVM |
+|---|---|---|---|---|---|
+| Hist HSV (8,8,8) | — | 512 | 0.965 ± 0.014 | 0.991 ± 0.005 | 0.989 ± 0.008 |
+| Hist H-S (8,8) | — | 64 | 0.976 ± 0.006 | 0.985 ± 0.008 | 0.958 ± 0.007 |
+| HOG 64×128 | — | 3780 | 0.946 ± 0.007 | 0.985 ± 0.004 | 0.982 ± 0.004 |
+| Hist HSV + HOG | ghép thẳng, z-score chung | 4292 | 0.943 ± 0.008 | 0.993 ± 0.003 | 0.991 ± 0.003 |
+| Hist HSV + HOG | chuẩn hóa từng phần rồi ghép | 4292 | 0.956 ± 0.012 | 0.993 ± 0.004 | 0.961 ± 0.007 |
+| Hist H-S + HOG | ghép thẳng, z-score chung | 3844 | 0.948 ± 0.009 | 0.989 ± 0.003 | 0.989 ± 0.003 |
+| Hist H-S + HOG | chuẩn hóa từng phần rồi ghép | 3844 | 0.977 ± 0.005 | 0.992 ± 0.003 | 0.966 ± 0.014 |
+| Hist HSV + moment + HOG | ghép thẳng, z-score chung | 4301 | 0.945 ± 0.008 | 0.993 ± 0.003 | 0.992 ± 0.003 |
+| Hist HSV + moment + HOG | chuẩn hóa từng phần rồi ghép | 4301 | 0.985 ± 0.009 | 0.991 ± 0.004 | 0.959 ± 0.007 |
+
+>>> python -m src.exp_select
+màu   Hist HSV (8,8,8)   KNN k=1, Euclidean, ưu tiên điểm gần                    0.975 ± 0.005
+màu   Hist HSV (8,8,8)   KNN k=1, Manhattan, ưu tiên điểm gần                    0.982 ± 0.004
+màu   Hist HSV (8,8,8)   KNN k=1, Hellinger, ưu tiên điểm gần                    0.987 ± 0.006
+màu   Hist HSV (8,8,8)   KNN k=3, Euclidean, ưu tiên điểm gần                    0.971 ± 0.011
+màu   Hist HSV (8,8,8)   KNN k=3, Manhattan, ưu tiên điểm gần                    0.971 ± 0.009
+màu   Hist HSV (8,8,8)   KNN k=3, Hellinger, ưu tiên điểm gần                    0.980 ± 0.013
+màu   Hist HSV (8,8,8)   KNN k=5, Euclidean, ưu tiên điểm gần                    0.966 ± 0.013
+màu   Hist HSV (8,8,8)   KNN k=5, Manhattan, ưu tiên điểm gần                    0.964 ± 0.009
+màu   Hist HSV (8,8,8)   KNN k=5, Hellinger, ưu tiên điểm gần                    0.976 ± 0.014
+màu   Hist HSV (8,8,8)   LogReg C=0.01                                           0.987 ± 0.008
+màu   Hist HSV (8,8,8)   LogReg C=0.1                                            0.991 ± 0.005
+màu   Hist HSV (8,8,8)   LogReg C=1                                              0.991 ± 0.005
+màu   Hist HSV (8,8,8)   LogReg C=10                                             0.990 ± 0.004
+màu   Hist HSV (8,8,8)   Linear SVM C=0.001                                      0.984 ± 0.011
+màu   Hist HSV (8,8,8)   Linear SVM C=0.01                                       0.989 ± 0.008
+màu   Hist HSV (8,8,8)   Linear SVM C=0.1                                        0.990 ± 0.004
+/usr/local/lib/python3.13/site-packages/sklearn/svm/_base.py:1295: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
+  warnings.warn(
+màu   Hist HSV (8,8,8)   Linear SVM C=1                                          0.987 ± 0.005
+màu   Hist H-S (8,8)     KNN k=1, Euclidean, ưu tiên điểm gần                    0.984 ± 0.005
+màu   Hist H-S (8,8)     KNN k=1, Manhattan, ưu tiên điểm gần                    0.986 ± 0.004
+màu   Hist H-S (8,8)     KNN k=1, Hellinger, ưu tiên điểm gần                    0.985 ± 0.007
+màu   Hist H-S (8,8)     KNN k=3, Euclidean, ưu tiên điểm gần                    0.981 ± 0.005
+màu   Hist H-S (8,8)     KNN k=3, Manhattan, ưu tiên điểm gần                    0.981 ± 0.005
+màu   Hist H-S (8,8)     KNN k=3, Hellinger, ưu tiên điểm gần                    0.981 ± 0.005
+màu   Hist H-S (8,8)     KNN k=5, Euclidean, ưu tiên điểm gần                    0.978 ± 0.006
+màu   Hist H-S (8,8)     KNN k=5, Manhattan, ưu tiên điểm gần                    0.980 ± 0.007
+màu   Hist H-S (8,8)     KNN k=5, Hellinger, ưu tiên điểm gần                    0.979 ± 0.005
+màu   Hist H-S (8,8)     LogReg C=0.01                                           0.955 ± 0.008
+màu   Hist H-S (8,8)     LogReg C=0.1                                            0.981 ± 0.005
+màu   Hist H-S (8,8)     LogReg C=1                                              0.985 ± 0.008
+màu   Hist H-S (8,8)     LogReg C=10                                             0.982 ± 0.005
+màu   Hist H-S (8,8)     Linear SVM C=0.001                                      0.934 ± 0.008
+màu   Hist H-S (8,8)     Linear SVM C=0.01                                       0.958 ± 0.007
+màu   Hist H-S (8,8)     Linear SVM C=0.1                                        0.973 ± 0.004
+màu   Hist H-S (8,8)     Linear SVM C=1                                          0.973 ± 0.003
+màu   Moment màu         KNN k=1, Euclidean, ưu tiên điểm gần                    0.977 ± 0.003
+màu   Moment màu         KNN k=1, Manhattan, ưu tiên điểm gần                    0.978 ± 0.004
+màu   Moment màu         KNN k=3, Euclidean, ưu tiên điểm gần                    0.977 ± 0.007
+màu   Moment màu         KNN k=3, Manhattan, ưu tiên điểm gần                    0.977 ± 0.007
+màu   Moment màu         KNN k=5, Euclidean, ưu tiên điểm gần                    0.972 ± 0.008
+màu   Moment màu         KNN k=5, Manhattan, ưu tiên điểm gần                    0.975 ± 0.008
+màu   Moment màu         LogReg C=0.01                                           0.838 ± 0.009
+màu   Moment màu         LogReg C=0.1                                            0.896 ± 0.010
+màu   Moment màu         LogReg C=1                                              0.908 ± 0.009
+màu   Moment màu         LogReg C=10                                             0.910 ± 0.011
+màu   Moment màu         Linear SVM C=0.001                                      0.805 ± 0.013
+màu   Moment màu         Linear SVM C=0.01                                       0.838 ± 0.011
+màu   Moment màu         Linear SVM C=0.1                                        0.866 ± 0.009
+màu   Moment màu         Linear SVM C=1                                          0.874 ± 0.007
+cạnh  Cạnh Roberts       KNN k=1, Euclidean, ưu tiên điểm gần                    0.901 ± 0.018
+cạnh  Cạnh Roberts       KNN k=1, Manhattan, ưu tiên điểm gần                    0.955 ± 0.015
+cạnh  Cạnh Roberts       KNN k=3, Euclidean, ưu tiên điểm gần                    0.912 ± 0.015
+cạnh  Cạnh Roberts       KNN k=3, Manhattan, ưu tiên điểm gần                    0.950 ± 0.012
+cạnh  Cạnh Roberts       KNN k=5, Euclidean, ưu tiên điểm gần                    0.905 ± 0.017
+cạnh  Cạnh Roberts       KNN k=5, Manhattan, ưu tiên điểm gần                    0.946 ± 0.013
+cạnh  Cạnh Roberts       LogReg C=0.01                                           0.915 ± 0.015
+cạnh  Cạnh Roberts       LogReg C=0.1                                            0.931 ± 0.009
+cạnh  Cạnh Roberts       LogReg C=1                                              0.932 ± 0.011
+cạnh  Cạnh Roberts       Linear SVM C=0.001                                      0.891 ± 0.013
+cạnh  Cạnh Roberts       Linear SVM C=0.01                                       0.925 ± 0.014
+cạnh  Cạnh Roberts       Linear SVM C=0.1                                        0.922 ± 0.010
+cạnh  Cạnh Sobel         KNN k=1, Euclidean, ưu tiên điểm gần                    0.902 ± 0.019
+cạnh  Cạnh Sobel         KNN k=1, Manhattan, ưu tiên điểm gần                    0.952 ± 0.014
+cạnh  Cạnh Sobel         KNN k=3, Euclidean, ưu tiên điểm gần                    0.899 ± 0.016
+cạnh  Cạnh Sobel         KNN k=3, Manhattan, ưu tiên điểm gần                    0.945 ± 0.014
+cạnh  Cạnh Sobel         KNN k=5, Euclidean, ưu tiên điểm gần                    0.894 ± 0.021
+cạnh  Cạnh Sobel         KNN k=5, Manhattan, ưu tiên điểm gần                    0.940 ± 0.016
+cạnh  Cạnh Sobel         LogReg C=0.01                                           0.875 ± 0.018
+cạnh  Cạnh Sobel         LogReg C=0.1                                            0.893 ± 0.014
+cạnh  Cạnh Sobel         LogReg C=1                                              0.894 ± 0.008
+cạnh  Cạnh Sobel         Linear SVM C=0.001                                      0.843 ± 0.006
+cạnh  Cạnh Sobel         Linear SVM C=0.01                                       0.881 ± 0.012
+cạnh  Cạnh Sobel         Linear SVM C=0.1                                        0.883 ± 0.014
+HOG   HOG 64×128         KNN k=1, Euclidean, ưu tiên điểm gần                    0.967 ± 0.011
+HOG   HOG 64×128         KNN k=1, Manhattan, ưu tiên điểm gần                    0.983 ± 0.004
+HOG   HOG 64×128         KNN k=1, Hellinger, ưu tiên điểm gần                    0.971 ± 0.008
+HOG   HOG 64×128         KNN k=3, Euclidean, ưu tiên điểm gần                    0.956 ± 0.010
+HOG   HOG 64×128         KNN k=3, Manhattan, ưu tiên điểm gần                    0.982 ± 0.008
+HOG   HOG 64×128         KNN k=3, Hellinger, ưu tiên điểm gần                    0.965 ± 0.007
+HOG   HOG 64×128         KNN k=5, Euclidean, ưu tiên điểm gần                    0.949 ± 0.008
+HOG   HOG 64×128         KNN k=5, Manhattan, ưu tiên điểm gần                    0.977 ± 0.010
+HOG   HOG 64×128         KNN k=5, Hellinger, ưu tiên điểm gần                    0.958 ± 0.011
+HOG   HOG 64×128         LogReg C=0.01                                           0.985 ± 0.005
+HOG   HOG 64×128         LogReg C=0.1                                            0.986 ± 0.007
+HOG   HOG 64×128         LogReg C=1                                              0.985 ± 0.004
+HOG   HOG 64×128         LogReg C=10                                             0.985 ± 0.004
+HOG   HOG 64×128         Linear SVM C=0.001                                      0.983 ± 0.003
+HOG   HOG 64×128         Linear SVM C=0.01                                       0.982 ± 0.004
+HOG   HOG 64×128         Linear SVM C=0.1                                        0.982 ± 0.004
+HOG   HOG 64×128         Linear SVM C=1                                          0.982 ± 0.004
+ghép  Hist HSV + HOG     KNN k=1, Euclidean, ưu tiên điểm gần, z-score chung     0.968 ± 0.008
+ghép  Hist HSV + HOG     KNN k=1, Manhattan, ưu tiên điểm gần, z-score chung     0.985 ± 0.002
+ghép  Hist HSV + HOG     KNN k=3, Euclidean, ưu tiên điểm gần, z-score chung     0.957 ± 0.009
+ghép  Hist HSV + HOG     KNN k=3, Manhattan, ưu tiên điểm gần, z-score chung     0.983 ± 0.008
+ghép  Hist HSV + HOG     KNN k=5, Euclidean, ưu tiên điểm gần, z-score chung     0.945 ± 0.009
+ghép  Hist HSV + HOG     KNN k=5, Manhattan, ưu tiên điểm gần, z-score chung     0.980 ± 0.010
+ghép  Hist HSV + HOG     LogReg C=0.01, z-score chung                            0.990 ± 0.005
+ghép  Hist HSV + HOG     LogReg C=0.1, z-score chung                             0.994 ± 0.003
+ghép  Hist HSV + HOG     LogReg C=1, z-score chung                               0.993 ± 0.003
+ghép  Hist HSV + HOG     LogReg C=10, z-score chung                              0.993 ± 0.003
+ghép  Hist HSV + HOG     Linear SVM C=0.001, z-score chung                       0.991 ± 0.003
+ghép  Hist HSV + HOG     Linear SVM C=0.01, z-score chung                        0.991 ± 0.003
+ghép  Hist HSV + HOG     Linear SVM C=0.1, z-score chung                         0.991 ± 0.003
+ghép  Hist HSV + HOG     Linear SVM C=1, z-score chung                           0.991 ± 0.003
+ghép  Hist HSV + HOG     KNN k=1, Euclidean, ưu tiên điểm gần, chuẩn hóa từng phần 0.978 ± 0.012
+ghép  Hist HSV + HOG     KNN k=1, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần 0.989 ± 0.003
+ghép  Hist HSV + HOG     KNN k=3, Euclidean, ưu tiên điểm gần, chuẩn hóa từng phần 0.964 ± 0.013
+ghép  Hist HSV + HOG     KNN k=3, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần 0.986 ± 0.005
+ghép  Hist HSV + HOG     KNN k=5, Euclidean, ưu tiên điểm gần, chuẩn hóa từng phần 0.958 ± 0.012
+ghép  Hist HSV + HOG     KNN k=5, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần 0.976 ± 0.011
+ghép  Hist HSV + HOG     LogReg C=1, chuẩn hóa từng phần                         0.993 ± 0.004
+ghép  Hist HSV + HOG     LogReg C=10, chuẩn hóa từng phần                        0.996 ± 0.003
+ghép  Hist HSV + HOG     LogReg C=100, chuẩn hóa từng phần                       0.996 ± 0.003
+ghép  Hist HSV + HOG     Linear SVM C=0.1, chuẩn hóa từng phần                   0.993 ± 0.004
+ghép  Hist HSV + HOG     Linear SVM C=1, chuẩn hóa từng phần                     0.996 ± 0.004
+ghép  Hist HSV + HOG     Linear SVM C=10, chuẩn hóa từng phần                    0.995 ± 0.003
+ghép  Hist H-S + HOG     KNN k=1, Euclidean, ưu tiên điểm gần, z-score chung     0.968 ± 0.011
+ghép  Hist H-S + HOG     KNN k=1, Manhattan, ưu tiên điểm gần, z-score chung     0.984 ± 0.004
+ghép  Hist H-S + HOG     KNN k=3, Euclidean, ưu tiên điểm gần, z-score chung     0.957 ± 0.011
+ghép  Hist H-S + HOG     KNN k=3, Manhattan, ưu tiên điểm gần, z-score chung     0.982 ± 0.008
+ghép  Hist H-S + HOG     KNN k=5, Euclidean, ưu tiên điểm gần, z-score chung     0.950 ± 0.010
+ghép  Hist H-S + HOG     KNN k=5, Manhattan, ưu tiên điểm gần, z-score chung     0.978 ± 0.010
+ghép  Hist H-S + HOG     LogReg C=0.01, z-score chung                            0.988 ± 0.006
+ghép  Hist H-S + HOG     LogReg C=0.1, z-score chung                             0.989 ± 0.004
+ghép  Hist H-S + HOG     LogReg C=1, z-score chung                               0.989 ± 0.003
+ghép  Hist H-S + HOG     LogReg C=10, z-score chung                              0.989 ± 0.003
+ghép  Hist H-S + HOG     Linear SVM C=0.001, z-score chung                       0.986 ± 0.002
+ghép  Hist H-S + HOG     Linear SVM C=0.01, z-score chung                        0.989 ± 0.003
+ghép  Hist H-S + HOG     Linear SVM C=0.1, z-score chung                         0.989 ± 0.003
+ghép  Hist H-S + HOG     Linear SVM C=1, z-score chung                           0.989 ± 0.003
+ghép  Hist H-S + HOG     KNN k=1, Euclidean, ưu tiên điểm gần, chuẩn hóa từng phần 0.988 ± 0.005
+ghép  Hist H-S + HOG     KNN k=1, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần 0.990 ± 0.003
+ghép  Hist H-S + HOG     KNN k=3, Euclidean, ưu tiên điểm gần, chuẩn hóa từng phần 0.985 ± 0.004
+ghép  Hist H-S + HOG     KNN k=3, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần 0.986 ± 0.005
+ghép  Hist H-S + HOG     KNN k=5, Euclidean, ưu tiên điểm gần, chuẩn hóa từng phần 0.978 ± 0.006
+ghép  Hist H-S + HOG     KNN k=5, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần 0.981 ± 0.007
+ghép  Hist H-S + HOG     LogReg C=1, chuẩn hóa từng phần                         0.992 ± 0.003
+ghép  Hist H-S + HOG     LogReg C=10, chuẩn hóa từng phần                        0.995 ± 0.004
+ghép  Hist H-S + HOG     LogReg C=100, chuẩn hóa từng phần                       0.996 ± 0.003
+ghép  Hist H-S + HOG     Linear SVM C=0.1, chuẩn hóa từng phần                   0.993 ± 0.001
+ghép  Hist H-S + HOG     Linear SVM C=1, chuẩn hóa từng phần                     0.996 ± 0.003
+ghép  Hist H-S + HOG     Linear SVM C=10, chuẩn hóa từng phần                    0.996 ± 0.003
+### Chốt cấu hình truyền thống — cấu hình tốt nhất của mỗi bộ phân lớp trên từng đặc trưng (5-fold CV)
+
+| Họ | Đặc trưng | Cấu hình tốt nhất của bộ phân lớp | Số chiều | Macro-F1 | Accuracy | Huấn luyện (s) | Dự đoán (ms/ảnh) |
+|---|---|---|---|---|---|---|---|
+| màu | Hist HSV (8,8,8) | KNN k=1, Hellinger, ưu tiên điểm gần | 512 | 0.987 ± 0.006 | 0.989 ± 0.006 | 0.00 | 0.022 |
+| màu | Hist HSV (8,8,8) | LogReg C=0.1 | 512 | 0.991 ± 0.005 | 0.992 ± 0.005 | 0.87 | 0.003 |
+| màu | Hist HSV (8,8,8) | Linear SVM C=0.1 | 512 | 0.990 ± 0.004 | 0.991 ± 0.004 | 2.69 | 0.006 |
+| màu | Hist H-S (8,8) | KNN k=1, Manhattan, ưu tiên điểm gần | 64 | 0.986 ± 0.004 | 0.986 ± 0.004 | 0.00 | 0.035 |
+| màu | Hist H-S (8,8) | LogReg C=1 | 64 | 0.985 ± 0.008 | 0.986 ± 0.007 | 0.02 | 0.001 |
+| màu | Hist H-S (8,8) | Linear SVM C=0.1 | 64 | 0.973 ± 0.004 | 0.977 ± 0.003 | 0.03 | 0.001 |
+| màu | Moment màu | KNN k=1, Manhattan, ưu tiên điểm gần | 9 | 0.978 ± 0.004 | 0.981 ± 0.003 | 0.00 | 0.009 |
+| màu | Moment màu | LogReg C=10 | 9 | 0.910 ± 0.011 | 0.926 ± 0.008 | 0.03 | 0.001 |
+| màu | Moment màu | Linear SVM C=1 | 9 | 0.874 ± 0.007 | 0.894 ± 0.004 | 0.01 | 0.001 |
+| cạnh | Cạnh Roberts | KNN k=1, Manhattan, ưu tiên điểm gần | 512 | 0.955 ± 0.015 | 0.959 ± 0.013 | 0.01 | 0.182 |
+| cạnh | Cạnh Roberts | LogReg C=1 | 512 | 0.932 ± 0.011 | 0.940 ± 0.009 | 4.53 | 0.003 |
+| cạnh | Cạnh Roberts | Linear SVM C=0.01 | 512 | 0.925 ± 0.014 | 0.937 ± 0.012 | 0.52 | 0.005 |
+| cạnh | Cạnh Sobel | KNN k=1, Manhattan, ưu tiên điểm gần | 512 | 0.952 ± 0.014 | 0.956 ± 0.012 | 0.01 | 0.185 |
+| cạnh | Cạnh Sobel | LogReg C=1 | 512 | 0.894 ± 0.008 | 0.900 ± 0.006 | 5.81 | 0.004 |
+| cạnh | Cạnh Sobel | Linear SVM C=0.1 | 512 | 0.883 ± 0.014 | 0.895 ± 0.013 | 0.98 | 0.005 |
+| HOG | HOG 64×128 | KNN k=1, Manhattan, ưu tiên điểm gần | 3780 | 0.983 ± 0.004 | 0.984 ± 0.003 | 0.06 | 1.820 |
+| HOG | HOG 64×128 | LogReg C=0.1 | 3780 | 0.986 ± 0.007 | 0.989 ± 0.006 | 3.04 | 0.026 |
+| HOG | HOG 64×128 | Linear SVM C=0.001 | 3780 | 0.983 ± 0.003 | 0.985 ± 0.002 | 1.63 | 0.021 |
+| ghép | Hist HSV + HOG | KNN k=1, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần | 4292 | 0.989 ± 0.003 | 0.989 ± 0.002 | 0.10 | 2.122 |
+| ghép | Hist HSV + HOG | LogReg C=10, chuẩn hóa từng phần | 4292 | 0.996 ± 0.003 | 0.997 ± 0.002 | 2.48 | 0.035 |
+| ghép | Hist HSV + HOG | Linear SVM C=1, chuẩn hóa từng phần | 4292 | 0.996 ± 0.004 | 0.996 ± 0.003 | 1.22 | 0.027 |
+| ghép | Hist H-S + HOG | KNN k=1, Manhattan, ưu tiên điểm gần, chuẩn hóa từng phần | 3844 | 0.990 ± 0.003 | 0.990 ± 0.003 | 0.07 | 1.877 |
+| ghép | Hist H-S + HOG | LogReg C=100, chuẩn hóa từng phần | 3844 | 0.996 ± 0.003 | 0.997 ± 0.003 | 1.07 | 0.032 |
+| ghép | Hist H-S + HOG | Linear SVM C=1, chuẩn hóa từng phần | 3844 | 0.996 ± 0.003 | 0.997 ± 0.003 | 1.00 | 0.025 |
+
+### Cấu hình truyền thống đã chốt
+
+| Vai trò | Cấu hình | Macro-F1 (5-fold) | Accuracy |
+|---|---|---|---|
+| trad_color | Hist HSV (8,8,8) + LogReg C=0.1 | 0.991 ± 0.005 | 0.992 |
+| trad_edge | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0.955 ± 0.015 | 0.959 |
+| trad_hog | HOG 64×128 + LogReg C=0.1 | 0.986 ± 0.007 | 0.989 |
+| trad_fusion | Hist H-S + HOG + LogReg C=100, chuẩn hóa từng phần | 0.996 ± 0.003 | 0.997 |
+ tốt nhất: trad_fusion

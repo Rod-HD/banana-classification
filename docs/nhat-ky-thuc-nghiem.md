@@ -1465,6 +1465,83 @@ Cấu hình đại diện của mỗi nhánh (`results/so_sanh_nhanh/table_arms.
 
 ---
 
+## Bước 15 — Đưa trọng số CNN, bản Augmented và log vào repo; đo lại dung lượng file mô hình (13/11/2026)
+
+**Mục tiêu.** Người clone repo có sẵn mọi thứ để xem, kiểm tra và chạy lại kết quả mà không phải huấn luyện lại CNN: trọng số của 54 lần huấn luyện, bản Augmented của tác giả, log của các lần chạy. Trước bước này ba thứ đó chỉ nằm trên máy chạy thí nghiệm.
+
+**Đã làm.**
+- `python -m src.cnn.checkpoints --slim`: lưu lại `checkpoints/<run>/best.keras` của 54 run ở dạng chỉ gồm kiến trúc và trọng số, bỏ trạng thái của bộ tối ưu Adam; so từng mảng trọng số với bản cũ (và với `best.weights.h5`) rồi mới xóa bản cũ. Bảng: `results/cnn/table_slim.md`.
+- `src/cnn/train.py`: huấn luyện xong thì `fit_loop` lưu `best.keras` ở dạng trên (`save_inference`); run đã xong thì `--resume` nạp `best.keras`, không huấn luyện lại. `src/cnn/predict.py`, `src/exp_cnn.py`: đầu phân lớp giai đoạn 1 đọc từ `best.keras`.
+- `python -m src.cnn.checkpoints`: nạp từng `best.keras`, dự đoán lại và so với kết quả đã ghi. Bảng: `results/cnn/table_checkpoints.md`.
+- Đo lại dung lượng file mô hình trên file mới: cột "File mô hình (MB)" của N6 (`results/N6/table.md`, `results/figures/N6_a_vs_b.png`), trường `best_model_file_mb` của 33 run trong `results/cnn/`, mô hình demo trong `models/` (`python -m src.export_demo`). `src/exp_cnn.py` tách `full_model_file` và `n6_render` để bảng và hình N6 dựng lại được từ `results/N6/metrics.json`; các số đo thời gian của N6 giữ nguyên, không đo lại.
+- `src/pipeline.py`: các nhánh mở rộng mặc định tính lại mọi cấu hình, CNN dùng lại trọng số trong `checkpoints/` và không chuẩn bị dữ liệu train khi run đã xong; `SKIP_DONE=1` bỏ qua cấu hình đã có kết quả. `scripts/run_all.sh`: thêm `RETRAIN=1` (xóa `checkpoints/` để huấn luyện lại từ đầu).
+- `.gitignore`: commit `checkpoints/<run>/best.keras` và `state.json`, `data/aug_author/` (7.413 ảnh), `logs/` (64 file). `data/cache/` vẫn không commit.
+- Sửa con số dung lượng trong báo cáo, slide, hỏi đáp, README; README thêm mục "Những gì có sẵn trong repo"; kế hoạch mục 8 thêm `checkpoints/`, `data/aug_author/`, `logs/`.
+
+**Lý do chọn cách này.**
+- GitHub từ chối file trên 100 MiB (104,86 MB). **[đo]** Trước khi chuyển có 14 file `best.keras` vượt mức này (`a_vgg16` 311,49 MB × 11 run, `b_resnet50` 214,77 MB × 3 run); sau khi chuyển, file lớn nhất là 103,84 MB (`results/cnn/table_slim.md`).
+- Bỏ trạng thái Adam không làm đổi dự đoán. **[đo]** 0/3.920 mảng trọng số khác bản cũ khi so từng bit (`results/cnn/table_slim.md`); 40/40 run được chấm lại cho đúng macro-F1 và số ảnh sai đã ghi (`results/cnn/table_checkpoints.md`).
+- Dung lượng file ghi ở N6 trước đây gồm cả trạng thái Adam (hai mảng moment cho mỗi trọng số huấn luyện được), nên lớn hơn mô hình dùng để dự đoán 2,3–3 lần. **[đo]** File mới xấp xỉ 4 byte × số tham số (bảng dưới). Con số "11,7 MB" của `b_mobilenetv3` trong báo cáo, slide và README là của file cũ; nay là 4,3 MB.
+- Các nhánh mở rộng trước đây bỏ qua cấu hình đã có `metrics.json`, nên chạy lại bước 11 hoặc 13 trên repo đã có kết quả thì không tính lại gì. **[lập luận]** Chạy lại phải tính lại được kết quả từ dữ liệu và trọng số; việc bỏ qua chỉ cần khi chạy tiếp một lần chạy bị ngắt, nên chuyển thành tùy chọn `SKIP_DONE=1`.
+
+**Phương án khác và vì sao không chọn.**
+- Giữ file kèm trạng thái Adam và dùng Git LFS: không chọn. **[đo]** Tổng 4.458 MB so với 1.563 MB sau khi chuyển. **[lập luận]** LFS có hạn mức dung lượng và băng thông theo tài khoản; người clone không cài `git-lfs` chỉ nhận được file con trỏ. Trạng thái Adam chỉ cần khi huấn luyện tiếp một run đã dừng, việc đồ án không làm.
+- Cắt file lớn thành nhiều phần dưới 100 MB: không chọn. **[lập luận]** Người chạy lại phải ghép file trước khi dùng; file sau khi bỏ trạng thái Adam đã dưới giới hạn.
+- Lưu trọng số dạng float16 để giảm thêm một nửa: không chọn. **[lập luận]** Cách này đổi giá trị trọng số, không còn bảo đảm dự đoán trùng từng ảnh với kết quả đã ghi.
+- Để trọng số ở một nơi lưu trữ ngoài repo rồi dẫn link: không chọn. **[lập luận]** Người chạy lại phải tải thêm từ nguồn thứ hai và link có thể hết hạn; để trong repo thì một lệnh clone là đủ.
+- Commit cả `data/cache/`: không chọn. **[đo]** Thư mục nặng 8,3 GiB, có 15 file trên 100 MiB, file lớn nhất 1,36 GiB (`du -sh data/cache`, `find data/cache -size +100M`). **[lập luận]** Đây là đặc trưng tính lại được từ ảnh và code, không cần huấn luyện.
+- Đo lại toàn bộ N6 (kể cả thời gian): không chọn. **[lập luận]** Dung lượng file là đại lượng tất định, còn thời gian phụ thuộc tải của máy lúc đo; đo lại sẽ làm đổi các số thời gian đã dùng trong báo cáo mà không có lý do.
+
+**Bằng chứng.**
+
+Dung lượng `best.keras` trước và sau khi bỏ trạng thái Adam, gộp theo kiến trúc (`results/cnn/table_slim.md` liệt kê từng run):
+
+| Kiến trúc | Số run | Số tham số | Mỗi file trước (MB) | Mỗi file sau (MB) | Tổng trước (MB) | Tổng sau (MB) | Số mảng trọng số | Số mảng khác (so từng bit) |
+|---|---|---|---|---|---|---|---|---|
+| a_lenet (64×64) | 6 | 337.976 | 4,10 | 1,39 | 25 | 8 | 60 | 0 |
+| a_lenet (32×32) | 1 | 61.496 | 0,79 | 0,28 | 1 | 0 | 10 | 0 |
+| a_lenet (128×128) | 1 | 1.628.216 | 19,59 | 6,55 | 20 | 7 | 10 | 0 |
+| a_dropout | 9 | 1.746.260 | 21,02 | 7,04 | 189 | 63 | 90 | 0 |
+| a_vgg16 (phần đầu phân lớp) | 11 | 25.954.564 | 311,49 | 103,84 | 3.426 | 1.142 | 66 | 0 |
+| b_mobilenetv3 | 13 | 941.428 | 11,74 | 4,34 | 153 | 56 | 2.704 | 0 |
+| b_resnet50 | 3 | 23.595.908 | 214,77 | 95,05 | 644 | 285 | 960 | 0 |
+| Đầu phân lớp giai đoạn 1 (hướng B) | 10 | 2.308–8.196 | 0,05–0,12 | 0,03–0,05 | 1 | 0 | 20 | 0 |
+| **Tổng** | **54** | | | | **4.458** | **1.563** | **3.920** | **0** |
+
+Chấm lại bằng trọng số trong repo (`results/cnn/table_checkpoints.md`):
+
+| Nhóm run | Tập chấm | Số run chấm lại | Số run trùng macro-F1 và accuracy đã ghi |
+|---|---|---|---|
+| Bước 4–6 (có kết quả trong `results/cnn/`) | val, 371 ảnh | 33 | 33 |
+| Nhánh T-kr và X-b (chấm trên ảnh test gốc) | test, 371 ảnh | 7 | 7 |
+| Nhánh X-a, T-tl và đầu phân lớp giai đoạn 1 của các nhánh | không chấm lại bằng lệnh này | 14 | — (trọng số đã so từng bit) |
+
+Dung lượng file mô hình đầy đủ ở N6 (`results/N6/table.md`; bản cũ nằm trong lịch sử git của file này):
+
+| Mô hình | Số tham số | File cũ, kèm trạng thái Adam (MB) | File mới (MB) | 4 byte × số tham số (MB) |
+|---|---|---|---|---|
+| a_lenet | 337.976 | 4,1 | 1,4 | 1,4 |
+| a_dropout | 1.746.260 | 21,0 | 7,0 | 7,0 |
+| a_vgg16 | 40.669.252 | 370,4 | 162,8 | 162,7 |
+| b_mobilenetv3 | 941.428 | 11,7 | 4,3 | 3,8 |
+| b_resnet50 | 23.595.908 | 214,8 | 95,1 | 94,4 |
+
+Dựng lại bảng N6 từ `results/N6/metrics.json` bằng `n6_render` trước khi đổi dung lượng cho ra đúng bảng đã commit (`git diff` rỗng), nên các cột khác không bị ảnh hưởng.
+
+Chạy lại lệnh huấn luyện khi đã có trọng số (5 lệnh của bước 4–5 với `--resume`: `a_lenet`, `a_vgg16_lr1e-3`, `b_mobilenetv3_s1`, `b_mobilenetv3_lr1e-4`, `b_resnet50`): cả 5 in "run đã hoàn tất … dùng lại trọng số đã lưu", tổng 88 giây. So với bản đã ghi: `history.json`, `classification_report.txt`, `confusion_matrix.png`, `curves.png` trùng từng byte; trong `metrics.json` chỉ khác trường thời gian `predict_ms_per_image_batched_val`.
+
+Chạy lại cả nhánh T-kr (`python -m src.exp_arm_t --only kr`, 9 cấu hình, 5 CNN dùng lại trọng số): 401 giây; `git status results/E2_aug_tac_gia` không có file nào thay đổi, tức `metrics.json`, `predictions.npz`, bảng và hình của cả 9 cấu hình trùng từng byte với bản đã commit.
+
+**Kết quả và kết luận.**
+- Repo có sẵn trọng số của cả 54 lần huấn luyện (1.563 MB), bản Augmented của tác giả (7.413 ảnh) và log. Chạy lại bất kỳ bước nào cũng không phải huấn luyện lại; thời gian huấn luyện đã ghi trong `state.json` của 54 run cộng lại là 3,3 giờ.
+- Các con số về độ chính xác tái lập được từ trọng số trong repo: 40/40 run chấm lại trùng kết quả đã ghi, nhánh T-kr tính lại trùng từng byte.
+- Con số dung lượng file mô hình trong các sản phẩm trước bước này lớn hơn thực tế vì tính cả trạng thái Adam. Sau khi đo lại, nhận định ở N6 không đổi (`b_mobilenetv3` nhỏ và nhanh hơn `a_vgg16`), chỉ đổi giá trị: 4,3 MB so với 162,8 MB.
+- Hai thứ không tái lập được trùng từng số: các số đo thời gian (phụ thuộc máy) và việc huấn luyện lại từ đầu trên máy hoặc phiên bản thư viện khác.
+
+**Ảnh hưởng tới bước sau.** Từ nay mỗi run chỉ để lại `best.keras` và `state.json`; `best.weights.h5` và `last.keras` chỉ tồn tại trong lúc huấn luyện. `data/cache/` không có trong repo nên lần chạy lại đầu tiên phải rút lại đặc trưng.
+
+---
+
 ## Bảng quyết định
 
 | Quyết định | Phương án thay thế | Bằng chứng | Nhãn |
@@ -1513,3 +1590,7 @@ Cấu hình đại diện của mỗi nhánh (`results/so_sanh_nhanh/table_arms.
 | Kết luận về các nhánh theo từng phép thử, không theo một điểm bền duy nhất | Xếp hạng bằng điểm bền | Bước 14, `results/so_sanh_nhanh/table_stress.md`: G, X-a, X-b có điểm bền 0,875–0,883 nhưng khác nhau rõ ở nền hoán đổi và che 25% | [đo] |
 | Slide chính: Beamer LaTeX style UIT, sinh cùng nguồn với bản pptx | Chỉ pptx | Bước 14; kế hoạch mục 8 | [lập luận] |
 | Demo giữ `b_mobilenetv3` của pipeline gốc làm mặc định, thêm bản X-b | Thay hẳn bằng bản X-b | Bước 14, `results/so_sanh_nhanh/table_stress.md` | [đo] |
+| `best.keras` chỉ gồm kiến trúc và trọng số, commit vào repo | Giữ trạng thái Adam và dùng Git LFS; cắt file; float16; lưu ngoài repo | Bước 15, `results/cnn/table_slim.md`: 4.458 → 1.563 MB, 0/3.920 mảng trọng số khác; `results/cnn/table_checkpoints.md`: 40/40 run trùng kết quả đã ghi | [đo] |
+| Dung lượng file mô hình đo trên file không kèm trạng thái Adam | Giữ số đo trên file kèm trạng thái Adam | Bước 15, `results/N6/table.md`: file mới xấp xỉ 4 byte × số tham số | [đo] |
+| Không commit `data/cache/` | Commit cả cache | Bước 15: 8,3 GiB, 15 file trên 100 MiB; tính lại được, không cần huấn luyện | [đo] |
+| Nhánh mở rộng mặc định tính lại, dùng lại trọng số; `SKIP_DONE=1` để bỏ qua cấu hình đã xong | Luôn bỏ qua cấu hình đã có kết quả | Bước 15: nhánh T-kr tính lại trùng từng byte trong 401 giây | [đo] |

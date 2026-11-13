@@ -1,0 +1,37 @@
+>>> train a_lenet: --model a_lenet
+run=a_lenet n_train=1729 n_val=371 size=64 lr=0.001 epochs=60 patience=10 params={'total': 337976, 'trainable': 337976, 'non_trainable': 0}
+tiếp tục từ epoch 50 (best 0.9735)
+KẾT QUẢ a_lenet: val macro-F1 0.9735 acc 0.9784 | train acc 1.0000 | 50 epoch, 31s (0.6s/epoch)
+>>> train a_lenet_s32: --model a_lenet --size 32 --tag s32
+run=a_lenet_s32 n_train=1729 n_val=371 size=32 lr=0.001 epochs=60 patience=10 params={'total': 61496, 'trainable': 61496, 'non_trainable': 0}
+KẾT QUẢ a_lenet_s32: val macro-F1 0.9543 acc 0.9596 | train acc 0.9838 | 30 epoch, 9s (0.3s/epoch)
+>>> train a_lenet_s128: --model a_lenet --size 128 --tag s128
+run=a_lenet_s128 n_train=1729 n_val=371 size=128 lr=0.001 epochs=60 patience=10 params={'total': 1628216, 'trainable': 1628216, 'non_trainable': 0}
+KẾT QUẢ a_lenet_s128: val macro-F1 0.9562 acc 0.9623 | train acc 1.0000 | 23 epoch, 40s (1.7s/epoch)
+>>> train a_lenet_frac25: --model a_lenet --frac 0.25
+run=a_lenet_frac25 n_train=432 n_val=371 size=64 lr=0.001 epochs=60 patience=10 params={'total': 337976, 'trainable': 337976, 'non_trainable': 0}
+KẾT QUẢ a_lenet_frac25: val macro-F1 0.9235 acc 0.9299 | train acc 1.0000 | 32 epoch, 7s (0.2s/epoch)
+>>> train a_lenet_frac50: --model a_lenet --frac 0.5
+run=a_lenet_frac50 n_train=864 n_val=371 size=64 lr=0.001 epochs=60 patience=10 params={'total': 337976, 'trainable': 337976, 'non_trainable': 0}
+KẾT QUẢ a_lenet_frac50: val macro-F1 0.9500 acc 0.9569 | train acc 0.9954 | 23 epoch, 8s (0.4s/epoch)
+>>> train a_dropout: --model a_dropout --epochs 40 --patience 40 --train-eval
+run=a_dropout n_train=1729 n_val=371 size=128 lr=0.001 epochs=40 patience=40 params={'total': 1746260, 'trainable': 1746260, 'non_trainable': 0}
+KẾT QUẢ a_dropout: val macro-F1 0.9399 acc 0.9461 | train acc 0.9994 | 40 epoch, 168s (4.2s/epoch)
+>>> train a_dropout_nodrop: --model a_dropout --no-dropout --tag nodrop --epochs 40 --patience 40 --train-eval
+run=a_dropout_nodrop n_train=1729 n_val=371 size=128 lr=0.001 epochs=40 patience=40 params={'total': 1746260, 'trainable': 1746260, 'non_trainable': 0}
+KẾT QUẢ a_dropout_nodrop: val macro-F1 0.9512 acc 0.9569 | train acc 1.0000 | 40 epoch, 150s (3.8s/epoch)
+>>> train a_dropout_aug: --model a_dropout --augment --tag aug --epochs 40 --patience 40 --train-eval
+run=a_dropout_aug n_train=1729 n_val=371 size=128 lr=0.001 epochs=40 patience=40 params={'total': 1746260, 'trainable': 1746260, 'non_trainable': 0}
+KẾT QUẢ a_dropout_aug: val macro-F1 0.9480 acc 0.9542 | train acc 0.9670 | 40 epoch, 194s (4.8s/epoch)
+>>> train a_vgg16: --model a_vgg16
+run=a_vgg16 n_train=1729 n_val=371 size=224 lr=0.0001 epochs=40 patience=8 params={'total': 25954564, 'trainable': 25954564, 'non_trainable': 0}
+KẾT QUẢ a_vgg16: val macro-F1 0.9835 acc 0.9865 | train acc 1.0000 | 15 epoch, 59s (3.9s/epoch)
+>>> train a_vgg16_lr1e-3: --model a_vgg16 --lr 1e-3 --tag lr1e-3
+run=a_vgg16_lr1e-3 n_train=1729 n_val=371 size=224 lr=0.001 epochs=40 patience=8 params={'total': 25954564, 'trainable': 25954564, 'non_trainable': 0}
+KẾT QUẢ a_vgg16_lr1e-3: val macro-F1 0.9895 acc 0.9919 | train acc 0.9994 | 24 epoch, 94s (3.9s/epoch)
+>>> train a_vgg16_frac25: --model a_vgg16 --frac 0.25
+run=a_vgg16_frac25 n_train=432 n_val=371 size=224 lr=0.0001 epochs=40 patience=8 params={'total': 25954564, 'trainable': 25954564, 'non_trainable': 0}
+KẾT QUẢ a_vgg16_frac25: val macro-F1 0.9673 acc 0.9730 | train acc 0.9954 | 11 epoch, 13s (1.2s/epoch)
+>>> train a_vgg16_frac50: --model a_vgg16 --frac 0.5
+run=a_vgg16_frac50 n_train=864 n_val=371 size=224 lr=0.0001 epochs=40 patience=8 params={'total': 25954564, 'trainable': 25954564, 'non_trainable': 0}
+KẾT QUẢ a_vgg16_frac50: val macro-F1 0.9628 acc 0.9677 | train acc 1.0000 | 11 epoch, 23s (2.1s/epoch)

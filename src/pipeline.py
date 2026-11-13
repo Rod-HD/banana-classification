@@ -75,8 +75,15 @@ def run_trad(arm: ArmData, key: str, cfg: dict):
     return val_pred, preds
 
 
-def run_cnn(arm: ArmData, model: str, resume: bool = True):
-    """Huấn luyện (hoặc nạp, với nhánh G) một CNN và dự đoán trên val, test và bộ kiểm tra khó."""
+def _trained(run: str) -> bool:
+    """Run đã huấn luyện xong và còn trọng số trong checkpoints/ (khi đó không cần chuẩn bị dữ liệu train)."""
+    st = CKPT_DIR / run / "state.json"
+    return st.exists() and bool(json.loads(st.read_text()).get("done")) and (CKPT_DIR / run / "best.keras").exists()
+
+
+def run_cnn(arm: ArmData, model: str):
+    """Huấn luyện một CNN (với nhánh G: nạp mô hình của bước 4–5) và dự đoán trên val, test và bộ kiểm tra khó.
+    Run đã có trọng số trong checkpoints/ thì không huấn luyện lại, chỉ nạp trọng số và dự đoán."""
     import keras
     from .cnn import models as M
     from .cnn.train import fit_loop, setup
@@ -91,7 +98,7 @@ def run_cnn(arm: ArmData, model: str, resume: bool = True):
         run = f"{arm.name}__{model}"
         if model in ("a_lenet", "a_dropout"):
             net = M.a_lenet(size) if model == "a_lenet" else M.a_dropout(size, augment=True)
-            net, _ = fit_loop(net, _resize(arm.Xtr, size), arm.ytr, f32(arm.Xva), arm.yva, run, lr, epochs, patience, resume=resume)
+            net, _ = fit_loop(net, _resize(arm.Xtr, size), arm.ytr, f32(arm.Xva), arm.yva, run, lr, epochs, patience, resume=True)
             predict = lambda X: net.predict(f32(X), batch_size=64, verbose=0).argmax(1)
         elif model == "a_vgg16":
             base = M.vgg16_features(size)
@@ -103,16 +110,18 @@ def run_cnn(arm: ArmData, model: str, resume: bool = True):
                 if tag:
                     np.save(f, out)
                 return out
-            head, _ = fit_loop(M.a_vgg16_head(), feat(arm.Xtr, "tr"), arm.ytr, feat(arm.Xva, "va"), arm.yva, run, lr, epochs, patience, resume=resume)
+            Ftr = None if _trained(run) else feat(arm.Xtr, "tr")
+            head, _ = fit_loop(M.a_vgg16_head(), Ftr, arm.ytr, feat(arm.Xva, "va"), arm.yva, run, lr, epochs, patience, resume=True)
             predict = lambda X, tag="": head.predict(feat(X, tag), batch_size=64, verbose=0).argmax(1)
         else:                                             # hướng B: giai đoạn 1 (đóng băng) rồi giai đoạn 2 (fine-tune)
             full, base = M.b_model(model, size, augment=True)
             emb = keras.Model(full.input, full.get_layer("embedding").output)
             E = lambda X: np.concatenate([emb.predict(f32(X[a:a + 512]), batch_size=32, verbose=0) for a in range(0, len(X), 512)])
-            head, _ = fit_loop(M.b_head(base.output_shape[-1]), E(arm.Xtr), arm.ytr, E(arm.Xva), arm.yva, run + "_s1", 1e-3, 60, 10, resume=resume)
+            Etr = None if _trained(run + "_s1") else E(arm.Xtr)
+            head, _ = fit_loop(M.b_head(base.output_shape[-1]), Etr, arm.ytr, E(arm.Xva), arm.yva, run + "_s1", 1e-3, 60, 10, resume=True)
             full.get_layer("softmax").set_weights(head.get_layer("softmax").get_weights())
             M.unfreeze(base, model)
-            full, _ = fit_loop(full, _resize(arm.Xtr, size), arm.ytr, f32(arm.Xva), arm.yva, run, lr, epochs, patience, resume=resume)
+            full, _ = fit_loop(full, _resize(arm.Xtr, size), arm.ytr, f32(arm.Xva), arm.yva, run, lr, epochs, patience, resume=True)
             predict = lambda X: full.predict(f32(X), batch_size=64, verbose=0).argmax(1)
     val_pred = predict(arm.Xva)
     preds = {"test": predict(arm.Xte)}
@@ -121,8 +130,11 @@ def run_cnn(arm: ArmData, model: str, resume: bool = True):
     return val_pred, preds
 
 
-def run_arm(arm: ArmData, models=None, resume: bool = True) -> list[dict]:
-    """Chạy các cấu hình trên nhánh `arm`; ghi results/<nhánh>/<mô hình>/ và results/<nhánh>/table.md."""
+def run_arm(arm: ArmData, models=None) -> list[dict]:
+    """Chạy các cấu hình trên nhánh `arm`; ghi results/<nhánh>/<mô hình>/ và results/<nhánh>/table.md.
+    Mặc định tính lại mọi cấu hình (CNN dùng lại trọng số đã có trong checkpoints/). Đặt biến môi trường SKIP_DONE=1
+    để bỏ qua cấu hình đã có results/<nhánh>/<mô hình>/metrics.json, dùng khi chạy tiếp một lần chạy bị ngắt."""
+    skip_done = os.environ.get("SKIP_DONE", "0") == "1"
     from .final_eval import bootstrap_ci
     from .report_utils import md_table
     sel = json.loads((RESULTS_DIR / "select_traditional" / "selected.json").read_text())
@@ -130,11 +142,11 @@ def run_arm(arm: ArmData, models=None, resume: bool = True) -> list[dict]:
     rows = []
     for key in (models or TRAD + CNN):
         done = arm.out / key / "metrics.json"
-        if resume and done.exists():
+        if skip_done and done.exists():
             m = json.loads(done.read_text())
         else:
             name = sel[key]["name"] if key in TRAD else key
-            val_pred, preds = run_trad(arm, key, sel[key]) if key in TRAD else run_cnn(arm, key, resume)
+            val_pred, preds = run_trad(arm, key, sel[key]) if key in TRAD else run_cnn(arm, key)
             ci_f, _ = bootstrap_ci(arm.yte, preds["test"])
             st = {s: _scores(arm.yte, preds[s]) for s in arm.stress}
             extra = {"arm": arm.name, "config": name, "group": GROUP[key], "n_train": int(len(arm.ytr)), "n_test": int(len(arm.yte)),

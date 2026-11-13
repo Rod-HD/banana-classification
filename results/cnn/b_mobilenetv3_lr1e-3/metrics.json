@@ -85,5 +85,5 @@
   "train_accuracy_inference_mode": 0.9982648930017352,
   "train_macro_f1_inference_mode": 0.9978755590810138,
   "predict_ms_per_image_batched_val": 5.301325865227627,
-  "best_model_file_mb": 11.739248
+  "best_model_file_mb": 4.341113
 }

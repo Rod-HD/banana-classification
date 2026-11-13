@@ -27,7 +27,7 @@ def full_model(run: str):
         return keras.Model(base.input, head(base.output), name="a_vgg16")
     if kind.startswith("b_") and meta.get("frozen_backbone"):
         model, base = M.b_model(kind, meta["input_size"], augment=False)
-        head = M.b_head(base.output_shape[-1]); head.load_weights(CKPT_DIR / run / "best.weights.h5")
+        head = M.b_head(base.output_shape[-1]); head.load_weights(CKPT_DIR / run / "best.keras")
         model.get_layer("softmax").set_weights(head.get_layer("softmax").get_weights())
         return model
     return keras.models.load_model(CKPT_DIR / run / "best.keras")

@@ -252,21 +252,28 @@ def bench_step_s(model, X, y, steps=18, batch=32):
     return (time.perf_counter() - t0) / steps
 
 
+def full_model_file(run):
+    """Mô hình đầy đủ ảnh → xác suất 4 lớp của một run và file .keras của nó (kiến trúc + trọng số, kể cả thân đóng băng;
+    không kèm trạng thái bộ tối ưu). Dung lượng file này là số ghi ở cột "File mô hình"."""
+    from .cnn.predict import full_model
+    fm = full_model(run)
+    f = CKPT_DIR / run / "full.keras"; fm.save(f)
+    return fm, f
+
+
 def n6():
     """So sánh hướng A và B. Thời gian được đo lại riêng trong hàm này (không có tác vụ khác chạy cùng):
     thời gian một bước huấn luyện, thời gian thân đóng băng xử lý một ảnh, thời gian dự đoán một ảnh.
     Thời gian huấn luyện = (số bước mỗi epoch × số epoch đã chạy × giây/bước) + thời gian tính đặc trưng thân đóng băng."""
     from .cnn import models as M
-    from .cnn.predict import full_model
     from .cnn.train import backbone_net, images_at, resize_batch
     tr, va = load_split("train"), load_split("val")
     imgs = np.stack([load_all_images(256)[i] for i in va["idx"].values[:60]])
     ytr = tr["label_id"].values; n_tr = len(ytr); steps_ep = int(np.ceil(n_tr / 32))
-    rows, raw, srows = [], {}, []
+    raw, srows = {}, []
     for model in A_RUNS + B_RUNS:
         run = final_run(model); m = meta(run); size = m["input_size"]
-        fm = full_model(run)
-        f = CKPT_DIR / run / "full.keras"; fm.save(f)
+        fm, f = full_model_file(run)
         import tensorflow as tf
         pred_fn = tf.function(lambda x: fm(x, training=False), reduce_retracing=True)   # đồ thị đã biên dịch, như khi triển khai
         ms = time_single(lambda x: pred_fn(tf.constant(resize_batch(x, size).astype(np.float32))).numpy(), imgs)
@@ -297,12 +304,19 @@ def n6():
         raw[model] = {"run": run, "macro_f1": m["macro_f1"], "accuracy": m["accuracy"], "params_total": fm.count_params(),
                       "file_mb": os.path.getsize(f) / 1e6, "train_time_s": t_train, "predict_ms_single_image": ms, "predict_ms_per_image_batch32": ms_batch, "epochs": m["epochs_run"],
                       "train_time_breakdown": "; ".join(parts), "recorded_train_time_s_during_run": m["train_time_s"]}
-        rows.append({"Hướng": "A" if model.startswith("a_") else "B", "Mô hình": model, "Biến thể được chốt": run, "Macro-F1 val": f"{m['macro_f1']:.3f}",
-                     "Accuracy val": f"{m['accuracy']:.3f}", "Số tham số": fm.count_params(), "File mô hình (MB)": f"{os.path.getsize(f) / 1e6:.1f}",
-                     "Thời gian huấn luyện (s)": f"{t_train:.0f}", "Dự đoán 1 ảnh (ms, CPU)": f"{ms:.1f}", "Dự đoán theo lô 32 (ms/ảnh)": f"{ms_batch:.1f}", "Cách tính thời gian huấn luyện": "; ".join(parts)})
         srows.append(srow("N6", run, m, predict_ms_per_image=round(ms, 2)))
-        print(rows[-1], flush=True)
+        print(model, raw[model], flush=True)
     save_json(exp_dir("N6") / "metrics.json", raw); register("N6", srows)
+    n6_render(raw)
+
+
+def n6_render(raw: dict):
+    """Dựng bảng và hình N6 từ các số đo đã lưu ở results/N6/metrics.json."""
+    rows = [{"Hướng": "A" if model.startswith("a_") else "B", "Mô hình": model, "Biến thể được chốt": r["run"], "Macro-F1 val": f"{r['macro_f1']:.3f}",
+             "Accuracy val": f"{r['accuracy']:.3f}", "Số tham số": r["params_total"], "File mô hình (MB)": f"{r['file_mb']:.1f}",
+             "Thời gian huấn luyện (s)": f"{r['train_time_s']:.0f}", "Dự đoán 1 ảnh (ms, CPU)": f"{r['predict_ms_single_image']:.1f}",
+             "Dự đoán theo lô 32 (ms/ảnh)": f"{r['predict_ms_per_image_batch32']:.1f}", "Cách tính thời gian huấn luyện": r["train_time_breakdown"]}
+            for model, r in raw.items()]
     print(save_table("N6", rows, title="N6 — So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)"))
     fig, axes = plt.subplots(1, 4, figsize=(17, 3.9))
     names = list(raw); col = ["tab:blue" if n.startswith("a_") else "tab:orange" for n in names]
@@ -448,7 +462,7 @@ def n4_bn():
     x = np.asarray(images_at(224)[idx]).astype(np.float32)
     rows, raw = [], {}
     for kind in B_RUNS:
-        head = M.b_head(576 if kind == "b_mobilenetv3" else 2048); head.load_weights(CKPT_DIR / f"{kind}_s1" / "best.weights.h5")
+        head = M.b_head(576 if kind == "b_mobilenetv3" else 2048); head.load_weights(CKPT_DIR / f"{kind}_s1" / "best.keras")
         for mode in ("BN mở (trainable=True)", "BN đóng băng (cách đồ án dùng)"):
             m, base = M.b_model(kind, augment=False)
             if mode.startswith("BN mở"):

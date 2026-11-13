@@ -1,0 +1,56 @@
+===== S2V2 =====
+### S2 — Chỉ dùng 4 góc ảnh 64×64 (không cần mask; trung bình 1.9% điểm ảnh ở góc thuộc vùng chuối đã nới rộng)
+
+| Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
+|---|---|---|---|
+| HOG của 4 góc ảnh (128×128) + LogReg C=0.1 | 8100 | 0.968 ± 0.008 | 0.973 ± 0.007 |
+| Hist HSV (8,8,8) của 4 góc ảnh + LogReg C=0.1 | 512 | 0.939 ± 0.009 | 0.948 ± 0.008 |
+
+### S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val) — mask mô hình nền bậc hai
+
+| Đặc trưng + bộ phân lớp | Phiên bản ảnh | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Toàn ảnh | 0.991 ± 0.005 | 0.992 ± 0.005 |
+| HOG 64×128 + LogReg C=0.1 | Toàn ảnh | 0.986 ± 0.007 | 0.989 ± 0.006 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Toàn ảnh | 0.996 ± 0.003 | 0.997 ± 0.003 |
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng chuối | 0.964 ± 0.007 | 0.967 ± 0.005 |
+| HOG 64×128 + LogReg C=0.1 | Chỉ vùng chuối | 0.883 ± 0.005 | 0.886 ± 0.006 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng chuối | 0.966 ± 0.007 | 0.969 ± 0.007 |
+| Hist HSV (8,8,8) + LogReg C=0.1 [màu tốt nhất] | Chỉ vùng nền | 0.933 ± 0.012 | 0.943 ± 0.011 |
+| HOG 64×128 + LogReg C=0.1 | Chỉ vùng nền | 0.976 ± 0.005 | 0.980 ± 0.004 |
+| Hist H-S + HOG + LogReg C=100 [truyền thống tốt nhất] | Chỉ vùng nền | 0.983 ± 0.006 | 0.986 ± 0.006 |
+
+### S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng
+
+| Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
+|---|---|---|---|
+| Màu Lab trung bình của nền (3 số) + KNN k=5 | 3 | 0.944 ± 0.012 | 0.953 ± 0.011 |
+| Màu Lab trung bình của nền (3 số) + LogReg | 3 | 0.606 ± 0.028 | 0.684 ± 0.022 |
+| Tỉ lệ diện tích quả chuối trong ảnh (1 số) + KNN k=5 | 1 | 0.609 ± 0.014 | 0.629 ± 0.009 |
+| HOG của mask nhị phân (chỉ hình bóng) + LogReg C=0.1 | 3780 | 0.871 ± 0.004 | 0.874 ± 0.003 |
+
+rò rỉ hình bóng (tỉ số gradient viền / nền xa): {'median': 1.1580472588539124, 'p25': 0.8412832617759705, 'p75': 1.5722746849060059, 'n': 2100}
+### S2 — Màu nền (Lab của OpenCV, thang 0–255) và kích thước quả theo lớp (train+val)
+
+| Lớp | Nền: L trung bình ± std | Nền: a | Nền: b | Tỉ lệ diện tích quả chuối |
+|---|---|---|---|---|
+| Bangla Kola | 202.2 ± 11.2 | 128.1 ± 1.0 | 128.3 ± 2.0 | 0.118 |
+| Champa Kola | 190.3 ± 11.5 | 127.2 ± 0.4 | 123.6 ± 0.9 | 0.164 |
+| Sabri Kola | 207.4 ± 12.4 | 127.3 ± 1.0 | 119.9 ± 10.3 | 0.053 |
+| Sagor Kola | 198.2 ± 17.6 | 128.2 ± 0.7 | 128.1 ± 2.1 | 0.185 |
+
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794526211.472901    7483 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1794526212.442925    7483 port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+{'Mô hình (học trên ảnh đầy đủ)': 'a_vgg16_lr1e-3', 'Toàn ảnh': '0.990', 'Chỉ vùng chuối': '0.949', 'Chỉ vùng nền': '0.799'}
+{'Mô hình (học trên ảnh đầy đủ)': 'b_mobilenetv3_lr1e-4', 'Toàn ảnh': '1.000', 'Chỉ vùng chuối': '0.967', 'Chỉ vùng nền': '0.676'}
+{'Mô hình (học trên ảnh đầy đủ)': 'b_resnet50', 'Toàn ảnh': '0.998', 'Chỉ vùng chuối': '0.924', 'Chỉ vùng nền': '0.721'}
+### S2 — CNN học trên ảnh đầy đủ, dự đoán trên ảnh val đã bỏ nền hoặc bỏ quả chuối (macro-F1, 371 ảnh) — mask mô hình nền bậc hai
+
+| Mô hình (học trên ảnh đầy đủ) | Toàn ảnh | Chỉ vùng chuối | Chỉ vùng nền |
+|---|---|---|---|
+| a_vgg16_lr1e-3 | 0.990 | 0.949 | 0.799 |
+| b_mobilenetv3_lr1e-4 | 1.000 | 0.967 | 0.676 |
+| b_resnet50 | 0.998 | 0.924 | 0.721 |
+

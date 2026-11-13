@@ -1,0 +1,16 @@
+run=a_vgg16_lr1e-3_os n_train=2780 n_val=371 size=224 lr=0.001 epochs=40 patience=8 params={'total': 25954564, 'trainable': 25954564, 'non_trainable': 0}
+/usr/local/lib/python3.13/site-packages/keras/src/trainers/epoch_iterator.py:74: UserWarning: `shuffle=True` was passed, but will be ignored since the data `x` was provided as a tf.data.Dataset. The Dataset is expected to already be shuffled (via `.shuffle(buffer_size)`).
+  self.data_adapter = data_adapters.get_data_adapter(
+epoch   1 loss 7.0561 acc 0.9065 | val loss 0.3052 acc 0.9730 macro-F1 0.9663 | best 0.9663 @ 1
+epoch   2 loss 0.1352 acc 0.9935 | val loss 0.2557 acc 0.9811 macro-F1 0.9761 | best 0.9761 @ 2
+epoch   3 loss 0.0307 acc 0.9982 | val loss 0.1358 acc 0.9892 macro-F1 0.9860 | best 0.9860 @ 3
+epoch   4 loss 0.0287 acc 0.9975 | val loss 0.1346 acc 0.9892 macro-F1 0.9869 | best 0.9869 @ 4
+epoch   5 loss 0.0451 acc 0.9975 | val loss 0.3773 acc 0.9757 macro-F1 0.9681 | best 0.9869 @ 4
+epoch   6 loss 0.0060 acc 0.9989 | val loss 0.1958 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+epoch   7 loss 0.0000 acc 1.0000 | val loss 0.1961 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+epoch   8 loss 0.0000 acc 1.0000 | val loss 0.1961 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+epoch   9 loss 0.0000 acc 1.0000 | val loss 0.1961 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+epoch  10 loss 0.0000 acc 1.0000 | val loss 0.1962 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+epoch  11 loss 0.0000 acc 1.0000 | val loss 0.1962 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+epoch  12 loss 0.0000 acc 1.0000 | val loss 0.1962 acc 0.9865 macro-F1 0.9826 | best 0.9869 @ 4
+KẾT QUẢ a_vgg16_lr1e-3_os: val macro-F1 0.9869 acc 0.9892 | train acc 0.9968 | 12 epoch, 74s (6.1s/epoch)
