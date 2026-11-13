@@ -1704,6 +1704,34 @@ Bốn hình có ghi số đo thời gian (`M4_color_features.png`, `P4_knn_algor
 
 **Ảnh hưởng tới bước sau.** Bước 9 của `scripts/run_all.sh` giờ chạy thêm `src.fig_overview` và sinh thêm `report/report.pdf`, `docs/kich-ban-thuyet-trinh.md`. Trong báo cáo, hai cột "Công việc phụ trách", "Mức độ hoàn thành" ở mục 1 và mục 7.3 để nhóm tự điền. Tên người trình bày từng phần điền ở biến `PRESENTERS` trong `src/make_slides.py`.
 
+## Bước 17 (tiếp): Sinh lại hình và bảng với tiêu đề mới, đối chiếu số liệu (13/11/2026)
+
+**Mục tiêu.** Hình trong `results/` mang tiêu đề do code vẽ lên, nên sau khi sửa tiêu đề trong code ở Bước 17 phải sinh lại hình. Yêu cầu: số liệu không được đổi theo.
+
+**Đã làm.**
+- Chép code đã sửa vào một bản clone riêng (có sẵn `data/cache/`), chạy lại `scripts/run_all.sh` cho bước 1 đến 8.
+- So từng file bảng và số liệu (`.md`, `.json`, `.csv`, `.txt`) sinh ra trong clone với file trong repo chính (đã sửa nhãn bằng thay chuỗi ở Bước 17).
+- Chép các hình khác nhau từ clone sang repo chính, trừ 4 hình có số đo thời gian đã vẽ lại ở Bước 17.
+
+**Lý do chọn cách này.** Chạy trong clone thì kết quả của repo chính, kể cả số đo thời gian đã dẫn trong báo cáo, không bị ghi đè. Việc so từng file cho biết cách sửa nhãn bằng thay chuỗi có cho đúng kết quả mà code mới sinh ra hay không. **[lập luận]**
+
+**Phương án khác và vì sao không chọn.**
+- Chạy lại ngay trong repo chính: số đo thời gian đổi theo máy, phải sửa lại mọi chỗ đã dẫn. **[lập luận]**
+- Giữ hình cũ: tiêu đề hình sẽ lệch với tiêu đề mà code hiện tại sinh ra. **[lập luận]**
+
+**Bằng chứng.** **[đo]**
+
+| Phần | Kết quả |
+|---|---|
+| Bước 1 đến 8 chạy lại trong clone | 8/8 bước kết thúc với mã thoát 0, tổng 3955 s |
+| File bảng và số liệu của bước 1 đến 8 (254 file) | 169 file giống hệt, 85 file chỉ khác số đo thời gian, 0 file khác ở chỗ khác |
+| Hình của bước 1 đến 8 | 40 hình khác bản cũ, đã chép sang (31 hình trong `results/figures/`, 9 ma trận nhầm lẫn trong `results/final/`) |
+| Hình khác bản cũ trên vùng rộng | 2 hình: `N3_dropout.png` (chú giải đổi "Dropout(0,5)" thành "Dropout(0.5)") và `N8_robustness.png` (nhãn trục đổi "V×0,6" thành "V×0.6") |
+
+**Kết quả và kết luận.** Với bước 1 đến 8, nhãn đã sửa trong repo chính trùng với kết quả do code mới sinh ra, và không số liệu nào đổi ngoài số đo thời gian. Phần mở rộng (bước 10 đến 14) đang chạy lại, kết quả sẽ ghi bổ sung vào mục này.
+
+**Ảnh hưởng tới bước sau.** Sau khi xong phần mở rộng, báo cáo và slide được dựng lại để nhúng hình mới.
+
 ## Bảng quyết định
 
 | Quyết định | Phương án thay thế | Bằng chứng | Nhãn |
