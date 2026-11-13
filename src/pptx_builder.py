@@ -24,7 +24,6 @@ def md_rows(path_or_rows, max_rows=None):
     else:
         lines = [l for l in Path(path_or_rows).read_text(encoding="utf-8").splitlines() if l.startswith("|")]
         rows = [[c.strip() for c in l.strip().strip("|").split("|")] for l in lines if not re.match(r"^\|\s*:?-{2,}", l)]
-        rows = [[re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", r"\1,\2", c) for c in r] for r in rows]
     return rows if max_rows is None else rows[:max_rows + 1]
 
 
@@ -62,6 +61,8 @@ def build(slides: list[dict], out: Path, title: str):
             for r in tb.text_frame.paragraphs[0].runs:
                 r.font.bold = True; r.font.color.rgb = ACCENT
             top = Inches(1.2); left = Inches(0.5); avail_w = Inches(12.3); avail_h = H - top - Inches(0.5)
+            if s.get("links"):                           # tài liệu gốc của phương pháp
+                s = {**s, "bullets": list(s.get("bullets") or []) + ["Tài liệu: " + "; ".join(f"{t} ({u})" for t, u in s["links"])]}
             has_side = s.get("bullets") and (s.get("image") or s.get("table"))
             if s.get("bullets"):
                 bw = Inches(4.6) if has_side else avail_w

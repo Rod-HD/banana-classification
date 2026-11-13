@@ -1,4 +1,4 @@
-"""Thí nghiệm đặc trưng màu M1–M6 (mục 6.2 của kế hoạch). 5-fold CV trên train+val;
+"""Thí nghiệm đặc trưng màu M1-M6 (mục 6.2 của kế hoạch). 5-fold CV trên train+val;
 phép biến đổi chỉ áp lên fold giữ lại.
 
     python -m src.exp_color            # chạy tất cả
@@ -55,13 +55,13 @@ def m1():
                          "Độ sụt": f"{v['drop_macro_f1']:+.3f} ± {v['drop_macro_f1_std']:.3f}"})
             srows += [summary_row("M1", f"{f} + {c}", r), summary_row("M1", f"{f} + {c}", r, "shuffle4")]
     save_json(exp_dir("M1") / "metrics.json", raw); register("M1", srows)
-    print(save_table("M1", rows, title="M1 — Xáo trộn lưới 4×4 trên ảnh chấm"))
+    print(save_table("M1", rows, title="M1: Xáo trộn lưới 4×4 trên ảnh chấm"))
     fig, axes = plt.subplots(1, 2, figsize=(14, 4))
     for ax, c in zip(axes, CLFS):
         ser = {"Ảnh gốc": ([raw[f"{f}+{c}"]["macro_f1"] for f in feats], [raw[f"{f}+{c}"]["macro_f1_std"] for f in feats]),
                "Xáo trộn 4×4": ([raw[f"{f}+{c}"]["variants"]["shuffle4"]["macro_f1"] for f in feats],
                                 [raw[f"{f}+{c}"]["variants"]["shuffle4"]["macro_f1_std"] for f in feats])}
-        bar_groups(ax, [FEAT_NAME[f] for f in feats], ser, "Macro-F1 (5-fold)", f"M1 — {CLF_NAME[c]}", (0, 1.2))
+        bar_groups(ax, [FEAT_NAME[f] for f in feats], ser, "Macro-F1 (5-fold)", f"M1: {CLF_NAME[c]}", (0, 1.2))
         ax.tick_params(axis="x", rotation=20)
     fig.tight_layout(); fig.savefig(FIG_DIR / "M1_shuffle.png", dpi=130); plt.close(fig)
 
@@ -75,17 +75,17 @@ def m2():
             raw[f"{f}+{c}"] = strip(r)
             a, b = r["variants"]["v0.6"], r["variants"]["v1.4"]
             rows.append({"Đặc trưng": FEAT_NAME[f], "Bộ phân lớp": CLF_NAME[c], "Ảnh gốc": pm(r["macro_f1"], r["macro_f1_std"]),
-                         "V×0,6": pm(a["macro_f1"], a["macro_f1_std"]), "Sụt (V×0,6)": f"{a['drop_macro_f1']:+.3f} ± {a['drop_macro_f1_std']:.3f}",
-                         "V×1,4": pm(b["macro_f1"], b["macro_f1_std"]), "Sụt (V×1,4)": f"{b['drop_macro_f1']:+.3f} ± {b['drop_macro_f1_std']:.3f}"})
+                         "V×0.6": pm(a["macro_f1"], a["macro_f1_std"]), "Sụt (V×0.6)": f"{a['drop_macro_f1']:+.3f} ± {a['drop_macro_f1_std']:.3f}",
+                         "V×1.4": pm(b["macro_f1"], b["macro_f1_std"]), "Sụt (V×1.4)": f"{b['drop_macro_f1']:+.3f} ± {b['drop_macro_f1_std']:.3f}"})
             srows += [summary_row("M2", f"{f} + {c}", r)] + [summary_row("M2", f"{f} + {c}", r, v) for v in ("v0.6", "v1.4")]
     save_json(exp_dir("M2") / "metrics.json", raw); register("M2", srows)
-    print(save_table("M2", rows, title="M2 — Đổi độ sáng (nhân kênh V) trên ảnh chấm; macro-F1 5-fold"))
+    print(save_table("M2", rows, title="M2: Đổi độ sáng (nhân kênh V) trên ảnh chấm; macro-F1 5-fold"))
     fig, axes = plt.subplots(1, 2, figsize=(12, 3.8))
     for ax, c in zip(axes, CLFS):
         ser = {lab: ([raw[f"{f}+{c}"]["variants"][v]["drop_macro_f1"] for f in feats],
                      [raw[f"{f}+{c}"]["variants"][v]["drop_macro_f1_std"] for f in feats])
-               for lab, v in [("V×0,6", "v0.6"), ("V×1,4", "v1.4")]}
-        bar_groups(ax, [FEAT_NAME[f] for f in feats], ser, "Độ sụt macro-F1", f"M2 — {CLF_NAME[c]}")
+               for lab, v in [("V×0.6", "v0.6"), ("V×1.4", "v1.4")]}
+        bar_groups(ax, [FEAT_NAME[f] for f in feats], ser, "Độ sụt macro-F1", f"M2: {CLF_NAME[c]}")
     fig.tight_layout(); fig.savefig(FIG_DIR / "M2_brightness.png", dpi=130); plt.close(fig)
 
 
@@ -113,7 +113,7 @@ def m3():
         row["Tỉ lệ phần tử bằng 0"] = f"{(X == 0).mean():.2f}"
         rows.append(row)
     save_json(exp_dir("M3") / "metrics.json", raw); register("M3", srows)
-    print(save_table("M3", rows, title="M3 — Quét số bin; macro-F1 5-fold"))
+    print(save_table("M3", rows, title="M3: Quét số bin; macro-F1 5-fold"))
     fig, axes = plt.subplots(1, 2, figsize=(11, 3.8))
     for ax, f, t in [(axes[0], "rgb_hist", "Hist RGB từng kênh"), (axes[1], "hsv_hist", "Hist HSV 3 chiều")]:
         for c in CLFS:
@@ -121,7 +121,7 @@ def m3():
             ax.errorbar(bs, [raw[f][c][b]["macro_f1"] for b in bs], yerr=[raw[f][c][b]["macro_f1_std"] for b in bs],
                         marker="o", capsize=3, label=CLF_NAME[c])
         ax.set_xscale("log", base=2); ax.set_xticks(bs); ax.set_xticklabels(bs)
-        ax.set_xlabel("Số bin mỗi kênh"); ax.set_ylabel("Macro-F1 (5-fold)"); ax.set_title(f"M3 — {t}"); ax.legend()
+        ax.set_xlabel("Số bin mỗi kênh"); ax.set_ylabel("Macro-F1 (5-fold)"); ax.set_title(f"M3: {t}"); ax.legend()
     fig.tight_layout(); fig.savefig(FIG_DIR / "M3_bins.png", dpi=130); plt.close(fig)
 
 
@@ -142,13 +142,13 @@ def m4():
             srows.append(summary_row("M4", f"{f} + {c}", r, extract_ms_per_image=round(ms, 3)))
         rows.append(row)
     save_json(exp_dir("M4") / "metrics.json", raw); register("M4", srows)
-    print(save_table("M4", rows, title="M4 — So sánh các đặc trưng màu: macro-F1 5-fold, số chiều, thời gian"))
+    print(save_table("M4", rows, title="M4: So sánh các đặc trưng màu: macro-F1 5-fold, số chiều, thời gian"))
     names = [FEAT_NAME[f] for f, _ in feats]
     fig, ax = plt.subplots(figsize=(12, 4.2))
     ser = {CLF_NAME[c]: ([raw[f"{f}+{c}"]["macro_f1"] for f, _ in feats], [raw[f"{f}+{c}"]["macro_f1_std"] for f, _ in feats])
            for c in ["knn", "logreg", "svm"]}
     bar_groups(ax, [f"{n}\n{raw[f + '+knn']['n_features']} chiều, {raw[f + '+knn']['extract_ms_per_image']:.1f} ms"
-                    for n, (f, _) in zip(names, feats)], ser, "Macro-F1 (5-fold)", "M4 — Các đặc trưng màu", (0.75, 1.08))
+                    for n, (f, _) in zip(names, feats)], ser, "Macro-F1 (5-fold)", "M4: Các đặc trưng màu", (0.75, 1.08))
     fig.tight_layout(); fig.savefig(FIG_DIR / "M4_color_features.png", dpi=130); plt.close(fig)
 
 
@@ -166,14 +166,14 @@ def m5():
     chg = {f: float(np.abs(dev_features(f) - dev_features(f, "shuffle4")).sum(1).mean()) for f in ["quant_hist", "ccv"]}
     raw["mean_l1_change_after_shuffle"] = chg
     save_json(exp_dir("M5") / "metrics.json", raw); register("M5", srows)
-    print(save_table("M5", rows, title="M5 — CCV so với histogram cùng mức lượng tử hóa (64 màu); macro-F1 5-fold"), chg)
+    print(save_table("M5", rows, title="M5: CCV so với histogram cùng mức lượng tử hóa (64 màu); macro-F1 5-fold"), chg)
     fig, axes = plt.subplots(1, 2, figsize=(11, 3.6))
     for ax, c in zip(axes, CLFS):
         fs = ["quant_hist", "ccv"]
         ser = {"Ảnh gốc": ([raw[f"{f}+{c}"]["macro_f1"] for f in fs], [raw[f"{f}+{c}"]["macro_f1_std"] for f in fs]),
                "Xáo trộn 4×4": ([raw[f"{f}+{c}"]["variants"]["shuffle4"]["macro_f1"] for f in fs],
                                 [raw[f"{f}+{c}"]["variants"]["shuffle4"]["macro_f1_std"] for f in fs])}
-        bar_groups(ax, [FEAT_NAME[f] for f in fs], ser, "Macro-F1 (5-fold)", f"M5 — {CLF_NAME[c]}", (0, 1.2))
+        bar_groups(ax, [FEAT_NAME[f] for f in fs], ser, "Macro-F1 (5-fold)", f"M5: {CLF_NAME[c]}", (0, 1.2))
     fig.tight_layout(); fig.savefig(FIG_DIR / "M5_ccv.png", dpi=130); plt.close(fig)
 
 
@@ -198,7 +198,7 @@ def m6():
             srows += [summary_row("M6", f"{key}", r), summary_row("M6", f"{key}", r, "gray"),
                       summary_row("M6", f"{key} (học lại trên ảnh xám)", rg)]
     save_json(exp_dir("M6") / "metrics.json", raw); register("M6", srows)
-    print(save_table("M6", rows, title="M6 — Bỏ thông tin màu (ảnh xám); macro-F1 5-fold"))
+    print(save_table("M6", rows, title="M6: Bỏ thông tin màu (ảnh xám); macro-F1 5-fold"))
     fig, axes = plt.subplots(1, 2, figsize=(16, 4.2))
     keys = [f"{f}{'_color' if fp.get('color') else ''}" for f, fp in feats]
     labels = [FEAT_NAME[f].replace(" 64×128", "") + ("\n(màu)" if fp.get("color") else "") for f, fp in feats]
@@ -209,7 +209,7 @@ def m6():
                                      [raw[f"{k}+{c}"]["color_train_color_test"]["variants"]["gray"]["macro_f1_std"] for k in keys]),
                "Học xám, chấm xám": ([raw[f"{k}+{c}"]["gray_train_gray_test"]["macro_f1"] for k in keys],
                                      [raw[f"{k}+{c}"]["gray_train_gray_test"]["macro_f1_std"] for k in keys])}
-        bar_groups(ax, labels, ser, "Macro-F1 (5-fold)", f"M6 — {CLF_NAME[c]}", (0, 1.2))
+        bar_groups(ax, labels, ser, "Macro-F1 (5-fold)", f"M6: {CLF_NAME[c]}", (0, 1.2))
         ax.tick_params(axis="x", rotation=20)
     fig.tight_layout(); fig.savefig(FIG_DIR / "M6_grayscale.png", dpi=130); plt.close(fig)
 

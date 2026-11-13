@@ -46,7 +46,7 @@ PAPER = {  # accuracy (%) bài báo công bố trên BananaImageBD, Bảng 3 c�
     ("resnet50", "svm_rbf"): 96.69, ("resnet50", "gbm"): 96.29, ("resnet50", "mlp"): 97.76,
     ("squeezenet", "svm_rbf"): 97.63, ("squeezenet", "gbm"): 93.08, ("squeezenet", "mlp"): 95.88,
 }
-CLF_NAME = {"svm_rbf": "SVM (RBF, C=1)", "svm_linear": "SVM tuyến tính (C=0,01)", "logreg": "Logistic Regression", "knn": "KNN (k=5)",
+CLF_NAME = {"svm_rbf": "SVM (RBF, C=1)", "svm_linear": "SVM tuyến tính (C=0.01)", "logreg": "Logistic Regression", "knn": "KNN (k=5)",
             "mlp": "MLP (1 lớp ẩn 256)", "gbm": "GBM (HistGradientBoosting)"}
 
 
@@ -146,7 +146,7 @@ def main():
     for key, r in raw.items():
         ex, cname = key.split("|"); pp, gp = r["paper_protocol"], r["group_protocol"]
         rows1.append({"Hướng": r["direction"], "Bộ rút đặc trưng": EXTRACTORS[ex][1], "Bộ phân lớp": CLF_NAME[cname],
-                      "Bài báo công bố: accuracy (%)": f"{r['paper_reported_accuracy_pct']:.2f}" if r["paper_reported_accuracy_pct"] else "—",
+                      "Bài báo công bố: accuracy (%)": f"{r['paper_reported_accuracy_pct']:.2f}" if r["paper_reported_accuracy_pct"] else "-",
                       "(i) Như bài báo: accuracy (%)": f"{100 * pp['accuracy']:.2f} ± {100 * pp['accuracy_std']:.2f}", "(i) Macro-F1": f"{pp['macro_f1']:.4f}",
                       "(ii) Giữ nhóm theo ảnh gốc: accuracy (%)": f"{100 * gp['accuracy']:.2f} ± {100 * gp['accuracy_std']:.2f}", "(ii) Macro-F1": f"{gp['macro_f1']:.4f}",
                       "Thổi phồng (i) − (ii), điểm %": f"{100 * (pp['accuracy'] - gp['accuracy']):+.2f}"})
@@ -155,12 +155,12 @@ def main():
                "KTC 95%": f"[{r['test']['macro_f1_ci95'][0]:.3f}; {r['test']['macro_f1_ci95'][1]:.3f}]", "Số ảnh sai / 371": r["test"]["n_errors"]}
         row.update({STRESS_LABEL[s]: f"{r['stress'][s]:.3f}" for s in STRESS}); row["Điểm bền"] = f"{r['robust_score']:.3f}"
         rows2.append(row)
-        srows.append({"experiment": "E3", "group": f"Bài báo — hướng {r['direction']}", "config": f"{ex} + {cname}", "condition": "clean", "eval_set": "test",
+        srows.append({"experiment": "E3", "group": f"Bài báo (hướng {r['direction']})", "config": f"{ex} + {cname}", "condition": "clean", "eval_set": "test",
                       "macro_f1": round(r["test"]["macro_f1"], 4), "macro_f1_std": None, "accuracy": round(r["test"]["accuracy"], 4), "n_features": r["n_features"]})
     from .exp_common import register
     register(EXP, srows)
-    print(save_table(EXP, rows1, "table_protocols", title="E3 — Phương pháp của bài báo trên bản Augmented (7.413 ảnh), 5-fold: như bài báo (i) so với giữ nhóm theo ảnh gốc (ii)"))
-    print(save_table(EXP, rows2, "table_test", title="E3 — Phương pháp của bài báo theo giao thức của đồ án: học trên train+val gốc (2.100 ảnh), chấm trên test gốc (371 ảnh) và bộ kiểm tra khó"))
+    print(save_table(EXP, rows1, "table_protocols", title="E3: Phương pháp của bài báo trên bản Augmented (7413 ảnh), 5-fold: như bài báo (i) so với giữ nhóm theo ảnh gốc (ii)"))
+    print(save_table(EXP, rows2, "table_test", title="E3: Phương pháp của bài báo theo giao thức của đồ án: học trên train+val gốc (2100 ảnh), chấm trên test gốc (371 ảnh) và bộ kiểm tra khó"))
     # đại diện mỗi hướng: chọn theo 5-fold trên train+val
     best = {}
     for d in ("B1", "B2"):
@@ -184,7 +184,7 @@ def main():
     ax.set_xticks(x); ax.set_xticklabels([f"{k.split('|')[0]}\n{CLF_NAME[k.split('|')[1]].split(' (')[0]}" for k in keys], fontsize=7)
     lo = min(min(v2), min([raw[k]["paper_reported_accuracy_pct"] or 100 for k in keys])) - 1.5
     ax.set_ylim(max(lo, 80), 100.6); ax.set_ylabel("Accuracy (%)"); ax.legend(fontsize=8, loc="lower right")
-    ax.set_title("E3 — Đặc trưng pretrained + bộ phân lớp trên bản Augmented: hai cách chia fold")
+    ax.set_title("E3: Đặc trưng pretrained + bộ phân lớp trên bản Augmented: hai cách chia fold")
     fig.tight_layout(); fig.savefig(FIG_DIR / "E3_papers_protocols.png", dpi=130); plt.close(fig)
 
 

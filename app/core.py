@@ -312,7 +312,7 @@ def result_tables() -> dict:
         first = f.read_text(encoding="utf-8").lstrip().splitlines()[0] if f.stat().st_size else ""
         title = first.lstrip("#").strip()
         rel = str(f.relative_to(ROOT))
-        out[f"{rel} — {title[:90]}" if title else rel] = f
+        out[f"{rel}: {title[:90]}" if title else rel] = f
     return out
 
 

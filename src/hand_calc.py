@@ -35,7 +35,7 @@ def main():
            "x": va.tolist(), "y": vb.tolist(), "sum_sq": float((d ** 2).sum()), "euclidean": eu, "manhattan": man,
            "dot": float(va @ vb), "norm_x": float(np.linalg.norm(va)), "norm_y": float(np.linalg.norm(vb)), "cosine_similarity": cos,
            "euclidean_after_unit_norm": eu_unit, "check_sqrt_2_minus_2cos": float(np.sqrt(2 - 2 * cos))}
-    save_table("hand_calc", rows, "table_moments", title="Ví dụ 1 — Vector moment màu (HSV, đã chia về [0, 1]) của hai ảnh")
+    save_table("hand_calc", rows, "table_moments", title="Ví dụ 1: Vector moment màu (HSV, đã chia về [0, 1]) của hai ảnh")
     # Precision / Recall từ confusion matrix của a_vgg16 trên test
     m = json.loads((RESULTS_DIR / "final" / "a_vgg16" / "metrics.json").read_text())
     cm = np.array(m["confusion_matrix"])
@@ -47,7 +47,7 @@ def main():
     res["bangla_f1"] = 2 * res["bangla_precision"] * res["bangla_recall"] / (res["bangla_precision"] + res["bangla_recall"])
     res["reported_per_class"] = m["per_class"]["Bangla Kola"]
     cm_rows = [dict({"Thực tế \\ Dự đoán": CLASS_NAMES[i]}, **{CLASS_NAMES[j]: int(cm[i, j]) for j in range(4)}) for i in range(4)]
-    save_table("hand_calc", cm_rows, "table_cm_a_vgg16", title="Ví dụ 2 — Confusion Matrix của a_vgg16 trên test")
+    save_table("hand_calc", cm_rows, "table_cm_a_vgg16", title="Ví dụ 2: Confusion Matrix của a_vgg16 trên test")
     n1 = json.loads((RESULTS_DIR / "N1" / "metrics.json").read_text())
     res["param_example"] = [r for r in n1["a_lenet"] if r["Lớp"] == "conv2"][0]
     save_json(out / "metrics.json", res)

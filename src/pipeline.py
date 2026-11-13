@@ -28,7 +28,7 @@ CNN = ["a_lenet", "a_dropout", "a_vgg16", "b_mobilenetv3", "b_resnet50"]
 GROUP = {"trad_color": "Truyền thống (màu)", "trad_edge": "Truyền thống (cạnh)", "trad_hog": "Truyền thống (HOG)",
          "trad_fusion": "Truyền thống (ghép)", "a_lenet": "CNN hướng A", "a_dropout": "CNN hướng A", "a_vgg16": "CNN hướng A",
          "b_mobilenetv3": "CNN hướng B", "b_resnet50": "CNN hướng B"}
-CNN_CFG = {  # kích thước ảnh, lr, số epoch tối đa, patience (giống biến thể đã chốt ở bước 4–5)
+CNN_CFG = {  # kích thước ảnh, lr, số epoch tối đa, patience (giống biến thể đã chốt ở bước 4-5)
     "a_lenet": (64, 1e-3, 60, 10), "a_dropout": (128, 1e-3, 40, 40), "a_vgg16": (224, 1e-3, 40, 8),
     "b_mobilenetv3": (224, 1e-4, 20, 5), "b_resnet50": (224, 1e-5, 20, 5)}
 
@@ -41,7 +41,7 @@ class ArmData:
     Xva: np.ndarray; yva: np.ndarray
     Xte: np.ndarray; yte: np.ndarray
     stress: dict = field(default_factory=dict)   # {tên phép: ảnh test đã biến đổi}; rỗng nếu không chấm trên tập test chung
-    pretrained: dict | None = None               # nhánh G: {mô hình: tên run đã huấn luyện ở bước 4–5}
+    pretrained: dict | None = None               # nhánh G: {mô hình: tên run đã huấn luyện ở bước 4-5}
     note: str = ""
 
 
@@ -82,14 +82,14 @@ def _trained(run: str) -> bool:
 
 
 def run_cnn(arm: ArmData, model: str):
-    """Huấn luyện một CNN (với nhánh G: nạp mô hình của bước 4–5) và dự đoán trên val, test và bộ kiểm tra khó.
+    """Huấn luyện một CNN (với nhánh G: nạp mô hình của bước 4-5) và dự đoán trên val, test và bộ kiểm tra khó.
     Run đã có trọng số trong checkpoints/ thì không huấn luyện lại, chỉ nạp trọng số và dự đoán."""
     import keras
     from .cnn import models as M
     from .cnn.train import fit_loop, setup
     size, lr, epochs, patience = CNN_CFG[model]
     f32 = lambda X: _resize(X, size).astype(np.float32)
-    if arm.pretrained:                                    # nhánh G: dùng mô hình đã huấn luyện ở bước 4–5
+    if arm.pretrained:                                    # nhánh G: dùng mô hình đã huấn luyện ở bước 4-5
         from .cnn.predict import Predictor
         P = Predictor(arm.pretrained[model])
         predict = lambda X: P(X).argmax(1)
@@ -152,7 +152,7 @@ def run_arm(arm: ArmData, models=None) -> list[dict]:
             extra = {"arm": arm.name, "config": name, "group": GROUP[key], "n_train": int(len(arm.ytr)), "n_test": int(len(arm.yte)),
                      "val": _scores(arm.yva, val_pred), "macro_f1_ci95": ci_f, "n_errors": int((preds["test"] != arm.yte).sum()),
                      "stress": st, "robust_score": float(np.mean([v["macro_f1"] for v in st.values()])) if st else None}
-            m = save_result(arm.out / key, arm.yte, preds["test"], extra=extra, title=f"{arm.name} — {name} — test")
+            m = save_result(arm.out / key, arm.yte, preds["test"], extra=extra, title=f"{arm.name}: {name}, test")
             np.savez(arm.out / key / "predictions.npz", y=arm.yte, **preds)
         row = {"Nhóm": m["group"], "Mô hình": m["config"], "Macro-F1 val": f"{m['val']['macro_f1']:.3f}", "Macro-F1 test": f"{m['macro_f1']:.3f}",
                "KTC 95%": f"[{m['macro_f1_ci95'][0]:.3f}; {m['macro_f1_ci95'][1]:.3f}]", "Accuracy test": f"{m['accuracy']:.3f}",
@@ -178,7 +178,7 @@ def base_split():
 
 
 def arm_g() -> ArmData:
-    """Nhánh G: pipeline gốc; CNN lấy từ các run đã huấn luyện ở bước 4–5."""
+    """Nhánh G: pipeline gốc; CNN lấy từ các run đã huấn luyện ở bước 4-5."""
     from .exp_cnn import final_run
     from .stress import stress_sets
     b = base_split()

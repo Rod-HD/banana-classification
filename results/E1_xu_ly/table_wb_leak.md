@@ -1,4 +1,4 @@
-### X3 — Cân bằng trắng theo nền có đưa thông tin của nền vào màu quả chuối không (371 ảnh val)
+### X3: Cân bằng trắng theo nền có đưa thông tin của nền vào màu quả chuối không (371 ảnh val)
 
 | Tiền xử lý | Hist HSV + LogReg: val gốc | Hist HSV + LogReg: val nền hoán đổi | Sụt | Màu quả chuối lệch đi khi đổi nền (khoảng cách Lab trung bình) |
 |---|---|---|---|---|

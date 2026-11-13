@@ -1,6 +1,6 @@
 ### Phép che 25%: accuracy trên test theo tỉ lệ diện tích quả chuối bị ô đen che (nhóm bị che ≥ 90% gồm 5 ảnh Bangla Kola, 35 ảnh Sabri Kola)
 
-| Nhánh | Cấu hình | Quả bị che ≥ 90% (40 ảnh) | Quả bị che 30–90% (286 ảnh) | Quả bị che < 30% (45 ảnh) |
+| Nhánh | Cấu hình | Quả bị che ≥ 90% (40 ảnh) | Quả bị che 30-90% (286 ảnh) | Quả bị che < 30% (45 ảnh) |
 |---|---|---|---|---|
 | G | b_mobilenetv3 | 0.175 | 0.699 | 0.911 |
 | G | Hist H-S + HOG + LogReg | 0.950 | 0.965 | 0.978 |

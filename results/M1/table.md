@@ -1,4 +1,4 @@
-### M1 — Xáo trộn lưới 4×4 trên ảnh chấm
+### M1: Xáo trộn lưới 4×4 trên ảnh chấm
 
 | Đặc trưng | Bộ phân lớp | Macro-F1 ảnh gốc | Macro-F1 ảnh xáo trộn 4×4 | Độ sụt |
 |---|---|---|---|---|

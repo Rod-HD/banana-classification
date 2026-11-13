@@ -1,4 +1,4 @@
-### P2 — KNN (k=5) theo độ đo và cách chuẩn hóa; macro-F1 5-fold
+### P2: KNN (k=5) theo độ đo và cách chuẩn hóa; macro-F1 5-fold
 
 | Độ đo | Chuẩn hóa | Moment màu (9 chiều) | Hist HSV (512 chiều) | HOG 64×128 (3780 chiều) |
 |---|---|---|---|---|

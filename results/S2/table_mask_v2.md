@@ -1,4 +1,4 @@
-### S2 — Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val) — mask mô hình nền bậc hai
+### S2: Đặc trưng rút trên toàn ảnh, chỉ vùng chuối, chỉ vùng nền; macro-F1 5-fold (train+val), mask mô hình nền bậc hai
 
 | Đặc trưng + bộ phân lớp | Phiên bản ảnh | Macro-F1 | Accuracy |
 |---|---|---|---|

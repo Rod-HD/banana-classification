@@ -1,6 +1,6 @@
-### C2 — Đổi độ sáng (nhân kênh V) với HOG có và không chuẩn hóa block, so với histogram màu; macro-F1 5-fold
+### C2: Đổi độ sáng (nhân kênh V) với HOG có và không chuẩn hóa block, so với histogram màu; macro-F1 5-fold
 
-| Đặc trưng | Số chiều | Bộ phân lớp | Ảnh gốc | Sụt (V×0,6) | Sụt (V×1,4) |
+| Đặc trưng | Số chiều | Bộ phân lớp | Ảnh gốc | Sụt (V×0.6) | Sụt (V×1.4) |
 |---|---|---|---|---|---|
 | HOG, chuẩn hóa block L2 | 3780 | KNN (k=5) | 0.946 ± 0.007 | +0.009 ± 0.007 | +0.163 ± 0.008 |
 | HOG, chuẩn hóa block L2 | 3780 | LogReg | 0.985 ± 0.004 | +0.004 ± 0.004 | +0.215 ± 0.033 |

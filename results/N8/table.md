@@ -1,6 +1,6 @@
-### N8 — Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)
+### N8: Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)
 
-| Mô hình | Ảnh gốc | Xáo trộn 4×4 | V×0,6 | V×1,4 | Ảnh xám | Nhiễu σ=5 | Nhiễu σ=10 | Nhiễu σ=20 | Che 25% | Xoay −30° | Xoay −15° | Xoay +15° | Xoay +30° |
+| Mô hình | Ảnh gốc | Xáo trộn 4×4 | V×0.6 | V×1.4 | Ảnh xám | Nhiễu σ=5 | Nhiễu σ=10 | Nhiễu σ=20 | Che 25% | Xoay −30° | Xoay −15° | Xoay +15° | Xoay +30° |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Truyền thống: Hist HSV (8,8,8) | 0.997 | 0.997 | 0.280 | 0.705 | 0.145 | 0.451 | 0.085 | 0.085 | 0.076 | 0.987 | 0.993 | 0.992 | 0.994 |
 | Truyền thống: HOG 64×128 | 0.983 | 0.302 | 0.984 | 0.800 | 0.981 | 0.537 | 0.461 | 0.318 | 0.801 | 0.679 | 0.929 | 0.886 | 0.550 |

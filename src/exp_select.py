@@ -90,7 +90,7 @@ def main():
     save_json(exp_dir("select_traditional") / "selected.json", selected)
     save_json(exp_dir("select_traditional") / "metrics.json", [{k: v for k, v in r.items() if k != "cfg"} for r in allres])
     register("select_traditional", srows)
-    print(save_table("select_traditional", rows, title="Chốt cấu hình truyền thống — cấu hình tốt nhất của mỗi bộ phân lớp trên từng đặc trưng (5-fold CV)"))
+    print(save_table("select_traditional", rows, title="Chốt cấu hình truyền thống: cấu hình tốt nhất của mỗi bộ phân lớp trên từng đặc trưng (5-fold CV)"))
     sel_rows = [{"Vai trò": k, "Cấu hình": v["name"], "Macro-F1 (5-fold)": pm(v["cv_macro_f1"], v["cv_macro_f1_std"]),
                  "Accuracy": f"{v['cv_accuracy']:.3f}"} for k, v in selected.items() if not k.startswith("_")]
     print(save_table("select_traditional", sel_rows, "table_selected", title="Cấu hình truyền thống đã chốt"), "tốt nhất:", best_key)

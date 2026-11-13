@@ -1,6 +1,6 @@
 ### Nhánh T-kr: 9 cấu hình của pipeline gốc (bản Augmented của tác giả, chia theo ảnh gốc (không rò rỉ); 5187 ảnh train, chấm trên 371 ảnh test)
 
-| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0.6 | V×1.4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0.1 | 0.993 | 0.997 | [0.989; 1.000] | 0.997 | 1 | 0.637 | 0.350 | 0.628 | 0.086 | 0.994 | 0.637 | 0.555 |
 | Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0.933 | 0.948 | [0.924; 0.969] | 0.951 | 18 | 0.825 | 0.659 | 0.890 | 0.340 | 0.736 | 0.682 | 0.689 |

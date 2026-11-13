@@ -76,7 +76,7 @@ def leak_report():
     rows = [{"Chỉ số": "Số ảnh test", "Giá trị": len(te)}, {"Chỉ số": "Ảnh test có ít nhất 1 file cùng ảnh gốc trong train", "Giá trị": f"{int(sib.sum())} ({100 * sib.mean():.1f}%)"},
             {"Chỉ số": "… có đúng 2 file cùng ảnh gốc trong train", "Giá trị": f"{int((n_sib == 2).sum())} ({100 * (n_sib == 2).mean():.1f}%)"},
             {"Chỉ số": "Ảnh test không có file cùng ảnh gốc trong train", "Giá trị": int((~sib).sum())}]
-    save_table("E2_aug_tac_gia", rows, "table_leak_stats", title="T-tl — Mức trùng nguồn giữa train và test khi chia ngẫu nhiên bản Augmented")
+    save_table("E2_aug_tac_gia", rows, "table_leak_stats", title="T-tl: Mức trùng nguồn giữa train và test khi chia ngẫu nhiên bản Augmented")
     acc = []
     for key in TRAD + CNN:
         f = OUT / "thong_le" / key / "predictions.npz"
@@ -84,9 +84,9 @@ def leak_report():
             z = np.load(f); ok = z["test"] == z["y"]
             acc.append({"Mô hình": json.loads((OUT / "thong_le" / key / "metrics.json").read_text())["config"],
                         "Accuracy (ảnh test có anh em trong train)": f"{ok[sib].mean():.3f}", "Số ảnh": int(sib.sum()),
-                        "Accuracy (ảnh test không có)": f"{ok[~sib].mean():.3f}" if (~sib).any() else "—", "Số ảnh ": int((~sib).sum())})
+                        "Accuracy (ảnh test không có)": f"{ok[~sib].mean():.3f}" if (~sib).any() else "-", "Số ảnh ": int((~sib).sum())})
     if acc:
-        save_table("E2_aug_tac_gia", acc, "table_leak_accuracy", title="T-tl — Accuracy trên test tách theo việc ảnh có file cùng ảnh gốc trong train")
+        save_table("E2_aug_tac_gia", acc, "table_leak_accuracy", title="T-tl: Accuracy trên test tách theo việc ảnh có file cùng ảnh gốc trong train")
 
 
 def main():

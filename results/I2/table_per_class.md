@@ -1,4 +1,4 @@
-### I2 — Precision (P) và Recall (R) từng lớp
+### I2: Precision (P) và Recall (R) từng lớp
 
 | Mô hình | Cách xử lý | P Bangla | P Champa | P Sabri | P Sagor | R Bangla | R Champa | R Sabri | R Sagor |
 |---|---|---|---|---|---|---|---|---|---|

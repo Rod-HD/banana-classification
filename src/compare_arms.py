@@ -17,10 +17,10 @@ from .pipeline import CNN, TRAD
 from .report_utils import exp_dir, save_json, save_table
 from .stress import STRESS, STRESS_LABEL
 
-ARMS = {"G": ("G — pipeline gốc", RESULTS_DIR / "so_sanh_nhanh" / "G"),
-        "X-a": ("X-a — xử lý dữ liệu: tiền xử lý lúc suy luận", RESULTS_DIR / "E1_xu_ly" / "pipeline"),
-        "X-b": ("X-b — xử lý dữ liệu: tăng cường có thay nền", RESULTS_DIR / "E1_xu_ly" / "pipeline_b"),
-        "T": ("T — Augmented của tác giả (không rò rỉ)", RESULTS_DIR / "E2_aug_tac_gia" / "khong_ro_ri")}
+ARMS = {"G": ("G: pipeline gốc", RESULTS_DIR / "so_sanh_nhanh" / "G"),
+        "X-a": ("X-a: xử lý dữ liệu, tiền xử lý lúc suy luận", RESULTS_DIR / "E1_xu_ly" / "pipeline"),
+        "X-b": ("X-b: xử lý dữ liệu, tăng cường có thay nền", RESULTS_DIR / "E1_xu_ly" / "pipeline_b"),
+        "T": ("T: Augmented của tác giả (không rò rỉ)", RESULTS_DIR / "E2_aug_tac_gia" / "khong_ro_ri")}
 SHORT = {"trad_color": "Hist HSV + LogReg", "trad_edge": "Cạnh Roberts + KNN", "trad_hog": "HOG + LogReg", "trad_fusion": "Hist H-S + HOG + LogReg",
          "a_lenet": "a_lenet", "a_dropout": "a_dropout", "a_vgg16": "a_vgg16", "b_mobilenetv3": "b_mobilenetv3", "b_resnet50": "b_resnet50"}
 
@@ -45,9 +45,9 @@ def main():
         row = {"Cấu hình": SHORT[k]}
         for a in data:
             m = data[a].get(k)
-            row[f"{a}: macro-F1 test"] = f"{m['macro_f1']:.3f}" if m else "—"
-            row[f"{a}: số ảnh sai"] = m["n_errors"] if m else "—"
-            row[f"{a}: điểm bền"] = f"{m['robust_score']:.3f}" if m else "—"
+            row[f"{a}: macro-F1 test"] = f"{m['macro_f1']:.3f}" if m else "-"
+            row[f"{a}: số ảnh sai"] = m["n_errors"] if m else "-"
+            row[f"{a}: điểm bền"] = f"{m['robust_score']:.3f}" if m else "-"
         rows.append(row)
     common = [k for k in TRAD + CNN if all(k in data[a] for a in data)]
     for label, keys, need_all in [("**Trung bình 9 cấu hình**", TRAD + CNN, True), (f"**Trung bình {len(common)} cấu hình có ở mọi nhánh**", common, False)]:
@@ -57,9 +57,9 @@ def main():
         for a in data:
             ms = [data[a][k] for k in keys if k in data[a]]
             ok = len(ms) == len(keys)
-            mean_row[f"{a}: macro-F1 test"] = f"**{np.mean([m['macro_f1'] for m in ms]):.3f}**" if ok else "—"
-            mean_row[f"{a}: số ảnh sai"] = f"**{np.mean([m['n_errors'] for m in ms]):.1f}**" if ok else "—"
-            mean_row[f"{a}: điểm bền"] = f"**{np.mean([m['robust_score'] for m in ms]):.3f}**" if ok else "—"
+            mean_row[f"{a}: macro-F1 test"] = f"**{np.mean([m['macro_f1'] for m in ms]):.3f}**" if ok else "-"
+            mean_row[f"{a}: số ảnh sai"] = f"**{np.mean([m['n_errors'] for m in ms]):.1f}**" if ok else "-"
+            mean_row[f"{a}: điểm bền"] = f"**{np.mean([m['robust_score'] for m in ms]):.3f}**" if ok else "-"
         rows.append(mean_row)
     print(save_table("so_sanh_nhanh", rows, "table_models", title="So sánh từng cấu hình qua các nhánh: macro-F1 trên test gốc (371 ảnh), số ảnh sai, điểm bền (trung bình macro-F1 trên 6 phép thử khó)"))
 
@@ -73,8 +73,8 @@ def main():
     if fb.exists():
         raw = json.loads(fb.read_text()); summ = json.loads((RESULTS_DIR / "E3_bai_bao" / "summary.json").read_text())
         from .exp_papers import CLF_NAME, EXTRACTORS
-        picks = [("B1 — bài báo, trong phạm vi môn học (CNN + bộ phân lớp)", summ["best_by_dev_cv"].get("B1")),
-                 ("B2 — bài báo, đúng phương pháp (ViT + SVM)", summ.get("paper_main"))]
+        picks = [("B1: bài báo, trong phạm vi môn học (CNN + bộ phân lớp)", summ["best_by_dev_cv"].get("B1")),
+                 ("B2: bài báo, đúng phương pháp (ViT + SVM)", summ.get("paper_main"))]
         for name, key in picks:
             if key:
                 r = raw[key]; ex, c = key.split("|")
@@ -102,7 +102,7 @@ def main():
     te = load_split("test"); masks = all_masks_v2()[te["idx"].values]
     occ = stress_sets("test")["occlude25"].sum(-1) == 0
     cover = np.array([(o & (m > 0)).sum() / max((m > 0).sum(), 1) for o, m in zip(occ, masks)])
-    bins = [("Quả bị che ≥ 90%", cover >= 0.9), ("Quả bị che 30–90%", (cover >= 0.3) & (cover < 0.9)), ("Quả bị che < 30%", cover < 0.3)]
+    bins = [("Quả bị che ≥ 90%", cover >= 0.9), ("Quả bị che 30-90%", (cover >= 0.3) & (cover < 0.9)), ("Quả bị che < 30%", cover < 0.3)]
     occ_rows = []
     for a in data:
         for k in ("b_mobilenetv3", "trad_fusion"):
@@ -135,7 +135,7 @@ def main():
         fig, ax = plt.subplots(figsize=(12, 4.6)); tests = ["clean"] + STRESS; x = np.arange(len(tests)); w = 0.8 / len(reps)
         for j, (name, cfg, dev, f1, ci, ne, st, rob, how) in enumerate(reps):
             v = [f1] + [st[s] for s in STRESS]
-            ax.bar(x + (j - (len(reps) - 1) / 2) * w, v, w, label=f"{name.split(' — ')[0]}: {cfg}")
+            ax.bar(x + (j - (len(reps) - 1) / 2) * w, v, w, label=f"{name.split(': ')[0]}: {cfg}")
         ax.set_xticks(x); ax.set_xticklabels([STRESS_LABEL[t] for t in tests]); ax.set_ylabel("Macro-F1 trên test"); ax.set_ylim(0, 1.08)
         ax.legend(fontsize=8, ncol=3, loc="upper center", bbox_to_anchor=(0.5, -0.1), frameon=False); ax.set_title("Cấu hình đại diện của mỗi nhánh trên ảnh gốc và 6 phép thử khó")
         fig.tight_layout(); fig.savefig(FIG_DIR / "E_compare_stress.png", dpi=130); plt.close(fig)

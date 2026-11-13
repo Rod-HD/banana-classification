@@ -1,4 +1,4 @@
-### C4 — Che một hình vuông 25% diện tích (tô đen, vị trí ngẫu nhiên) trên ảnh chấm; macro-F1 5-fold
+### C4: Che một hình vuông 25% diện tích (tô đen, vị trí ngẫu nhiên) trên ảnh chấm; macro-F1 5-fold
 
 | Đặc trưng | Loại | Bộ phân lớp | Ảnh gốc | Che 25% | Độ sụt |
 |---|---|---|---|---|---|

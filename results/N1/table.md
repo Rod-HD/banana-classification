@@ -1,4 +1,4 @@
-### N1 — Số tham số từng lớp: tính tay theo công thức so với Keras
+### N1: Số tham số từng lớp: tính tay theo công thức so với Keras
 
 | Mô hình | Lớp | Công thức | Tính tay | model.summary() | Khớp | Ghi chú |
 |---|---|---|---|---|---|---|

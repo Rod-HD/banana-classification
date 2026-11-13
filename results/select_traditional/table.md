@@ -1,4 +1,4 @@
-### Chốt cấu hình truyền thống — cấu hình tốt nhất của mỗi bộ phân lớp trên từng đặc trưng (5-fold CV)
+### Chốt cấu hình truyền thống: cấu hình tốt nhất của mỗi bộ phân lớp trên từng đặc trưng (5-fold CV)
 
 | Họ | Đặc trưng | Cấu hình tốt nhất của bộ phân lớp | Số chiều | Macro-F1 | Accuracy | Huấn luyện (s) | Dự đoán (ms/ảnh) |
 |---|---|---|---|---|---|---|---|

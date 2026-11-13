@@ -1,4 +1,4 @@
-### Ví dụ 1 — Vector moment màu (HSV, đã chia về [0, 1]) của hai ảnh
+### Ví dụ 1: Vector moment màu (HSV, đã chia về [0, 1]) của hai ảnh
 
 | Thành phần | x (Bangla_Kola_1.jpg) | y (Champa_Kola_1.jpg) | x − y | (x − y)² | Trị tuyệt đối của x − y |
 |---|---|---|---|---|---|

@@ -1,4 +1,4 @@
-### T-tl — Mức trùng nguồn giữa train và test khi chia ngẫu nhiên bản Augmented
+### T-tl: Mức trùng nguồn giữa train và test khi chia ngẫu nhiên bản Augmented
 
 | Chỉ số | Giá trị |
 |---|---|

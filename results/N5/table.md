@@ -1,4 +1,4 @@
-### N5 — Tăng cường ảnh (lật, xoay ±30°, zoom ±10%) lúc huấn luyện
+### N5: Tăng cường ảnh (lật, xoay ±30°, zoom ±10%) lúc huấn luyện
 
 | Cấu hình | Epoch chọn / tổng | Macro-F1 val | Accuracy train (epoch chọn) | Accuracy val (epoch chọn) | Loss train (epoch cuối) | Loss val (epoch cuối) | Khoảng cách loss val − train (epoch cuối) | Loss val thấp nhất |
 |---|---|---|---|---|---|---|---|---|

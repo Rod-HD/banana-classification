@@ -1,4 +1,4 @@
-### M6 — Bỏ thông tin màu (ảnh xám); macro-F1 5-fold
+### M6: Bỏ thông tin màu (ảnh xám); macro-F1 5-fold
 
 | Đặc trưng | Bộ phân lớp | Học màu, chấm màu | Học màu, chấm xám | Học xám, chấm xám | Sụt khi bỏ màu (học lại) |
 |---|---|---|---|---|---|

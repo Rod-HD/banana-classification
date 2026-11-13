@@ -10,7 +10,7 @@ from .data import load_all_images, load_split
 from .transforms import apply_transform
 
 STRESS = ["swapbg", "v0.6", "v1.4", "noise10", "rot30", "occlude25"]
-STRESS_LABEL = {"clean": "Ảnh gốc", "swapbg": "Nền hoán đổi", "v0.6": "V×0,6", "v1.4": "V×1,4", "noise10": "Nhiễu σ=10",
+STRESS_LABEL = {"clean": "Ảnh gốc", "swapbg": "Nền hoán đổi", "v0.6": "V×0.6", "v1.4": "V×1.4", "noise10": "Nhiễu σ=10",
                 "rot30": "Xoay +30°", "occlude25": "Che 25%"}
 _DIL = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (25, 25))
 

@@ -1,4 +1,4 @@
-### C3 — Quét tham số HOG (ảnh xám, block 2×2 cell, chuẩn hóa L2, chia phiếu cho hai bin gần nhất); macro-F1 5-fold
+### C3: Quét tham số HOG (ảnh xám, block 2×2 cell, chuẩn hóa L2, chia phiếu cho hai bin gần nhất); macro-F1 5-fold
 
 | Kích thước ảnh (rộng×cao) | Cell | Số bin | Số chiều | Rút đặc trưng (ms/ảnh) | KNN (k=5) | LogReg | Linear SVM |
 |---|---|---|---|---|---|---|---|

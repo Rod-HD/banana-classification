@@ -1,4 +1,4 @@
-### P6 — Bộ phân lớp tuyến tính so với KNN theo số chiều của đặc trưng; macro-F1 5-fold
+### P6: Bộ phân lớp tuyến tính so với KNN theo số chiều của đặc trưng; macro-F1 5-fold
 
 | Đặc trưng | KNN (k=5) | Logistic Regression | Linear SVM | LogReg − KNN |
 |---|---|---|---|---|

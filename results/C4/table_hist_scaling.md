@@ -1,4 +1,4 @@
-### C4 (phụ) — Histogram dưới phép che 25% theo cách chuẩn hóa của KNN
+### C4 (phụ): Histogram dưới phép che 25% theo cách chuẩn hóa của KNN
 
 | Đặc trưng | KNN (k=5), chuẩn hóa | Ảnh gốc | Che 25% | Độ sụt |
 |---|---|---|---|---|

@@ -132,8 +132,8 @@ PRESETS = {  # tên: (V, nhiễu, góc, che, xám, lật, nền)
     "Tự chỉnh": None,
     "Ảnh gốc": (1.0, 0, 0, 0.0, False, False, "Giữ nền gốc"),
     "Nền hoán đổi": (1.0, 0, 0, 0.0, False, False, "Nền của một ảnh test"),
-    "V×0,6 (tối hơn)": (0.6, 0, 0, 0.0, False, False, "Giữ nền gốc"),
-    "V×1,4 (sáng hơn)": (1.4, 0, 0, 0.0, False, False, "Giữ nền gốc"),
+    "V×0.6 (tối hơn)": (0.6, 0, 0, 0.0, False, False, "Giữ nền gốc"),
+    "V×1.4 (sáng hơn)": (1.4, 0, 0, 0.0, False, False, "Giữ nền gốc"),
     "Nhiễu σ=10": (1.0, 10, 0, 0.0, False, False, "Giữ nền gốc"),
     "Xoay +30°": (1.0, 0, 30, 0.0, False, False, "Giữ nền gốc"),
     "Che 25%": (1.0, 0, 0, 0.25, False, False, "Giữ nền gốc"),
@@ -220,7 +220,7 @@ def ui_metrics(label, split, version):
     key, stress = key_of(label), C.DATA_VERSIONS[version]
     r = C.evaluate(key, split, stress)
     per, avg, cm, s = C.metric_tables(r)
-    name = f"{REGISTRY[key]['label']} — tập {split} ({s['n']} ảnh), {version.lower()}"
+    name = f"{REGISTRY[key]['label']}, tập {split} ({s['n']} ảnh), {version.lower()}"
     lines = [f"### {name}",
              f"**Accuracy** {s['accuracy']:.4f} · **Macro-F1** {s['macro_f1']:.4f} · số ảnh sai {s['wrong']}/{s['n']} · "
              f"thời gian dự đoán {r['seconds']:.1f} s ({1000 * r['seconds'] / s['n']:.1f} ms/ảnh)"]

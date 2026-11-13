@@ -1,4 +1,4 @@
-### C1 — Vector cạnh (512 chiều) theo toán tử; nhiễu Gauss trên ảnh chấm; macro-F1 5-fold
+### C1: Vector cạnh (512 chiều) theo toán tử; nhiễu Gauss trên ảnh chấm; macro-F1 5-fold
 
 | Toán tử | Bộ phân lớp | Ảnh gốc | Sụt σ=2 | Sụt σ=5 | Sụt σ=10 | Sụt σ=20 |
 |---|---|---|---|---|---|---|

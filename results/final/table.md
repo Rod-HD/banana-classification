@@ -1,4 +1,4 @@
-### Đánh giá cuối trên tập test (371 ảnh; mỗi ảnh sai tương ứng 0,27% accuracy)
+### Đánh giá cuối trên tập test (371 ảnh; mỗi ảnh sai tương ứng 0.27% accuracy)
 
 | Nhóm | Mô hình | Macro-F1 test | KTC 95% (bootstrap) | Accuracy test | Số ảnh sai / 371 | Recall thấp nhất | Macro-F1 lúc chọn (5-fold CV hoặc val) |
 |---|---|---|---|---|---|---|---|

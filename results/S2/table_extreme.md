@@ -1,4 +1,4 @@
-### S2 — Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng
+### S2: Hai phép thử cực đoan: chỉ màu nền, chỉ kích thước/hình bóng
 
 | Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
 |---|---|---|---|

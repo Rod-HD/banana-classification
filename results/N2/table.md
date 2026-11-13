@@ -1,4 +1,4 @@
-### N2 — Macro-F1 trên val theo tỉ lệ tập train được dùng
+### N2: Macro-F1 trên val theo tỉ lệ tập train được dùng
 
 | Mô hình | 25% train (432 ảnh) | 50% train (864 ảnh) | 100% train (1729 ảnh) | Tăng từ 25% lên 100% |
 |---|---|---|---|---|

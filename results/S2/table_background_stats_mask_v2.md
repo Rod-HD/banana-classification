@@ -1,4 +1,4 @@
-### S2 — Màu nền (Lab của OpenCV, thang 0–255) và kích thước quả theo lớp (train+val)
+### S2: Màu nền (Lab của OpenCV, thang 0-255) và kích thước quả theo lớp (train+val)
 
 | Lớp | Nền: L trung bình ± std | Nền: a | Nền: b | Tỉ lệ diện tích quả chuối |
 |---|---|---|---|---|

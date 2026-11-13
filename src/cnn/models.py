@@ -3,7 +3,7 @@
 Hướng A (theo bài giảng): a_lenet, a_dropout, a_vgg16 (transfer learning, đóng băng phần tích chập).
 Hướng B (lớn hơn, fine-tune): b_mobilenetv3, b_resnet50.
 
-Mọi mô hình nhận ảnh RGB giá trị 0–255; phần chuẩn hóa nằm trong mô hình.
+Mọi mô hình nhận ảnh RGB giá trị 0-255; phần chuẩn hóa nằm trong mô hình.
 """
 from __future__ import annotations
 
@@ -47,7 +47,7 @@ def a_lenet(size: int = 64, augment: bool = False):
 
 
 def a_dropout(size: int = 128, dropout: bool = True, augment: bool = False):
-    """Conv(32, 5×5) → MaxPool → Conv(16, 5×5) → MaxPool → Flatten → Dense(128) → Dropout(0,5) → Dense(64) → Softmax(4)."""
+    """Conv(32, 5×5) → MaxPool → Conv(16, 5×5) → MaxPool → Flatten → Dense(128) → Dropout(0.5) → Dense(64) → Softmax(4)."""
     inp = keras.Input((size, size, 3), name="image")
     x = augmentation()(inp) if augment else inp
     x = layers.Rescaling(1 / 255.0, name="rescale")(x)
@@ -65,7 +65,7 @@ def a_dropout(size: int = 128, dropout: bool = True, augment: bool = False):
 
 
 def _rgb_backbone(kind: str, size: int = 224):
-    """VGG16 / ResNet50 ImageNet không có phần đầu, sửa để nhận thẳng ảnh RGB 0–255:
+    """VGG16 / ResNet50 ImageNet không có phần đầu, sửa để nhận thẳng ảnh RGB 0-255:
     trừ trung bình ImageNet bằng lớp Normalization và đảo trục kênh của kernel tích chập đầu tiên
     (trọng số gốc học trên ảnh BGR). Tương đương preprocess_input kiểu 'caffe'."""
     fn = {"vgg16": keras.applications.VGG16, "resnet50": keras.applications.ResNet50}[kind]
@@ -80,7 +80,7 @@ def _rgb_backbone(kind: str, size: int = 224):
 
 
 def vgg16_features(size: int = 224):
-    """Phần tích chập VGG16 đóng băng: ảnh RGB 0–255 → bản đồ đặc trưng 7×7×512."""
+    """Phần tích chập VGG16 đóng băng: ảnh RGB 0-255 → bản đồ đặc trưng 7×7×512."""
     m, base = _rgb_backbone("vgg16", size)
     m.trainable = False
     return m
@@ -97,7 +97,7 @@ def a_vgg16_head(feat_shape=(7, 7, 512)):
 
 
 def b_backbone(kind: str, size: int = 224):
-    """Thân mạng hướng B: ảnh RGB 0–255 → vector sau GlobalAveragePooling."""
+    """Thân mạng hướng B: ảnh RGB 0-255 → vector sau GlobalAveragePooling."""
     if kind == "b_mobilenetv3":
         base = keras.applications.MobileNetV3Small(include_top=False, weights="imagenet", input_shape=(size, size, 3),
                                                    include_preprocessing=True)
@@ -107,7 +107,7 @@ def b_backbone(kind: str, size: int = 224):
 
 
 def b_model(kind: str, size: int = 224, augment: bool = True):
-    """Mô hình hướng B đầy đủ: (tăng cường) → thân ImageNet (BatchNorm ở chế độ suy luận) → GAP → Dropout(0,2) → Softmax(4).
+    """Mô hình hướng B đầy đủ: (tăng cường) → thân ImageNet (BatchNorm ở chế độ suy luận) → GAP → Dropout(0.2) → Softmax(4).
     Trả về (model, base) để đóng/mở băng base."""
     inp = keras.Input((size, size, 3), name="image")
     x = augmentation()(inp) if augment else inp

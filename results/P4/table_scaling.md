@@ -1,4 +1,4 @@
-### P4 (phụ) — Đặc trưng 9 chiều, tập tham chiếu nhân bản kèm nhiễu Gauss σ=0,05 (dữ liệu tổng hợp, chỉ để đo thời gian)
+### P4 (phụ): Đặc trưng 9 chiều, tập tham chiếu nhân bản kèm nhiễu Gauss σ=0.05 (dữ liệu tổng hợp, chỉ để đo thời gian)
 
 | Số điểm tham chiếu | brute: dự đoán 420 ảnh (ms) | kd_tree: dự đoán 420 ảnh (ms) | ball_tree: dự đoán 420 ảnh (ms) |
 |---|---|---|---|

@@ -1,4 +1,4 @@
-### M4 — So sánh các đặc trưng màu: macro-F1 5-fold, số chiều, thời gian
+### M4: So sánh các đặc trưng màu: macro-F1 5-fold, số chiều, thời gian
 
 | Đặc trưng | Số chiều | Rút đặc trưng (ms/ảnh) | KNN (k=5) | Huấn luyện KNN (k=5) (s) | Dự đoán KNN (k=5) (ms/ảnh) | LogReg | Huấn luyện LogReg (s) | Dự đoán LogReg (ms/ảnh) | Linear SVM |
 |---|---|---|---|---|---|---|---|---|---|

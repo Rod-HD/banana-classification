@@ -1,4 +1,4 @@
-### Kiểm tra trọng số trong checkpoints/: dự đoán lại bằng best.keras, so với kết quả đã ghi — khớp 40/40 run được chấm lại
+### Kiểm tra trọng số trong checkpoints/: dự đoán lại bằng best.keras, so với kết quả đã ghi, khớp 40/40 run được chấm lại
 
 | Run | File (MB) | Tập chấm | Macro-F1 đã ghi | Macro-F1 tính lại | Số ảnh đoán sai (đã ghi / tính lại) | Khớp |
 |---|---|---|---|---|---|---|
@@ -6,23 +6,23 @@
 | T-kr__a_lenet | 1.39 | test (371 ảnh) | 0.966263 | 0.966263 | 10 / 10 | có |
 | T-kr__a_vgg16 | 103.84 | test (371 ảnh) | 0.984792 | 0.984792 | 5 / 5 | có |
 | T-kr__b_mobilenetv3 | 4.34 | test (371 ảnh) | 0.997566 | 0.997566 | 1 / 1 | có |
-| T-kr__b_mobilenetv3_s1 | 0.03 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| T-kr__b_mobilenetv3_s1 | 0.03 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
 | T-kr__b_resnet50 | 95.05 | test (371 ảnh) | 0.996774 | 0.996774 | 1 / 1 | có |
-| T-kr__b_resnet50_s1 | 0.05 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| T-tl__a_lenet | 1.39 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| T-tl__a_vgg16 | 103.84 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| T-tl__b_mobilenetv3 | 4.34 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| T-tl__b_mobilenetv3_s1 | 0.03 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__a_dropout | 7.04 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__a_lenet | 1.39 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__a_vgg16 | 103.84 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__b_mobilenetv3 | 4.34 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__b_mobilenetv3_s1 | 0.03 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__b_resnet50 | 95.05 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
-| X__b_resnet50_s1 | 0.05 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| T-kr__b_resnet50_s1 | 0.05 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| T-tl__a_lenet | 1.39 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| T-tl__a_vgg16 | 103.84 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| T-tl__b_mobilenetv3 | 4.34 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| T-tl__b_mobilenetv3_s1 | 0.03 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__a_dropout | 7.04 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__a_lenet | 1.39 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__a_vgg16 | 103.84 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__b_mobilenetv3 | 4.34 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__b_mobilenetv3_s1 | 0.03 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__b_resnet50 | 95.05 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| X__b_resnet50_s1 | 0.05 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
 | Xb__a_vgg16 | 103.84 | test (371 ảnh) | 0.976633 | 0.976633 | 8 / 8 | có |
 | Xb__b_mobilenetv3 | 4.34 | test (371 ảnh) | 1.000000 | 1.000000 | 0 / 0 | có |
-| Xb__b_mobilenetv3_s1 | 0.03 | — | — | — | — | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
+| Xb__b_mobilenetv3_s1 | 0.03 | - | - | - | - | không chấm lại ở đây; trọng số đã so từng bit (table_slim.md) |
 | a_dropout | 7.03 | val (371 ảnh) | 0.939909 | 0.939909 | 20 / 20 | có |
 | a_dropout_aug | 7.04 | val (371 ảnh) | 0.947960 | 0.947960 | 17 / 17 | có |
 | a_dropout_nodrop | 7.02 | val (371 ảnh) | 0.951153 | 0.951153 | 16 / 16 | có |

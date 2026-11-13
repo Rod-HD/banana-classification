@@ -1,4 +1,4 @@
-"""Thí nghiệm mất cân bằng dữ liệu I1–I2 (mục 6.6 của kế hoạch).
+"""Thí nghiệm mất cân bằng dữ liệu I1-I2 (mục 6.6 của kế hoạch).
 
 I1: Accuracy so với macro-F1 và recall từng lớp ở mô hình chưa xử lý mất cân bằng.
 I2: không xử lý / class weight / oversampling / tăng cường ảnh cho lớp ít, trên mô hình tốt nhất
@@ -75,13 +75,13 @@ def i1():
                           "Accuracy − Macro-F1": f"{m['accuracy'] - m['macro_f1']:+.3f}"},
                          **{f"Recall {s}": f"{r:.3f}" for s, r in zip(SHORT, rc)}, **{"Recall thấp nhất": f"{min(rc):.3f} ({SHORT[int(np.argmin(rc))]})"}))
     save_json(exp_dir("I1") / "metrics.json", raw); register("I1", [])
-    print(save_table("I1", rows, title="I1 — Accuracy so với macro-F1 và recall từng lớp (mô hình chưa xử lý mất cân bằng)"))
+    print(save_table("I1", rows, title="I1: Accuracy so với macro-F1 và recall từng lớp (mô hình chưa xử lý mất cân bằng)"))
     fig, ax = plt.subplots(figsize=(7, 4.5))
     a = [raw[n]["accuracy"] for n in raw]; f = [raw[n]["macro_f1"] for n in raw]; mn = [min(raw[n]["recall"]) for n in raw]
     ax.scatter(a, f, label="Macro-F1", marker="o"); ax.scatter(a, mn, label="Recall của lớp kém nhất", marker="x", color="tab:red")
     lo = min(min(a), min(mn)) - 0.02
     ax.plot([lo, 1], [lo, 1], color="gray", lw=1, ls="--", label="bằng Accuracy")
-    ax.set_xlabel("Accuracy"); ax.set_ylabel("Chỉ số"); ax.set_title("I1 — Accuracy che khuất lớp bị nhận kém"); ax.legend(fontsize=8)
+    ax.set_xlabel("Accuracy"); ax.set_ylabel("Chỉ số"); ax.set_title("I1: Accuracy che khuất lớp bị nhận kém"); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "I1_accuracy_vs_macro_f1.png", dpi=130); plt.close(fig)
 
 
@@ -148,10 +148,10 @@ def i2():
                       "macro_f1": round(r["macro_f1"], 4), "macro_f1_std": None if r["macro_f1_std"] is None else round(r["macro_f1_std"], 4),
                       "accuracy": round(r["accuracy"], 4)})
     save_json(exp_dir("I2") / "metrics.json", [{k: v for k, v in r.items() if k != "res"} for r in recs]); register("I2", srows)
-    print(save_table("I2", rows, title="I2 — Các cách xử lý mất cân bằng (lấy mẫu lại chỉ trên phần huấn luyện)"))
+    print(save_table("I2", rows, title="I2: Các cách xử lý mất cân bằng (lấy mẫu lại chỉ trên phần huấn luyện)"))
     full = [dict({"Mô hình": r["model"], "Cách xử lý": r["method"]}, **{f"P {s}": f"{v:.3f}" for s, v in zip(SHORT, r["precision"])},
                  **{f"R {s}": f"{v:.3f}" for s, v in zip(SHORT, r["recall"])}) for r in recs]
-    save_table("I2", full, "table_per_class", title="I2 — Precision (P) và Recall (R) từng lớp")
+    save_table("I2", full, "table_per_class", title="I2: Precision (P) và Recall (R) từng lớp")
     models = list(dict.fromkeys(r["model"] for r in recs))
     fig, axes = plt.subplots(1, len(models), figsize=(4.2 * len(models), 3.9), sharey=False)
     for ax, mdl in zip(np.atleast_1d(axes), models):
@@ -162,7 +162,7 @@ def i2():
         ax.set_ylim(max(0, lo - 0.05), 1.005); ax.set_xticks(x); ax.set_xticklabels([r["method"].replace(" ", "\n", 1) for r in rs], fontsize=7)
         ax.set_title(mdl.split(":")[0] + ":\n" + mdl.split(": ")[1][:38], fontsize=8)
     np.atleast_1d(axes)[0].legend(fontsize=7, loc="lower left")
-    fig.suptitle("I2 — Precision/Recall của lớp ít nhất (Bangla Kola) và lớp đông nhất (Champa Kola)")
+    fig.suptitle("I2: Precision/Recall của lớp ít nhất (Bangla Kola) và lớp đông nhất (Champa Kola)")
     fig.tight_layout(); fig.savefig(FIG_DIR / "I2_imbalance.png", dpi=130); plt.close(fig)
 
 

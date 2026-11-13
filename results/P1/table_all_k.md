@@ -1,4 +1,4 @@
-### P1 — Macro-F1 5-fold theo k (Euclidean, chuẩn hóa z-score, bình chọn đa số)
+### P1: Macro-F1 5-fold theo k (Euclidean, chuẩn hóa z-score, bình chọn đa số)
 
 | k | Moment màu (9 chiều) | Hist HSV (512 chiều) | HOG 64×128 (3780 chiều) |
 |---|---|---|---|

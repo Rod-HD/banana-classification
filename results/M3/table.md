@@ -1,4 +1,4 @@
-### M3 — Quét số bin; macro-F1 5-fold
+### M3: Quét số bin; macro-F1 5-fold
 
 | Đặc trưng | Số bin mỗi kênh | Số chiều | KNN (k=5) | LogReg | Tỉ lệ phần tử bằng 0 |
 |---|---|---|---|---|---|

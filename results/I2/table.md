@@ -1,4 +1,4 @@
-### I2 — Các cách xử lý mất cân bằng (lấy mẫu lại chỉ trên phần huấn luyện)
+### I2: Các cách xử lý mất cân bằng (lấy mẫu lại chỉ trên phần huấn luyện)
 
 | Mô hình | Cách xử lý | Chấm | Macro-F1 | Accuracy | Precision Bangla (ít nhất) | Recall Bangla (ít nhất) | Precision Champa (đông nhất) | Recall Champa (đông nhất) | Recall thấp nhất |
 |---|---|---|---|---|---|---|---|---|---|

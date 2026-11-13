@@ -52,7 +52,7 @@ def main():
         ci_f, ci_a = bootstrap_ci(yte, p)
         m = save_result(out / key, yte, p, extra=dict({"config": name, "group": group, "eval_set": "test (371 ảnh)", "macro_f1_ci95": ci_f, "accuracy_ci95": ci_a,
                                                         "n_errors": int((p != yte).sum()), "dev_score": dev_score, "dev_score_kind": dev_label}, **(extra or {})),
-                        title=f"{name} — test")
+                        title=f"{name}, test")
         preds[key] = p
         if proba is not None:
             probs[key] = proba
@@ -82,7 +82,7 @@ def main():
     register_rows = srows
     from .exp_common import register
     register("final", register_rows)
-    print(save_table("final", rows, title="Đánh giá cuối trên tập test (371 ảnh; mỗi ảnh sai tương ứng 0,27% accuracy)"))
+    print(save_table("final", rows, title="Đánh giá cuối trên tập test (371 ảnh; mỗi ảnh sai tương ứng 0.27% accuracy)"))
 
     # --- so sánh từng cặp: số ảnh chỉ mô hình này sai / chỉ mô hình kia sai
     # Mô hình đại diện mỗi nhóm được chọn theo điểm lúc phát triển (CV hoặc val), không theo test.
@@ -109,7 +109,7 @@ def main():
         for k in bk:
             ok = preds[k] == yte
             dup_rows.append({"Ngưỡng Hamming": f"≤ {th}", "Mô hình": k, "Ảnh test có ảnh gần trùng trong train+val": int(near.sum()),
-                             "Accuracy trên nhóm đó": f"{ok[near].mean():.3f}" if near.any() else "—",
+                             "Accuracy trên nhóm đó": f"{ok[near].mean():.3f}" if near.any() else "-",
                              "Ảnh test không có": int((~near).sum()), "Accuracy trên nhóm không có": f"{ok[~near].mean():.3f}"})
     print(save_table("final", dup_rows, "table_near_duplicates", title="Accuracy trên test tách theo việc có ảnh gần trùng (pHash) trong tập huấn luyện"))
 
@@ -131,7 +131,7 @@ def main():
         cm = np.array(json.loads((out / k / "metrics.json").read_text())["confusion_matrix"])
         pairs = sorted([(cm[i, j], CLASS_NAMES[i], CLASS_NAMES[j]) for i in range(4) for j in range(4) if i != j and cm[i, j] > 0], reverse=True)
         conf[k] = [{"Mô hình": k, "Thực tế": a, "Đoán thành": b, "Số ảnh": int(n)} for n, a, b in pairs]
-    save_table("final", [r for k in bk for r in conf[k]] or [{"Mô hình": "—"}], "table_confusions", title="Các cặp lớp bị nhầm của mô hình tốt nhất mỗi nhóm (test)")
+    save_table("final", [r for k in bk for r in conf[k]] or [{"Mô hình": "-"}], "table_confusions", title="Các cặp lớp bị nhầm của mô hình tốt nhất mỗi nhóm (test)")
     save_json(out / "summary.json", {"best_per_group": best, "n_test": int(len(yte)), "n_images_wrong_by_at_least_one_model": int((n_wrong > 0).sum()),
                                      "n_images_wrong_by_all_models": int((n_wrong == len(keys)).sum()), "models": keys})
 
@@ -148,7 +148,7 @@ def main():
             ax.imshow(imgs_te[j])
             pr = f" ({probs[k][j].max():.2f})" if k in probs else ""
             ax.set_title(f"đúng: {CLASS_NAMES[yte[j]].replace(' Kola', '')}\nđoán: {CLASS_NAMES[preds[k][j]].replace(' Kola', '')}{pr}", fontsize=8)
-        fig.suptitle(f"Ảnh test bị đoán sai — {k} ({int((preds[k] != yte).sum())} ảnh sai / 371)", fontsize=10)
+        fig.suptitle(f"Ảnh test bị đoán sai: {k} ({int((preds[k] != yte).sum())} ảnh sai / 371)", fontsize=10)
         fig.tight_layout(); fig.savefig(FIG_DIR / f"final_errors_{k}.png", dpi=110); plt.close(fig)
     # hình: macro-F1 test kèm khoảng tin cậy
     fig, ax = plt.subplots(figsize=(9, 4))

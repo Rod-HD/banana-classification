@@ -1,4 +1,4 @@
-### X1 — Macro-F1 trên train+val: chia ngẫu nhiên so với chia theo khối ảnh có số thứ tự liên tiếp
+### X1: Macro-F1 trên train+val: chia ngẫu nhiên so với chia theo khối ảnh có số thứ tự liên tiếp
 
 | Mô hình | 5-fold ngẫu nhiên phân tầng | 5-fold theo khối ảnh liên tiếp | Chênh |
 |---|---|---|---|

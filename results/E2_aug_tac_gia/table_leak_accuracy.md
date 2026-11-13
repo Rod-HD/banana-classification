@@ -1,4 +1,4 @@
-### T-tl — Accuracy trên test tách theo việc ảnh có file cùng ảnh gốc trong train
+### T-tl: Accuracy trên test tách theo việc ảnh có file cùng ảnh gốc trong train
 
 | Mô hình | Accuracy (ảnh test có anh em trong train) | Số ảnh | Accuracy (ảnh test không có) | Số ảnh  |
 |---|---|---|---|---|

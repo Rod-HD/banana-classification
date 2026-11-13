@@ -1,5 +1,6 @@
 """Dựng báo cáo từ file mẫu: thay mỗi chỗ {{T:đường_dẫn_bảng.md}} bằng bảng tương ứng trong results/
-(đổi dấu thập phân sang dấu phẩy), ghi report/report.md rồi chuyển sang report/report.docx.
+(giữ dấu chấm thập phân), ghi report/report.md, chuyển sang report/report.docx rồi xuất report/report.pdf
+(cần LibreOffice; không có thì bỏ qua bước PDF).
 Đồng thời cập nhật các bảng trong README.md (giữa <!-- T:... --> và <!-- /T -->).
 
     python -m src.build_report
@@ -15,7 +16,19 @@ from .md2docx import convert
 
 def table(path: str) -> str:
     lines = [l for l in (ROOT / path).read_text(encoding="utf-8").strip().splitlines() if l.startswith("|")]
-    return re.sub(r"(?<![\d.,])(\d+)\.(\d+)(?![\d.])", r"\1,\2", "\n".join(lines))
+    return "\n".join(lines)
+
+
+def to_pdf(docx):
+    """Xuất PDF từ file docx bằng LibreOffice (nếu có). Trả về đường dẫn PDF hoặc None."""
+    import shutil
+    import subprocess
+    exe = shutil.which("soffice") or shutil.which("libreoffice")
+    if not exe:
+        return None
+    subprocess.run([exe, "--headless", "--convert-to", "pdf", "--outdir", str(docx.parent), str(docx)], capture_output=True, text=True, timeout=600)
+    pdf = docx.with_suffix(".pdf")
+    return pdf if pdf.exists() else None
 
 
 def render(template: str) -> str:
@@ -44,6 +57,8 @@ def main():
     (ROOT / a.out).write_text(md, encoding="utf-8")
     convert(ROOT / a.out, (ROOT / a.out).with_suffix(".docx"))
     print("đã ghi", a.out, "và", str((ROOT / a.out).with_suffix(".docx").relative_to(ROOT)))
+    pdf = to_pdf((ROOT / a.out).with_suffix(".docx"))
+    print("đã ghi " + str(pdf.relative_to(ROOT)) if pdf else "không có LibreOffice: bỏ qua bước xuất PDF")
     if refresh_readme():
         print("đã cập nhật bảng trong README.md")
 

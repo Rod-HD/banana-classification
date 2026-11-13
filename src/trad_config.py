@@ -25,7 +25,7 @@ def _params(fp):
 
 
 def features_all(cfg, variant: str = "clean") -> tuple[np.ndarray, list[int]]:
-    """Đặc trưng của toàn bộ 2.471 ảnh (theo thứ tự list_images) cho cấu hình cfg."""
+    """Đặc trưng của toàn bộ 2471 ảnh (theo thứ tự list_images) cho cấu hình cfg."""
     Xs = [extract(f, transformed_images(variant), f"all256_{variant}", **_params(fp)) for f, fp in cfg["parts"]]
     return np.concatenate(Xs, axis=1), [x.shape[1] for x in Xs]
 

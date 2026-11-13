@@ -1,4 +1,4 @@
-"""Thí nghiệm bộ phân lớp P1–P6 (mục 6.4 của kế hoạch). 5-fold CV trên train+val.
+"""Thí nghiệm bộ phân lớp P1-P6 (mục 6.4 của kế hoạch). 5-fold CV trên train+val.
 
     python -m src.exp_classifier            # chạy tất cả
     python -m src.exp_classifier --only P4
@@ -41,12 +41,12 @@ def p1():
         ax.scatter([kb], [m.max()], s=120, facecolors="none", edgecolors="red", zorder=5)
     ax.axvline(5, color="gray", ls="--", lw=1); ax.text(5.2, ax.get_ylim()[0] + 0.002, "k = số lớp + 1", fontsize=8, color="gray")
     ax.set_xticks(KS); ax.set_xlabel("k"); ax.set_ylabel("Macro-F1 (5-fold)")
-    ax.set_title("P1 — KNN theo k (vòng đỏ: k tốt nhất theo cross-validation)"); ax.legend(fontsize=8)
+    ax.set_title("P1: KNN theo k (vòng đỏ: k tốt nhất theo cross-validation)"); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "P1_knn_k.png", dpi=130); plt.close(fig)
     save_json(exp_dir("P1") / "metrics.json", raw); register("P1", srows)
     full = [dict({"k": k}, **{fname: pm(raw[f][k]["macro_f1"], raw[f][k]["macro_f1_std"]) for f, fname in FEATS}) for k in KS]
-    save_table("P1", full, "table_all_k", title="P1 — Macro-F1 5-fold theo k (Euclidean, chuẩn hóa z-score, bình chọn đa số)")
-    print(save_table("P1", rows, title="P1 — Quy tắc k = số lớp + 1 so với k chọn bằng cross-validation"))
+    save_table("P1", full, "table_all_k", title="P1: Macro-F1 5-fold theo k (Euclidean, chuẩn hóa z-score, bình chọn đa số)")
+    print(save_table("P1", rows, title="P1: Quy tắc k = số lớp + 1 so với k chọn bằng cross-validation"))
 
 
 def neighbor_rank_agreement(X, k=10):
@@ -88,9 +88,9 @@ def p2():
                       "Đã chuẩn hóa đơn vị: cùng tập 10 láng giềng": f"{100 * a['unit_euclid_vs_cosine_same_set']:.1f}%",
                       "Chưa chuẩn hóa: cùng tập 10 láng giềng": f"{100 * a['raw_euclid_vs_cosine_same_set']:.1f}%"})
     save_json(exp_dir("P2") / "metrics.json", raw); register("P2", srows)
-    print(save_table("P2", rows, title="P2 — KNN (k=5) theo độ đo và cách chuẩn hóa; macro-F1 5-fold"))
+    print(save_table("P2", rows, title="P2: KNN (k=5) theo độ đo và cách chuẩn hóa; macro-F1 5-fold"))
     print(save_table("P2", agree, "table_rank_agreement",
-                     title="P2 — Euclidean so với cosine: tỉ lệ ảnh truy vấn có cùng 10 láng giềng gần nhất (420 ảnh truy vấn, 1680 ảnh tham chiếu)"))
+                     title="P2: Euclidean so với cosine: tỉ lệ ảnh truy vấn có cùng 10 láng giềng gần nhất (420 ảnh truy vấn, 1680 ảnh tham chiếu)"))
     fig, axes = plt.subplots(1, 3, figsize=(14, 4), sharey=True)
     for ax, (f, fname) in zip(axes, FEATS):
         labs, m, s = [], [], []
@@ -103,7 +103,7 @@ def p2():
             ax.text(v + 0.012, i, f"{v:.3f}", va="center", fontsize=8)
         ax.set_yticks(range(len(m))); ax.set_yticklabels(labs, fontsize=7); ax.invert_yaxis()
         ax.set_xlim(0.6, 1.06); ax.set_title(fname, fontsize=9); ax.set_xlabel("Macro-F1 (5-fold)")
-    fig.suptitle("P2 — KNN (k=5): độ đo khoảng cách và chuẩn hóa")
+    fig.suptitle("P2: KNN (k=5): độ đo khoảng cách và chuẩn hóa")
     fig.tight_layout(); fig.savefig(FIG_DIR / "P2_metrics.png", dpi=130); plt.close(fig)
 
 
@@ -127,7 +127,7 @@ def p3():
                          "Recall Bangla Kola distance": pm(pd_[0], sd),
                          "Recall thấp nhất trong 4 lớp uniform → distance": f"{pu.min():.3f} → {pd_.min():.3f}"})
     save_json(exp_dir("P3") / "metrics.json", raw); register("P3", srows)
-    print(save_table("P3", rows, title="P3 — Bình chọn đa số (uniform) so với ưu tiên điểm gần (distance); 5-fold"))
+    print(save_table("P3", rows, title="P3: Bình chọn đa số (uniform) so với ưu tiên điểm gần (distance); 5-fold"))
     fig, axes = plt.subplots(1, 3, figsize=(13, 3.6), sharey=True)
     for ax, (f, fname) in zip(axes, FEATS):
         x = np.arange(4); w = 0.2
@@ -136,7 +136,7 @@ def p3():
         ax.set_xticks(x); ax.set_xticklabels([c.replace(" Kola", "") for c in CLASS_NAMES]); ax.set_ylim(0.7, 1.02)
         ax.set_title(fname, fontsize=9)
     axes[0].set_ylabel("Recall từng lớp (out-of-fold)"); axes[0].legend(fontsize=7)
-    fig.suptitle("P3 — Recall từng lớp của KNN: uniform so với distance")
+    fig.suptitle("P3: Recall từng lớp của KNN: uniform so với distance")
     fig.tight_layout(); fig.savefig(FIG_DIR / "P3_weights.png", dpi=130); plt.close(fig)
 
 
@@ -182,9 +182,9 @@ def p4(repeats: int = 3):
             raw[f"moments_x{mult}|{alg}"] = {"n_reference": int(len(Xr)), "predict_time_s": float(np.median(tp))}
             row[f"{alg}: dự đoán 420 ảnh (ms)"] = f"{1000 * np.median(tp):.1f}"
         rows_n.append(row)
-    print(save_table("P4", rows_n, "table_scaling", title="P4 (phụ) — Đặc trưng 9 chiều, tập tham chiếu nhân bản kèm nhiễu Gauss σ=0,05 (dữ liệu tổng hợp, chỉ để đo thời gian)"))
+    print(save_table("P4", rows_n, "table_scaling", title="P4 (phụ): Đặc trưng 9 chiều, tập tham chiếu nhân bản kèm nhiễu Gauss σ=0.05 (dữ liệu tổng hợp, chỉ để đo thời gian)"))
     save_json(exp_dir("P4") / "metrics.json", raw); register("P4", [])
-    print(save_table("P4", rows, title="P4 — Brute Force, K-D Tree, Ball Tree (k=5, 1680 ảnh tham chiếu, 420 ảnh truy vấn, 1 luồng, trung vị 3 lần)"))
+    print(save_table("P4", rows, title="P4: Brute Force, K-D Tree, Ball Tree (k=5, 1680 ảnh tham chiếu, 420 ảnh truy vấn, 1 luồng, trung vị 3 lần)"))
     fig, ax = plt.subplots(figsize=(7.5, 3.8))
     fs = ["moments", "hsv_hist", "hog"]; x = np.arange(3); w = 0.26
     for j, alg in enumerate(("brute", "kd_tree", "ball_tree")):
@@ -193,7 +193,7 @@ def p4(repeats: int = 3):
         for xi, t in zip(x + (j - 1) * w, v):
             ax.text(xi, t * 1.1, f"{t:.0f}" if t >= 10 else f"{t:.1f}", ha="center", fontsize=8)
     ax.set_yscale("log"); ax.set_xticks(x); ax.set_xticklabels(["9 chiều (moment)", "512 chiều (hist HSV)", "3780 chiều (HOG)"])
-    ax.set_ylabel("Thời gian dự đoán 420 ảnh (ms, thang log)"); ax.set_title("P4 — Thuật toán tìm láng giềng"); ax.legend()
+    ax.set_ylabel("Thời gian dự đoán 420 ảnh (ms, thang log)"); ax.set_title("P4: Thuật toán tìm láng giềng"); ax.legend()
     fig.tight_layout(); fig.savefig(FIG_DIR / "P4_knn_algorithms.png", dpi=130); plt.close(fig)
 
 
@@ -214,15 +214,15 @@ def p5_p6():
         rows6.append(row6)
     save_json(exp_dir("P5") / "metrics.json", raw); register("P5", srows)
     save_json(exp_dir("P6") / "metrics.json", {k: v for k, v in raw.items() if not k.endswith("svm")}); register("P6", [])
-    print(save_table("P5", rows5, title="P5 — Thời gian huấn luyện và dự đoán (trung bình mỗi fold, đặc trưng đã rút sẵn)"))
-    print(save_table("P6", rows6, title="P6 — Bộ phân lớp tuyến tính so với KNN theo số chiều của đặc trưng; macro-F1 5-fold"))
+    print(save_table("P5", rows5, title="P5: Thời gian huấn luyện và dự đoán (trung bình mỗi fold, đặc trưng đã rút sẵn)"))
+    print(save_table("P6", rows6, title="P6: Bộ phân lớp tuyến tính so với KNN theo số chiều của đặc trưng; macro-F1 5-fold"))
     fig, axes = plt.subplots(1, 2, figsize=(11, 3.8))
     x = np.arange(3); w = 0.26
     for j, (c, cname) in enumerate([("knn", "KNN (k=5)"), ("logreg", "LogReg"), ("svm", "Linear SVM")]):
         axes[0].bar(x + (j - 1) * w, [1000 * raw[f"{f}|{c}"]["fit_time_s"] for f, _ in FEATS], w, label=cname)
         axes[1].bar(x + (j - 1) * w, [1000 * raw[f"{f}|{c}"]["predict_time_s"] for f, _ in FEATS], w, label=cname)
     for ax, t in zip(axes, ["Huấn luyện 1680 ảnh (ms)", "Dự đoán 420 ảnh (ms)"]):
-        ax.set_yscale("log"); ax.set_xticks(x); ax.set_xticklabels(["Moment (9)", "Hist HSV (512)", "HOG (3780)"]); ax.set_title("P5 — " + t); ax.legend(fontsize=8)
+        ax.set_yscale("log"); ax.set_xticks(x); ax.set_xticklabels(["Moment (9)", "Hist HSV (512)", "HOG (3780)"]); ax.set_title("P5: " + t); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "P5_time.png", dpi=130); plt.close(fig)
     fig, ax = plt.subplots(figsize=(6.5, 3.8))
     for j, (c, cname) in enumerate([("knn", "KNN (k=5)"), ("logreg", "Logistic Regression")]):
@@ -231,7 +231,7 @@ def p5_p6():
         for xi, v in zip(x + (j - 0.5) * 0.38, m):
             ax.text(xi, v + 0.012, f"{v:.3f}", ha="center", fontsize=8)
     ax.set_xticks(x); ax.set_xticklabels(["Moment (9 chiều)", "Hist HSV (512)", "HOG (3780)"]); ax.set_ylim(0.85, 1.03)
-    ax.set_ylabel("Macro-F1 (5-fold)"); ax.set_title("P6 — KNN so với bộ phân lớp tuyến tính"); ax.legend(fontsize=8)
+    ax.set_ylabel("Macro-F1 (5-fold)"); ax.set_title("P6: KNN so với bộ phân lớp tuyến tính"); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "P6_linear_vs_knn.png", dpi=130); plt.close(fig)
 
 

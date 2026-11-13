@@ -1,4 +1,4 @@
-### N4 (phụ) — BatchNorm khi fine-tune: 64 ảnh train, lô 64
+### N4 (phụ): BatchNorm khi fine-tune: 64 ảnh train, lô 64
 
 | Thân mạng | Cách mở băng | Thay đổi tương đối của embedding (training=True so với suy luận) | Accuracy đầu phân lớp GĐ1, embedding chế độ suy luận | Accuracy đầu phân lớp GĐ1, embedding chế độ huấn luyện |
 |---|---|---|---|---|

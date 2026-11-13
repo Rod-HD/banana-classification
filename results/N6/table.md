@@ -1,4 +1,4 @@
-### N6 — So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)
+### N6: So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)
 
 | Hướng | Mô hình | Biến thể được chốt | Macro-F1 val | Accuracy val | Số tham số | File mô hình (MB) | Thời gian huấn luyện (s) | Dự đoán 1 ảnh (ms, CPU) | Dự đoán theo lô 32 (ms/ảnh) | Cách tính thời gian huấn luyện |
 |---|---|---|---|---|---|---|---|---|---|---|

@@ -1,4 +1,4 @@
-"""Thí nghiệm CNN N1–N8 (mục 6.5 của kế hoạch). Đọc kết quả các lần huấn luyện trong results/cnn/
+"""Thí nghiệm CNN N1-N8 (mục 6.5 của kế hoạch). Đọc kết quả các lần huấn luyện trong results/cnn/
 (tạo bởi src.cnn.train) và chạy các phép đo bổ sung (đếm tham số, thời gian dự đoán, embedding, độ bền).
 
     python -m src.exp_cnn --only N1 N2 N3     # sau khi huấn luyện hướng A
@@ -101,14 +101,14 @@ def n1():
                        "Tham số được huấn luyện": v.get("trainable", f"giai đoạn 1: {v.get('trainable_stage1')}; giai đoạn 2: {v.get('trainable_stage2')}")})
     raw["totals"] = pc
     save_json(exp_dir("N1") / "metrics.json", raw); register("N1", [])
-    print(save_table("N1", out, title="N1 — Số tham số từng lớp: tính tay theo công thức so với Keras"))
-    print(save_table("N1", totals, "table_totals", title="N1 — Tổng số tham số của năm mô hình"))
+    print(save_table("N1", out, title="N1: Số tham số từng lớp: tính tay theo công thức so với Keras"))
+    print(save_table("N1", totals, "table_totals", title="N1: Tổng số tham số của năm mô hình"))
     fig, ax = plt.subplots(figsize=(7, 3.6))
     names = list(pc); vals = [pc[k]["total"] for k in names]
     ax.bar(names, vals, color=["tab:blue"] * 3 + ["tab:orange"] * 2)
     for i, v in enumerate(vals):
         ax.text(i, v * 1.15, f"{v / 1e6:.2f} triệu", ha="center", fontsize=8)
-    ax.set_yscale("log"); ax.set_ylim(top=max(vals) * 4); ax.set_ylabel("Số tham số (thang log)"); ax.set_title("N1 — Tổng số tham số (xanh: hướng A, cam: hướng B)")
+    ax.set_yscale("log"); ax.set_ylim(top=max(vals) * 4); ax.set_ylabel("Số tham số (thang log)"); ax.set_title("N1: Tổng số tham số (xanh: hướng A, cam: hướng B)")
     ax.tick_params(axis="x", labelsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "N1_params.png", dpi=130); plt.close(fig)
 
@@ -136,13 +136,13 @@ def n2():
         ax.plot([m["n_train"] for _, m in pts], [m["macro_f1"] for _, m in pts], marker="o", label=LABEL[model])
         for _, m in pts:
             ax.annotate(f"{m['macro_f1']:.3f}", (m["n_train"], m["macro_f1"]), textcoords="offset points", xytext=(0, 6), ha="center", fontsize=8)
-    ax.set_xlabel("Số ảnh huấn luyện"); ax.set_ylabel("Macro-F1 trên val (371 ảnh)"); ax.set_title("N2 — Đường cong học theo lượng dữ liệu"); ax.legend(fontsize=8)
+    ax.set_xlabel("Số ảnh huấn luyện"); ax.set_ylabel("Macro-F1 trên val (371 ảnh)"); ax.set_title("N2: Đường cong học theo lượng dữ liệu"); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "N2_learning_curve.png", dpi=130); plt.close(fig)
     save_json(exp_dir("N2") / "metrics.json", raw); register("N2", srows)
-    print(save_table("N2", rows, title="N2 — Macro-F1 trên val theo tỉ lệ tập train được dùng"))
+    print(save_table("N2", rows, title="N2: Macro-F1 trên val theo tỉ lệ tập train được dùng"))
 
 
-# ---------------------------------------------------------------- N3, N5 (dùng chung cách đo khoảng cách train–val)
+# ---------------------------------------------------------------- N3, N5 (dùng chung cách đo khoảng cách train-val)
 def gap_row(run, name):
     m, h = meta(run), hist(run)
     b = h[m["best_epoch"] - 1]; last = h[-1]
@@ -168,15 +168,15 @@ def curves_compare(runs, path, title):
 
 
 def n3():
-    runs = [("a_dropout", "a_dropout có Dropout(0,5)"), ("a_dropout_nodrop", "a_dropout không Dropout")]
+    runs = [("a_dropout", "a_dropout có Dropout(0.5)"), ("a_dropout_nodrop", "a_dropout không Dropout")]
     rows = [gap_row(r, n) for r, n in runs]
     save_json(exp_dir("N3") / "metrics.json", {r: {"metrics": meta(r), "history": hist(r)} for r, _ in runs})
     register("N3", [srow("N3", r, meta(r)) for r, _ in runs])
-    print(save_table("N3", rows, title="N3 — Dropout và khoảng cách train–val (seed 42, 40 epoch, train chấm ở chế độ suy luận)"))
-    curves_compare(runs, FIG_DIR / "N3_dropout.png", "N3 — a_dropout có và không có Dropout")
+    print(save_table("N3", rows, title="N3: Dropout và khoảng cách train-val (seed 42, 40 epoch, train chấm ở chế độ suy luận)"))
+    curves_compare(runs, FIG_DIR / "N3_dropout.png", "N3: a_dropout có và không có Dropout")
     # Lặp lại với 3 seed khởi tạo (42, 43, 44) để biết chênh lệch có vượt nhiễu giữa các lần huấn luyện không
     seeds = []
-    for name, base in [("Có Dropout(0,5)", "a_dropout"), ("Không Dropout", "a_dropout_nodrop")]:
+    for name, base in [("Có Dropout(0.5)", "a_dropout"), ("Không Dropout", "a_dropout_nodrop")]:
         ms = [(r, meta(r), hist(r)) for r in [base, base + "_seed43", base + "_seed44"] if meta(r)]
         f1 = [m["macro_f1"] for _, m, _ in ms]; gap = [h[-1]["val_loss"] - h[-1]["train_eval_loss"] for _, _, h in ms]
         vmin = [min(x["val_loss"] for x in h) for _, _, h in ms]
@@ -184,7 +184,7 @@ def n3():
                       "Macro-F1 val (TB ± ĐLC)": f"{np.mean(f1):.3f} ± {np.std(f1):.3f}",
                       "Khoảng cách loss val − train ở epoch 40 (TB ± ĐLC)": f"{np.mean(gap):.3f} ± {np.std(gap):.3f}",
                       "Loss val thấp nhất (TB ± ĐLC)": f"{np.mean(vmin):.3f} ± {np.std(vmin):.3f}"})
-    print(save_table("N3", seeds, "table_seeds", title="N3 — Lặp lại với 3 seed khởi tạo (cùng cách chia dữ liệu)"))
+    print(save_table("N3", seeds, "table_seeds", title="N3: Lặp lại với 3 seed khởi tạo (cùng cách chia dữ liệu)"))
 
 
 def n5():
@@ -194,10 +194,10 @@ def n5():
     rows = [gap_row(r, n) for r, n in runs + runs_b]
     save_json(exp_dir("N5") / "metrics.json", {r: {"metrics": meta(r), "history": hist(r)} for r, _ in runs + runs_b})
     register("N5", [srow("N5", r, meta(r)) for r, _ in runs + runs_b])
-    print(save_table("N5", rows, title="N5 — Tăng cường ảnh (lật, xoay ±30°, zoom ±10%) lúc huấn luyện"))
-    curves_compare(runs, FIG_DIR / "N5_augment_a_dropout.png", "N5 — a_dropout có và không có tăng cường ảnh")
+    print(save_table("N5", rows, title="N5: Tăng cường ảnh (lật, xoay ±30°, zoom ±10%) lúc huấn luyện"))
+    curves_compare(runs, FIG_DIR / "N5_augment_a_dropout.png", "N5: a_dropout có và không có tăng cường ảnh")
     if runs_b:
-        curves_compare(runs_b, FIG_DIR / "N5_augment_b_mobilenetv3.png", "N5 — b_mobilenetv3 (giai đoạn 2) có và không có tăng cường ảnh")
+        curves_compare(runs_b, FIG_DIR / "N5_augment_b_mobilenetv3.png", "N5: b_mobilenetv3 (giai đoạn 2) có và không có tăng cường ảnh")
 
 
 # ---------------------------------------------------------------- N4
@@ -220,13 +220,13 @@ def n4():
                      "Epoch chọn / tổng": f"{m['best_epoch']} / {m['epochs_run']}", "Thời gian mỗi epoch (s)": f"{m['time_per_epoch_s']:.1f}"})
         srows.append(srow("N4", run, m))
     save_json(exp_dir("N4") / "metrics.json", raw); register("N4", srows)
-    print(save_table("N4", rows, title="N4 — Đóng băng (giai đoạn 1) so với fine-tune (giai đoạn 2) và ảnh hưởng của learning rate"))
+    print(save_table("N4", rows, title="N4: Đóng băng (giai đoạn 1) so với fine-tune (giai đoạn 2) và ảnh hưởng của learning rate"))
     fig, ax = plt.subplots(figsize=(7.5, 4))
     for run, name in spec:
         if run in raw and "mobilenet" in run:
             h = raw[run]["history"]
             ax.plot([x["epoch"] for x in h], [x["val_macro_f1"] for x in h], marker="o", ms=3, label=name.replace("MobileNetV3-Small, ", ""))
-    ax.set_xlabel("Epoch"); ax.set_ylabel("Macro-F1 trên val"); ax.set_title("N4 — b_mobilenetv3: giai đoạn 1 và giai đoạn 2 theo learning rate"); ax.legend(fontsize=8)
+    ax.set_xlabel("Epoch"); ax.set_ylabel("Macro-F1 trên val"); ax.set_title("N4: b_mobilenetv3: giai đoạn 1 và giai đoạn 2 theo learning rate"); ax.legend(fontsize=8)
     fig.tight_layout(); fig.savefig(FIG_DIR / "N4_finetune_lr.png", dpi=130); plt.close(fig)
 
 
@@ -317,7 +317,7 @@ def n6_render(raw: dict):
              "Thời gian huấn luyện (s)": f"{r['train_time_s']:.0f}", "Dự đoán 1 ảnh (ms, CPU)": f"{r['predict_ms_single_image']:.1f}",
              "Dự đoán theo lô 32 (ms/ảnh)": f"{r['predict_ms_per_image_batch32']:.1f}", "Cách tính thời gian huấn luyện": r["train_time_breakdown"]}
             for model, r in raw.items()]
-    print(save_table("N6", rows, title="N6 — So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)"))
+    print(save_table("N6", rows, title="N6: So sánh hướng A với hướng B (chấm trên val; thời gian đo riêng trên CPU 4 nhân)"))
     fig, axes = plt.subplots(1, 4, figsize=(17, 3.9))
     names = list(raw); col = ["tab:blue" if n.startswith("a_") else "tab:orange" for n in names]
     for ax, key, title, log in [(axes[0], "macro_f1", "Macro-F1 trên val", False), (axes[1], "file_mb", "Dung lượng file mô hình (MB, thang log)", True),
@@ -332,7 +332,7 @@ def n6_render(raw: dict):
         else:
             ax.set_ylim(min(v) - 0.03, 1.01)
         ax.set_title(title, fontsize=10); ax.tick_params(axis="x", labelsize=7, rotation=15)
-    fig.suptitle("N6 — Hướng A (xanh) và hướng B (cam)"); fig.tight_layout(); fig.savefig(FIG_DIR / "N6_a_vs_b.png", dpi=130); plt.close(fig)
+    fig.suptitle("N6: Hướng A (xanh) và hướng B (cam)"); fig.tight_layout(); fig.savefig(FIG_DIR / "N6_a_vs_b.png", dpi=130); plt.close(fig)
 
 
 # ---------------------------------------------------------------- N7
@@ -376,7 +376,7 @@ def n7():
                           "macro_f1": round(float(f1), 4), "macro_f1_std": None, "accuracy": round(float(acc), 4), "n_features": int(X.shape[1])})
         rows.append(row)
     save_json(exp_dir("N7") / "metrics.json", raw); register("N7", srows)
-    print(save_table("N7", rows, title="N7 — Feature vector thủ công so với embedding của CNN: học trên train (1729 ảnh), macro-F1 trên val (371 ảnh)"))
+    print(save_table("N7", rows, title="N7: Feature vector thủ công so với embedding của CNN: học trên train (1729 ảnh), macro-F1 trên val (371 ảnh)"))
     fig, ax = plt.subplots(figsize=(10, 4.2))
     y = np.arange(len(rows)); h = 0.38
     for j, cname in enumerate(["KNN (k=5)", "LogReg"]):
@@ -385,12 +385,12 @@ def n7():
         for yi, x in zip(y + (j - 0.5) * h, v):
             ax.text(x + 0.002, yi, f"{x:.3f}", va="center", fontsize=7)
     ax.set_yticks(y); ax.set_yticklabels([f"{r['Đặc trưng']}\n({r['Loại']}, {r['Số chiều']} chiều)" for r in rows], fontsize=7); ax.invert_yaxis()
-    ax.set_xlim(0.9, 1.012); ax.set_xlabel("Macro-F1 trên val"); ax.set_title("N7 — Đặc trưng thủ công và embedding với cùng bộ phân lớp"); ax.legend(fontsize=8, loc="lower left")
+    ax.set_xlim(0.9, 1.012); ax.set_xlabel("Macro-F1 trên val"); ax.set_title("N7: Đặc trưng thủ công và embedding với cùng bộ phân lớp"); ax.legend(fontsize=8, loc="lower left")
     fig.tight_layout(); fig.savefig(FIG_DIR / "N7_embedding.png", dpi=130); plt.close(fig)
 
 
 # ---------------------------------------------------------------- N8
-N8_T = [("shuffle4", "Xáo trộn 4×4"), ("v0.6", "V×0,6"), ("v1.4", "V×1,4"), ("gray", "Ảnh xám"), ("noise5", "Nhiễu σ=5"), ("noise10", "Nhiễu σ=10"),
+N8_T = [("shuffle4", "Xáo trộn 4×4"), ("v0.6", "V×0.6"), ("v1.4", "V×1.4"), ("gray", "Ảnh xám"), ("noise5", "Nhiễu σ=5"), ("noise10", "Nhiễu σ=10"),
         ("noise20", "Nhiễu σ=20"), ("occlude25", "Che 25%"), ("rot-30", "Xoay −30°"), ("rot-15", "Xoay −15°"), ("rot15", "Xoay +15°"), ("rot30", "Xoay +30°")]
 
 
@@ -421,7 +421,7 @@ def n8():
         rows.append(dict({"Mô hình": name, "Ảnh gốc": f"{res['clean']['macro_f1']:.3f}"}, **{lab: f"{res[t]['macro_f1']:.3f}" for t, lab in N8_T}))
         print(rows[-1], flush=True)
     save_json(exp_dir("N8") / "metrics.json", dict(raw, _best_a=best_a, _best_b=best_b)); register("N8", srows)
-    print(save_table("N8", rows, title="N8 — Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)"))
+    print(save_table("N8", rows, title="N8: Macro-F1 trên val khi ảnh chấm bị biến đổi (mô hình học trên ảnh train sạch)"))
     names = list(raw); M = np.array([[raw[n][t]["macro_f1"] for t, _ in [("clean", "")] + N8_T] for n in names])
     fig, ax = plt.subplots(figsize=(13, 3.6))
     im = ax.imshow(M, cmap="RdYlGn", vmin=0, vmax=1, aspect="auto")
@@ -430,7 +430,7 @@ def n8():
             ax.text(j, i, f"{M[i, j]:.2f}", ha="center", va="center", fontsize=8)
     ax.set_xticks(range(M.shape[1])); ax.set_xticklabels(["Ảnh gốc"] + [l for _, l in N8_T], fontsize=8, rotation=30, ha="right")
     ax.set_yticks(range(len(names))); ax.set_yticklabels(names, fontsize=8); ax.grid(False)
-    ax.set_title("N8 — Macro-F1 trên val theo phép biến đổi áp lên ảnh chấm"); fig.colorbar(im, ax=ax, fraction=0.02)
+    ax.set_title("N8: Macro-F1 trên val theo phép biến đổi áp lên ảnh chấm"); fig.colorbar(im, ax=ax, fraction=0.02)
     fig.tight_layout(); fig.savefig(FIG_DIR / "N8_robustness.png", dpi=130); plt.close(fig)
 
 
@@ -483,7 +483,7 @@ def n4_bn():
                          "Accuracy đầu phân lớp GĐ1, embedding chế độ suy luận": f"{acc_inf:.3f}",
                          "Accuracy đầu phân lớp GĐ1, embedding chế độ huấn luyện": f"{acc_tr:.3f}"})
     save_json(exp_dir("N4") / "bn_check.json", raw)
-    print(save_table("N4", rows, "table_batchnorm", title="N4 (phụ) — BatchNorm khi fine-tune: 64 ảnh train, lô 64"))
+    print(save_table("N4", rows, "table_batchnorm", title="N4 (phụ): BatchNorm khi fine-tune: 64 ảnh train, lô 64"))
 
 
 EXPS = {"RUNS": runs, "N1": n1, "N4BN": n4_bn, "N2": n2, "N3": n3, "N4": n4, "N5": n5, "N6": n6, "N7": n7, "N8": n8}

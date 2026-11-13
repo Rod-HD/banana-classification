@@ -1,4 +1,4 @@
-### P1 — Quy tắc k = số lớp + 1 so với k chọn bằng cross-validation
+### P1: Quy tắc k = số lớp + 1 so với k chọn bằng cross-validation
 
 | Đặc trưng | k = số lớp + 1 = 5 | k tốt nhất theo CV | Macro-F1 tại k tốt nhất | Chênh so với k=5 | k=1 | k=31 |
 |---|---|---|---|---|---|---|

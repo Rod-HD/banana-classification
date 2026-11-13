@@ -1,4 +1,4 @@
-### S2 — Chỉ dùng 4 góc ảnh 64×64 (không cần mask; trung bình 1.9% điểm ảnh ở góc thuộc vùng chuối đã nới rộng)
+### S2: Chỉ dùng 4 góc ảnh 64×64 (không cần mask; trung bình 1.9% điểm ảnh ở góc thuộc vùng chuối đã nới rộng)
 
 | Đặc trưng + bộ phân lớp | Số chiều | Macro-F1 | Accuracy |
 |---|---|---|---|

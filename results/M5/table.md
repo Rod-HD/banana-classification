@@ -1,4 +1,4 @@
-### M5 — CCV so với histogram cùng mức lượng tử hóa (64 màu); macro-F1 5-fold
+### M5: CCV so với histogram cùng mức lượng tử hóa (64 màu); macro-F1 5-fold
 
 | Đặc trưng | Số chiều | Bộ phân lớp | Ảnh gốc | Xáo trộn 4×4 | Độ sụt |
 |---|---|---|---|---|---|

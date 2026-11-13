@@ -89,7 +89,7 @@ ARM_DIRS = {"T-kr": "E2_aug_tac_gia/khong_ro_ri", "Xb": "E1_xu_ly/pipeline_b"}
 
 
 def verify():
-    """Nạp best.keras của từng run, dự đoán lại và so với kết quả đã ghi: run ở bước 4–6 chấm trên val
+    """Nạp best.keras của từng run, dự đoán lại và so với kết quả đã ghi: run ở bước 4-6 chấm trên val
     (results/cnn/<run>/), run của nhánh T-kr và X-b chấm trên test (results/<nhánh>/<mô hình>/)."""
     import keras
     from ..data import load_all_images, load_split
@@ -105,8 +105,8 @@ def verify():
     for run in sorted(p.name for p in CKPT_DIR.iterdir() if (p / "best.keras").exists()):
         size_mb = os.path.getsize(CKPT_DIR / run / "best.keras") / 1e6
         arm, _, model = run.partition("__")
-        row = {"Run": run, "File (MB)": f"{size_mb:.2f}", "Tập chấm": "—", "Macro-F1 đã ghi": "—", "Macro-F1 tính lại": "—",
-               "Số ảnh đoán sai (đã ghi / tính lại)": "—", "Khớp": ""}
+        row = {"Run": run, "File (MB)": f"{size_mb:.2f}", "Tập chấm": "-", "Macro-F1 đã ghi": "-", "Macro-F1 tính lại": "-",
+               "Số ảnh đoán sai (đã ghi / tính lại)": "-", "Khớp": ""}
         if (OUT / run / "metrics.json").exists():
             sp, m = "val", run_meta(run)
             predict = Predictor(run)
@@ -129,7 +129,7 @@ def verify():
         rows.append(row); print(row, flush=True)
     OUT.mkdir(parents=True, exist_ok=True)
     (OUT / "table_checkpoints.md").write_text(
-        f"### Kiểm tra trọng số trong checkpoints/: dự đoán lại bằng best.keras, so với kết quả đã ghi — khớp {n - bad}/{n} run được chấm lại\n\n"
+        f"### Kiểm tra trọng số trong checkpoints/: dự đoán lại bằng best.keras, so với kết quả đã ghi, khớp {n - bad}/{n} run được chấm lại\n\n"
         + md_table(rows) + "\n")
     print(f"khớp {n - bad}/{n} run được chấm lại; {len(rows) - n} run còn lại chỉ liệt kê dung lượng")
     return bad

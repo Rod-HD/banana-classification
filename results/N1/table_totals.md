@@ -1,4 +1,4 @@
-### N1 — Tổng số tham số của năm mô hình
+### N1: Tổng số tham số của năm mô hình
 
 | Mô hình | Tổng số tham số | Tham số được huấn luyện |
 |---|---|---|

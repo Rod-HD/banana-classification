@@ -59,7 +59,7 @@ def _section(doc, landscape: bool):
     return sec
 
 
-def add_table(doc, lines):
+def add_table(doc, lines, size=None):
     rows = [[c.strip() for c in l.strip().strip("|").split("|")] for l in lines if not re.match(r"^\|\s*:?-{2,}", l.strip())]
     ncol = max(len(r) for r in rows)
     wide = ncol >= 11
@@ -67,7 +67,7 @@ def add_table(doc, lines):
         _section(doc, True)
     t = doc.add_table(rows=len(rows), cols=ncol)
     t.style = "Table Grid"; t.alignment = WD_TABLE_ALIGNMENT.CENTER
-    size = 9 if ncol <= 5 else 8 if ncol <= 8 else 7
+    size = size or (9 if ncol <= 5 else 8 if ncol <= 8 else 7)
     for i, r in enumerate(rows):
         for j in range(ncol):
             cell = t.cell(i, j); cell.text = ""
@@ -83,6 +83,49 @@ def add_table(doc, lines):
         doc.add_paragraph()
 
 
+def page_number_footer(section):
+    """Số trang canh giữa ở chân trang."""
+    p = section.footer.paragraphs[0]; p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    r = p.add_run()
+    for tag, text in [("begin", None), (None, "PAGE"), ("end", None)]:
+        if tag:
+            el = OxmlElement("w:fldChar"); el.set(qn("w:fldCharType"), tag)
+        else:
+            el = OxmlElement("w:instrText"); el.set(qn("xml:space"), "preserve"); el.text = text
+        r._r.append(el)
+    r.font.size = Pt(10)
+
+
+def add_cover(doc, block):
+    """Trang bìa: '# ' là tên đề tài, '## ' là dòng lớn, bảng là danh sách thành viên, dòng khác canh giữa."""
+    k = 0
+    while k < len(block):
+        l = block[k].strip()
+        if not l:
+            k += 1; continue
+        if l.startswith("|"):
+            j = k
+            while j < len(block) and block[j].strip().startswith("|"):
+                j += 1
+            add_table(doc, [b.strip() for b in block[k:j]], size=12)
+            k = j; continue
+        p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        if l.startswith("# "):
+            r = p.add_run(l[2:]); r.bold = True; r.font.size = Pt(26)
+            p.paragraph_format.space_before = Pt(60); p.paragraph_format.space_after = Pt(70)
+        elif l.startswith("## "):
+            r = p.add_run(l[3:]); r.bold = True; r.font.size = Pt(16)
+            p.paragraph_format.space_before = Pt(36 if "BÁO CÁO" in l else 6)
+        else:
+            r = p.add_run(l); r.font.size = Pt(13); r.bold = l.isupper()
+            if l.startswith("TP."):
+                p.paragraph_format.space_before = Pt(70)
+            elif l.startswith("Mã nguồn"):
+                p.paragraph_format.space_before = Pt(18)
+        k += 1
+    doc.add_page_break()
+
+
 def convert(src: Path, dst: Path):
     doc = Document()
     st = doc.styles["Normal"]; st.font.name = "Times New Roman"; st.font.size = Pt(12)
@@ -91,10 +134,22 @@ def convert(src: Path, dst: Path):
         s.left_margin = s.right_margin = Cm(2.2); s.top_margin = s.bottom_margin = Cm(2)
     width = doc.sections[0].page_width - doc.sections[0].left_margin - doc.sections[0].right_margin
     lines = src.read_text(encoding="utf-8").splitlines()
+    page_number_footer(doc.sections[0])
     i = 0
     title_done = False
+    n_fig = 0
     while i < len(lines):
         l = lines[i]
+        if l.strip() == "<!-- cover -->":                      # trang bìa: mọi dòng canh giữa, hết khối thì sang trang
+            j = i + 1; block = []
+            while j < len(lines) and lines[j].strip() != "<!-- /cover -->":
+                block.append(lines[j]); j += 1
+            add_cover(doc, block); title_done = True
+            i = j + 1; continue
+        if l.strip() == "<!-- pagebreak -->":
+            doc.add_page_break(); i += 1; continue
+        if l.strip().startswith("<!--") and l.strip().endswith("-->"):
+            i += 1; continue
         if l.startswith("```"):
             j = i + 1; buf = []
             while j < len(lines) and not lines[j].startswith("```"):
@@ -115,14 +170,17 @@ def convert(src: Path, dst: Path):
             else:
                 h = doc.add_heading(level=min(level, 3) if level > 1 else 1); add_inline(h, text)
             i += 1; continue
-        m = re.match(r"^!\[([^\]]*)\]\(([^)]+)\)", l.strip())
+        m = re.match(r"^!\[(.*)\]\(([^()]+)\)$", l.strip())
         if m:
             cap, path = m.groups()
             img = (src.parent / path).resolve()
             if img.exists():
                 doc.add_picture(str(img), width=width)
                 doc.paragraphs[-1].alignment = WD_ALIGN_PARAGRAPH.CENTER
+                doc.paragraphs[-1].paragraph_format.keep_with_next = True
+            n_fig += 1
             p = doc.add_paragraph(); p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            r = p.add_run(f"Hình {n_fig}. "); r.bold = True; r.font.size = Pt(10)
             r = p.add_run(cap); r.italic = True; r.font.size = Pt(10)
             i += 1; continue
         if l.strip() == "---":
@@ -130,10 +188,12 @@ def convert(src: Path, dst: Path):
         m = re.match(r"^(\s*)([-*]|\d+\.)\s+(.*)", l)
         if m:
             indent, mark, text = m.groups()
-            style = "List Number" if mark[0].isdigit() else "List Bullet"
-            if len(indent) >= 2:
-                style += " 2"
-            p = doc.add_paragraph(style=style); add_inline(p, text)
+            if mark[0].isdigit():       # tự ghi số thứ tự để mỗi danh sách bắt đầu lại từ 1
+                p = doc.add_paragraph(); add_inline(p, f"{mark} {text}")
+                p.paragraph_format.left_indent = Cm(0.9 + (0.6 if len(indent) >= 2 else 0)); p.paragraph_format.first_line_indent = Cm(-0.65)
+                p.paragraph_format.space_after = Pt(3)
+            else:
+                p = doc.add_paragraph(style="List Bullet 2" if len(indent) >= 2 else "List Bullet"); add_inline(p, text)
             i += 1; continue
         if not l.strip():
             i += 1; continue
@@ -143,7 +203,7 @@ def convert(src: Path, dst: Path):
         p = doc.add_paragraph(); add_inline(p, " ".join(buf)); p.paragraph_format.space_after = Pt(6)
         i = j
     cp = doc.core_properties
-    cp.author = AUTHOR; cp.last_modified_by = AUTHOR; cp.title = "Nhận diện giống chuối từ ảnh — Báo cáo đồ án CS231"
+    cp.author = AUTHOR; cp.last_modified_by = AUTHOR; cp.title = "Nhận diện giống chuối từ ảnh: Báo cáo đồ án CS231"
     cp.comments = ""; cp.keywords = "CS231, phân loại ảnh, giống chuối"
     doc.save(dst)
 

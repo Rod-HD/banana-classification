@@ -1,4 +1,4 @@
-### P4 — Brute Force, K-D Tree, Ball Tree (k=5, 1680 ảnh tham chiếu, 420 ảnh truy vấn, 1 luồng, trung vị 3 lần)
+### P4: Brute Force, K-D Tree, Ball Tree (k=5, 1680 ảnh tham chiếu, 420 ảnh truy vấn, 1 luồng, trung vị 3 lần)
 
 | Đặc trưng | brute: dựng (ms) | brute: dự đoán 420 ảnh (ms) | kd_tree: dựng (ms) | kd_tree: dự đoán 420 ảnh (ms) | kd_tree: kết quả trùng brute | ball_tree: dựng (ms) | ball_tree: dự đoán 420 ảnh (ms) | ball_tree: kết quả trùng brute |
 |---|---|---|---|---|---|---|---|---|

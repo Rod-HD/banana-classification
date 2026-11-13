@@ -1,4 +1,4 @@
-### S1 — Chỉ số không cần nhãn mask trên 400 ảnh (100 ảnh mỗi lớp)
+### S1: Chỉ số không cần nhãn mask trên 400 ảnh (100 ảnh mỗi lớp)
 
 | Phương pháp | Số mảnh rời (trung bình) | Số mảnh rời (trung vị) | Tỉ lệ lỗ thủng trong vật | Tỉ lệ diện tích vật | IoU với phương pháp được chọn |
 |---|---|---|---|---|---|

@@ -33,7 +33,7 @@
       "Kết quả": 18
     },
     {
-      "Kiểm tra": "Mask của bước S1 lớn hơn mask mới từ 1,5 lần (mask cũ tràn ra nền)",
+      "Kiểm tra": "Mask của bước S1 lớn hơn mask mới từ 1.5 lần (mask cũ tràn ra nền)",
       "Kết quả": "129 / 2471 (5.2%)"
     }
   ],

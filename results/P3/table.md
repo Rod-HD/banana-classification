@@ -1,4 +1,4 @@
-### P3 — Bình chọn đa số (uniform) so với ưu tiên điểm gần (distance); 5-fold
+### P3: Bình chọn đa số (uniform) so với ưu tiên điểm gần (distance); 5-fold
 
 | Đặc trưng | k | Macro-F1 uniform | Macro-F1 distance | Recall Bangla Kola (lớp ít ảnh nhất) uniform | Recall Bangla Kola distance | Recall thấp nhất trong 4 lớp uniform → distance |
 |---|---|---|---|---|---|---|

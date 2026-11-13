@@ -1,4 +1,4 @@
-### N7 — Feature vector thủ công so với embedding của CNN: học trên train (1729 ảnh), macro-F1 trên val (371 ảnh)
+### N7: Feature vector thủ công so với embedding của CNN: học trên train (1729 ảnh), macro-F1 trên val (371 ảnh)
 
 | Đặc trưng | Loại | Số chiều | KNN (k=5) | LogReg |
 |---|---|---|---|---|

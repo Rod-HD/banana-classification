@@ -1,6 +1,6 @@
 ### Nhánh G: 9 cấu hình của pipeline gốc (pipeline gốc, ảnh gốc resize 256×256; 1729 ảnh train, chấm trên 371 ảnh test)
 
-| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0,6 | V×1,4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
+| Nhóm | Mô hình | Macro-F1 val | Macro-F1 test | KTC 95% | Accuracy test | Số ảnh sai / 371 | Nền hoán đổi | V×0.6 | V×1.4 | Nhiễu σ=10 | Xoay +30° | Che 25% | Điểm bền |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | Truyền thống (màu) | Hist HSV (8,8,8) + LogReg C=0.1 | 0.997 | 0.994 | [0.984; 1.000] | 0.995 | 2 | 0.726 | 0.304 | 0.673 | 0.086 | 0.983 | 0.150 | 0.487 |
 | Truyền thống (cạnh) | Cạnh Roberts + KNN k=1, Manhattan, ưu tiên điểm gần | 0.957 | 0.964 | [0.944; 0.982] | 0.968 | 12 | 0.759 | 0.691 | 0.901 | 0.085 | 0.730 | 0.755 | 0.654 |

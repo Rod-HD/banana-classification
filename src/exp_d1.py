@@ -5,7 +5,7 @@ Chỉ dùng tập phát triển (train+val), không chạm vào tập test chín
   (b) chia rồi tăng cường: chia ảnh gốc 80/20, chỉ tăng cường phần huấn luyện, chấm trên ảnh gốc;
   (c) chia theo ảnh gốc rồi tăng cường cả hai phía: phần chấm có cùng thành phần với (a)
       nhưng không có bản sao của ảnh huấn luyện -> (a) − (c) là mức thổi phồng thuần do rò rỉ.
-Phần phụ D1b: ảnh gần trùng tự nhiên (perceptual hash) — so StratifiedKFold với
+Phần phụ D1b: ảnh gần trùng tự nhiên (perceptual hash), so StratifiedKFold với
 StratifiedGroupKFold giữ các ảnh gần trùng trong cùng một fold.
 
     python -m src.exp_d1
@@ -109,8 +109,8 @@ def main():
                                                 "augmentations": ["hflip", "rotate ±[10,30] độ"],
                                                 "accuracy_and_f1_per_repeat": raw,
                                                 "table": rows, "near_duplicate_cv_macro_f1": rows_b})
-    save_table("D1", rows, "table", title="D1 — Accuracy (trung bình ± độ lệch chuẩn qua %d lần chia 80/20)" % args.repeats)
-    save_table("D1", rows_b, "table_near_duplicates", title="D1b — Macro-F1 5-fold: chia thường so với chia giữ nhóm ảnh gần trùng")
+    save_table("D1", rows, "table", title="D1: Accuracy (trung bình ± độ lệch chuẩn qua %d lần chia 80/20)" % args.repeats)
+    save_table("D1", rows_b, "table_near_duplicates", title="D1b: Macro-F1 5-fold: chia thường so với chia giữ nhóm ảnh gần trùng")
 
     fig, ax = plt.subplots(figsize=(9, 4))
     x = np.arange(len(rows)); w = 0.27
@@ -123,7 +123,7 @@ def main():
             ax.text(xi, v + 0.004, f"{v:.3f}", ha="center", fontsize=7, rotation=90)
     ax.set_xticks(x); ax.set_xticklabels([r["Mô hình"] for r in rows], fontsize=8)
     ax.set_ylim(0.8, 1.04); ax.set_ylabel("Accuracy"); ax.legend(fontsize=8, loc="lower right")
-    ax.set_title("D1 — Rò rỉ dữ liệu do tăng cường ảnh trước khi chia tập")
+    ax.set_title("D1: Rò rỉ dữ liệu do tăng cường ảnh trước khi chia tập")
     fig.tight_layout(); fig.savefig(FIG_DIR / "D1_leakage.png", dpi=130); plt.close(fig)
 
 

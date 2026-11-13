@@ -1,4 +1,4 @@
-### Ví dụ 2 — Confusion Matrix của a_vgg16 trên test
+### Ví dụ 2: Confusion Matrix của a_vgg16 trên test
 
 | Thực tế \ Dự đoán | Bangla Kola | Champa Kola | Sabri Kola | Sagor Kola |
 |---|---|---|---|---|

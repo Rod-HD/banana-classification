@@ -61,7 +61,7 @@ def _table(s, max_h: str = "0.74\\textheight") -> str:
     nc = len(rows[0])
     body = [" & ".join(r"\textbf{" + esc(c) + "}" for c in rows[0]) + r" \\ \midrule"]
     body += [" & ".join(esc(c) for c in r) + r" \\" for r in rows[1:]]
-    spec = "l" * nc
+    spec = (s.get("colspec") or "l" * nc).replace("p{", ">{\\raggedright\\arraybackslash}p{")     # cột có xuống dòng: canh trái, không giãn chữ
     return ("\\begin{center}\\begin{adjustbox}{max width=\\linewidth,max totalheight=" + max_h + "}\n\\rowcolors{2}{uitbg}{white}\n"
             f"\\begin{{tabular}}{{{spec}}}\\toprule\n" + "\n".join(body) + "\n\\bottomrule\\end{tabular}\n\\end{adjustbox}\\end{center}")
 
@@ -75,9 +75,17 @@ def frame(s, slides_dir: Path) -> str:
     if s.get("layout") == "title":
         return ""
     out = []
+    if s.get("appendix"):
+        out.append("\\appendix")
     if s.get("section") and not s.get("toc"):
         out.append(f"\\section{{{esc(s['section'])}}}")
     out.append(f"\\begin{{frame}}{{{esc(s['title'])}}}")
+    if s.get("tex"):                                     # nội dung LaTeX viết sẵn (công thức); bullets chỉ dùng cho bản pptx
+        out.append(s["tex"].strip())
+        if s.get("notes"):
+            out.append("\\note{" + esc(s["notes"]) + "}")
+        out.append("\\end{frame}")
+        return "\n".join(out)
     if s.get("toc"):
         out.append("\\tableofcontents")
         if s.get("notes"):
@@ -89,10 +97,14 @@ def frame(s, slides_dir: Path) -> str:
     if side and s.get("table") and len(_rows(s)[0]) > 4:      # bảng nhiều cột: chữ ở trên, bảng rộng hết khung ở dưới
         out.append(_bullets(s["bullets"], "\\footnotesize"))
         out.append(_table(s, "0.40\\textheight"))
-    elif side:
-        out.append("\\begin{columns}[T]\n\\begin{column}{0.36\\textwidth}")
+    elif side and s.get("stack"):                         # hình rộng hết khung ở trên, chữ ở dưới
+        out.append(_image(s["image"], slides_dir, height=s.get("img_h", "0.52\\textheight")))
         out.append(_bullets(s["bullets"], "\\footnotesize"))
-        out.append("\\end{column}\n\\begin{column}{0.62\\textwidth}")
+    elif side:
+        tw = s.get("ratio", 0.36)
+        out.append(f"\\begin{{columns}}[T]\n\\begin{{column}}{{{tw:.2f}\\textwidth}}")
+        out.append(_bullets(s["bullets"], "\\footnotesize"))
+        out.append(f"\\end{{column}}\n\\begin{{column}}{{{0.98 - tw:.2f}\\textwidth}}")
         out.append(_image(s["image"], slides_dir, height="0.72\\textheight") if s.get("image") else _table(s))
         out.append("\\end{column}\n\\end{columns}")
     elif s.get("bullets"):
@@ -101,27 +113,31 @@ def frame(s, slides_dir: Path) -> str:
         out.append(_image(s["image"], slides_dir))
     elif s.get("table"):
         out.append(_table(s))
+    if s.get("links"):                                   # tài liệu gốc của phương pháp, bấm được trong PDF
+        out.append("\\vfill{\\scriptsize\\color{uitgray}Tài liệu: " + " \\textbar{} ".join(
+            f"{esc(t)}: \\href{{{u}}}{{\\texttt{{{esc(u.split('://', 1)[1])}}}}}" for t, u in s["links"]) + "}")
     if s.get("notes"):
         out.append("\\note{" + esc(s["notes"]) + "}")
     out.append("\\end{frame}")
     return "\n".join(out)
 
 
-def build_tex(slides: list[dict], out_tex: Path, title: str, subtitle: str = "", author: str = "", institute: str = "", date: str = "") -> str:
+def build_tex(slides: list[dict], out_tex: Path, title: str, subtitle: str = "", author: str = "", institute: str = "", date: str = "",
+              author_tex: str | None = None) -> str:
     slides_dir = out_tex.parent
     t0 = next((s for s in slides if s.get("layout") == "title"), {})
-    pre = f"""% Slide trình bày đồ án — Beamer, style UIT. Biên dịch: pdflatex {out_tex.name} (2 lần), hoặc tải thư mục slides/ lên Overleaf.
+    pre = f"""% Slide trình bày đồ án, Beamer, style UIT. Biên dịch: pdflatex {out_tex.name} (2 lần), hoặc tải thư mục slides/ lên Overleaf.
 % Bật trang ghi chú thuyết trình: đổi \\setbeameroption{{hide notes}} thành \\setbeameroption{{show notes}}.
 \\documentclass[aspectratio=169,10pt]{{beamer}}
 \\usepackage[utf8]{{vietnam}}
 \\usepackage{{lmodern}}
-\\usepackage{{booktabs,adjustbox,colortbl}}
+\\usepackage{{array,booktabs,adjustbox,colortbl}}
 \\usepackage[table]{{xcolor}}
 \\usetheme{{UIT}}
 \\ifdefined\\shownotes\\setbeameroption{{show notes}}\\else\\setbeameroption{{hide notes}}\\fi
 \\title[{esc(title)}]{{{esc(title)}}}
 \\subtitle{{{esc(subtitle)}}}
-\\author{{{esc(author)}}}
+\\author{{{author_tex if author_tex is not None else esc(author)}}}
 \\institute{{{esc(institute)}}}
 \\date{{{esc(date)}}}
 \\begin{{document}}
@@ -146,9 +162,9 @@ def compile_pdf(out_tex: Path) -> list[Path]:
     for job, pre in [(name, ""), (name + "-ghi-chu", "\\def\\shownotes{1}")]:
         cmd = ["pdflatex", "-interaction=nonstopmode", "-halt-on-error", f"-jobname={job}", pre + f"\\input{{{out_tex.name}}}"]
         for _ in range(2):
-            r = subprocess.run(cmd, cwd=d, capture_output=True, text=True)
+            r = subprocess.run(cmd, cwd=d, capture_output=True)      # log của pdflatex có thể cắt ngang ký tự nhiều byte
         if r.returncode != 0:
-            print(r.stdout[-2500:]); raise SystemExit(f"pdflatex lỗi khi biên dịch {job}")
+            print(r.stdout.decode("utf-8", errors="replace")[-2500:]); raise SystemExit(f"pdflatex lỗi khi biên dịch {job}")
         for ext in (".aux", ".log", ".nav", ".out", ".snm", ".toc", ".vrb"):
             (d / (job + ext)).unlink(missing_ok=True)
         done.append(d / (job + ".pdf"))

@@ -1,4 +1,4 @@
-### X1 — Ảnh mang số thứ tự liền kề giống nhau tới mức nào (toàn bộ 2.471 ảnh)
+### X1: Ảnh mang số thứ tự liền kề giống nhau tới mức nào (toàn bộ 2471 ảnh)
 
 | Chỉ số | Đo được | Nếu ngẫu nhiên |
 |---|---|---|

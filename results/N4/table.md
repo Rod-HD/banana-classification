@@ -1,4 +1,4 @@
-### N4 — Đóng băng (giai đoạn 1) so với fine-tune (giai đoạn 2) và ảnh hưởng của learning rate
+### N4: Đóng băng (giai đoạn 1) so với fine-tune (giai đoạn 2) và ảnh hưởng của learning rate
 
 | Cấu hình | Tham số được huấn luyện | Macro-F1 val | Accuracy val | Loss val (epoch chọn) | Macro-F1 val sau epoch 1 | Macro-F1 val thấp nhất | Epoch chọn / tổng | Thời gian mỗi epoch (s) |
 |---|---|---|---|---|---|---|---|---|

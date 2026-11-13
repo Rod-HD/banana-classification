@@ -1,4 +1,4 @@
-### C3 — Biến thể cài đặt của HOG 64×128
+### C3: Biến thể cài đặt của HOG 64×128
 
 | Biến thể | KNN (k=5) | LogReg | Linear SVM |
 |---|---|---|---|

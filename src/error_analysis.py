@@ -43,7 +43,7 @@ def main():
         sel = y == c
         ctx.append({"Lớp": CLASS_NAMES[c], "Số ảnh test": int(sel.sum()), "Ảnh bị ≥ 1 mô hình đoán sai": int((sel & (n_wrong > 0)).sum()),
                     "Diện tích quả TB (ảnh đúng hết)": f"{area[sel & (n_wrong == 0)].mean():.3f}",
-                    "Diện tích quả TB (ảnh bị sai)": f"{area[sel & (n_wrong > 0)].mean():.3f}" if (sel & (n_wrong > 0)).any() else "—"})
+                    "Diện tích quả TB (ảnh bị sai)": f"{area[sel & (n_wrong > 0)].mean():.3f}" if (sel & (n_wrong > 0)).any() else "-"})
     print(save_table("final", ctx, "table_error_context", title="Diện tích quả chuối (tỉ lệ trong ảnh, theo mask S1) của ảnh test bị đoán sai so với ảnh đoán đúng"))
     # 3) hình: mọi ảnh test bị ít nhất một mô hình đoán sai, sắp theo số mô hình sai
     order = [j for j in np.argsort(-n_wrong, kind="stable") if n_wrong[j] > 0][:24]

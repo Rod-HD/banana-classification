@@ -1,4 +1,4 @@
-### X1 — Kiểm tra và làm sạch dữ liệu
+### X1: Kiểm tra và làm sạch dữ liệu
 
 | Kiểm tra | Kết quả |
 |---|---|
@@ -10,4 +10,4 @@
 | Số ảnh train sau khi làm sạch | 1694 / 1729 |
 | Độ nét (phương sai Laplacian): phân vị 5% / trung vị / phân vị 95% | 56 / 153 / 280 |
 | Ảnh có độ nét dưới 1/4 trung vị (nghi mờ; giữ lại, chỉ liệt kê) | 18 |
-| Mask của bước S1 lớn hơn mask mới từ 1,5 lần (mask cũ tràn ra nền) | 129 / 2471 (5.2%) |
+| Mask của bước S1 lớn hơn mask mới từ 1.5 lần (mask cũ tràn ra nền) | 129 / 2471 (5.2%) |

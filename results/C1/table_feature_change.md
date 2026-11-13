@@ -1,4 +1,4 @@
-### C1 — Thay đổi tương đối của vector đặc trưng khi thêm nhiễu (‖f(nhiễu) − f(gốc)‖ / ‖f(gốc)‖)
+### C1: Thay đổi tương đối của vector đặc trưng khi thêm nhiễu (‖f(nhiễu) − f(gốc)‖ / ‖f(gốc)‖)
 
 | Toán tử | σ=2 | σ=5 | σ=10 | σ=20 |
 |---|---|---|---|---|

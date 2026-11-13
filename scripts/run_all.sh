@@ -4,9 +4,9 @@
 #
 #   bash scripts/run_all.sh            # chạy tất cả các bước
 #   bash scripts/run_all.sh 2 3        # chỉ chạy bước 2 và 3
-# Các bước: 1 dữ liệu + D1 | 2 màu, bộ phân lớp | 3 cạnh, HOG, chốt cấu hình | 4 CNN hướng A | 5 CNN hướng B + N1–N8
+# Các bước: 1 dữ liệu + D1 | 2 màu, bộ phân lớp | 3 cạnh, HOG, chốt cấu hình | 4 CNN hướng A | 5 CNN hướng B + N1-N8
 #           6 mất cân bằng | 7 phân đoạn | 8 đánh giá cuối trên test | 9 demo, báo cáo, slide
-# Phần mở rộng (mục 12 của kế hoạch), cần kết quả của bước 1–8:
+# Phần mở rộng (mục 12 của kế hoạch), cần kết quả của bước 1-8:
 #           10 bộ kiểm tra khó + nhánh G | 11 nhánh T (bản Augmented của tác giả) | 12 nhánh B (phương pháp của bài báo)
 #           13 nhánh X (xử lý dữ liệu) | 14 so sánh bốn nhánh, tổng hợp, rồi dựng lại báo cáo và slide
 #   FRESH=1 bash scripts/run_all.sh    # xóa data/cache/ trước (rút lại toàn bộ đặc trưng)
@@ -38,11 +38,11 @@ if want 1; then   # Bước 1: chia dữ liệu, ảnh gần trùng, thống kê
   run src.split_data
   run src.exp_d1
 fi
-if want 2; then   # Bước 2: đặc trưng màu (M1–M6), bộ phân lớp (P1–P6)
+if want 2; then   # Bước 2: đặc trưng màu (M1-M6), bộ phân lớp (P1-P6)
   run src.exp_color
   run src.exp_classifier
 fi
-if want 3; then   # Bước 3: cạnh, HOG, ghép đặc trưng (C1–C5), chốt cấu hình truyền thống
+if want 3; then   # Bước 3: cạnh, HOG, ghép đặc trưng (C1-C5), chốt cấu hình truyền thống
   run src.exp_shape
   run src.exp_select
 fi
@@ -60,7 +60,7 @@ if want 4; then   # Bước 4: CNN hướng A (theo bài giảng)
   train a_vgg16_frac25    --model a_vgg16 --frac 0.25
   train a_vgg16_frac50    --model a_vgg16 --frac 0.5
 fi
-if want 5; then   # Bước 5: CNN hướng B (lớn hơn, fine-tune), rồi các phép đo N1–N8
+if want 5; then   # Bước 5: CNN hướng B (lớn hơn, fine-tune), rồi các phép đo N1-N8
   train b_mobilenetv3_s1        --model b_mobilenetv3 --stage 1
   train b_mobilenetv3           --model b_mobilenetv3 --stage 2 --lr 1e-5 --augment --train-eval
   train b_mobilenetv3_lr1e-4    --model b_mobilenetv3 --stage 2 --lr 1e-4 --augment --tag lr1e-4
@@ -78,7 +78,7 @@ if want 5; then   # Bước 5: CNN hướng B (lớn hơn, fine-tune), rồi cá
   done
   run src.exp_cnn
 fi
-if want 6; then   # Bước 6: mất cân bằng (I1–I2). Run gốc của I2 là biến thể được chốt ở bước 5:
+if want 6; then   # Bước 6: mất cân bằng (I1-I2). Run gốc của I2 là biến thể được chốt ở bước 5:
                   # a_vgg16_lr1e-3 (hướng A) và b_mobilenetv3_lr1e-4 (hướng B).
   for m in cw os minaug; do
     flag=$([ $m = cw ] && echo --class-weight || ([ $m = os ] && echo --oversample || echo --minority-aug))
@@ -88,7 +88,7 @@ if want 6; then   # Bước 6: mất cân bằng (I1–I2). Run gốc của I2 l
   run src.exp_imbalance
   python -m src.exp_cnn --only RUNS N4BN N6 N8 2>&1 | tee logs/src_exp_cnn_N6.log   # đo lại thời gian khi máy không chạy tác vụ khác
 fi
-if want 7; then   # Bước 7: phân đoạn tách nền (S1–S2); S2CNN cần các mô hình CNN của bước 5
+if want 7; then   # Bước 7: phân đoạn tách nền (S1-S2); S2CNN cần các mô hình CNN của bước 5
   run src.exp_segment --only S1 S2 S2CNN
 fi
 if want 8; then   # Bước 8: đánh giá cuối trên test, tổng hợp
@@ -116,9 +116,10 @@ if want 14; then  # Bước 14: so sánh bốn nhánh, tổng hợp
   run src.compare_arms
   run src.summarize
 fi
-if want 9 || want 14; then   # Bước 9 (chạy lại sau bước 14): mô hình cho demo, ví dụ tính tay, báo cáo (md + docx), slide
+if want 9 || want 14; then   # Bước 9 (chạy lại sau bước 14): mô hình cho demo, ví dụ tính tay, hình minh họa, báo cáo (md + docx + pdf), slide, kịch bản
   run src.export_demo
   run src.hand_calc
+  run src.fig_overview
   run src.build_report
   run src.make_slides
 fi

@@ -1,4 +1,4 @@
-### P5 — Thời gian huấn luyện và dự đoán (trung bình mỗi fold, đặc trưng đã rút sẵn)
+### P5: Thời gian huấn luyện và dự đoán (trung bình mỗi fold, đặc trưng đã rút sẵn)
 
 | Đặc trưng | Bộ phân lớp | Huấn luyện 1680 ảnh (ms) | Dự đoán 420 ảnh (ms) | Dự đoán (ms/ảnh) | Macro-F1 |
 |---|---|---|---|---|---|

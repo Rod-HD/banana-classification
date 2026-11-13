@@ -1,4 +1,4 @@
-### D1b — Macro-F1 5-fold: chia thường so với chia giữ nhóm ảnh gần trùng
+### D1b: Macro-F1 5-fold: chia thường so với chia giữ nhóm ảnh gần trùng
 
 | Mô hình | StratifiedKFold | GroupKFold (Hamming ≤ 2) | Chênh (≤ 2) | GroupKFold (Hamming ≤ 4) | Chênh (≤ 4) |
 |---|---|---|---|---|---|

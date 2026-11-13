@@ -333,24 +333,24 @@
     "relative_change": [
       {
         "Đặc trưng": "HOG, chuẩn hóa block L2",
-        "Thay đổi tương đối của vector (V×0,6)": "0.21",
-        "Thay đổi tương đối của vector (V×1,4)": "0.60"
+        "Thay đổi tương đối của vector (V×0.6)": "0.21",
+        "Thay đổi tương đối của vector (V×1.4)": "0.60"
       },
       {
         "Đặc trưng": "HOG, không chuẩn hóa block",
-        "Thay đổi tương đối của vector (V×0,6)": "0.40",
-        "Thay đổi tương đối của vector (V×1,4)": "0.28"
+        "Thay đổi tương đối của vector (V×0.6)": "0.40",
+        "Thay đổi tương đối của vector (V×1.4)": "0.28"
       }
     ],
     "flat_cell_fraction": {
       "Ảnh gốc": 0.002258184523809524,
-      "V×0,6": 0.0030394345238095237,
-      "V×1,4": 0.14133556547619047
+      "V×0.6": 0.0030394345238095237,
+      "V×1.4": 0.14133556547619047
     },
     "saturated_pixel_fraction": {
       "Ảnh gốc": 0.005170622326078869,
-      "V×0,6": 0.0,
-      "V×1,4": 0.6870461600167411
+      "V×0.6": 0.0,
+      "V×1.4": 0.6870461600167411
     }
   }
 }

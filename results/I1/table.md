@@ -1,4 +1,4 @@
-### I1 — Accuracy so với macro-F1 và recall từng lớp (mô hình chưa xử lý mất cân bằng)
+### I1: Accuracy so với macro-F1 và recall từng lớp (mô hình chưa xử lý mất cân bằng)
 
 | Mô hình (chưa xử lý mất cân bằng) | Chấm trên | Accuracy | Macro-F1 | Accuracy − Macro-F1 | Recall Bangla | Recall Champa | Recall Sabri | Recall Sagor | Recall thấp nhất |
 |---|---|---|---|---|---|---|---|---|---|

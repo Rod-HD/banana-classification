@@ -1,4 +1,4 @@
-### D1 — Accuracy (trung bình ± độ lệch chuẩn qua 5 lần chia 80/20)
+### D1: Accuracy (trung bình ± độ lệch chuẩn qua 5 lần chia 80/20)
 
 | Mô hình | (a) tăng cường rồi chia | (b) chia rồi tăng cường train | (c) chia theo ảnh gốc, tăng cường 2 phía | Thổi phồng (a)−(b) | Thổi phồng (a)−(c) | Macro-F1 (a) | Macro-F1 (b) |
 |---|---|---|---|---|---|---|---|
