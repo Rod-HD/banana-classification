@@ -70,6 +70,8 @@
       "dropout": true,
       "class_weight": false,
       "oversample": false,
+      "minority_aug": false,
+      "seed": 42,
       "frozen_backbone": false,
       "params": {
         "total": 1746260,
@@ -85,7 +87,7 @@
       "train_accuracy_inference_mode": 0.9994216310005783,
       "train_macro_f1_inference_mode": 0.9994792090647047,
       "predict_ms_per_image_batched_val": 1.0800555390850828,
-      "best_model_file_mb": 21.006389
+      "best_model_file_mb": 7.025675
     },
     "history": [
       {
@@ -561,6 +563,8 @@
       "dropout": false,
       "class_weight": false,
       "oversample": false,
+      "minority_aug": false,
+      "seed": 42,
       "frozen_backbone": false,
       "params": {
         "total": 1746260,
@@ -576,7 +580,7 @@
       "train_accuracy_inference_mode": 1.0,
       "train_macro_f1_inference_mode": 1.0,
       "predict_ms_per_image_batched_val": 1.1095249191362875,
-      "best_model_file_mb": 21.004024
+      "best_model_file_mb": 7.023347
     },
     "history": [
       {

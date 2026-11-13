@@ -68,6 +68,8 @@
   "dropout": true,
   "class_weight": false,
   "oversample": false,
+  "minority_aug": false,
+  "seed": 42,
   "frozen_backbone": false,
   "params": {
     "total": 61496,

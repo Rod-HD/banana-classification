@@ -121,28 +121,28 @@ Lệnh này chạy lần lượt các bước 1–8 theo mục 11 của kế ho�
 RETRAIN=1 bash scripts/run_all.sh
 ```
 
-Khi huấn luyện lại từ đầu, tổng cộng khoảng 8 giờ trên CPU 4 nhân (bước 1–9: khoảng 3 giờ; phần mở rộng: khoảng 5 giờ); cột thời gian trong bảng dưới là của trường hợp này. Có thể chạy từng bước, ví dụ:
+Thời gian trên CPU 4 nhân: chạy lại với trọng số có sẵn (mặc định) mất khoảng 2,5 giờ, đo bằng một bản clone mới từ GitHub, chưa có `data/cache/` (cột "Chạy lại, dùng trọng số có sẵn"); huấn luyện lại từ đầu mất khoảng 8 giờ (bước 1–9: khoảng 3 giờ; phần mở rộng: khoảng 5 giờ; cột "Huấn luyện lại từ đầu"). Có thể chạy từng bước, ví dụ:
 
 ```bash
 bash scripts/run_all.sh 2 3
 ```
 
-| Bước | Nội dung | Module chính | Thời gian ước lượng (CPU 4 nhân) |
-|---|---|---|---|
-| 1 | Chia dữ liệu, ảnh gần trùng, D1 | `src.split_data`, `src.exp_d1` | khoảng 2 phút |
-| 2 | Đặc trưng màu M1–M6, bộ phân lớp P1–P6 | `src.exp_color`, `src.exp_classifier` | khoảng 6 phút |
-| 3 | Cạnh, HOG C1–C5, chốt cấu hình truyền thống | `src.exp_shape`, `src.exp_select` | khoảng 25 phút |
-| 4 | CNN hướng A | `src.cnn.train` | khoảng 20 phút |
-| 5 | CNN hướng B, N1–N8 | `src.cnn.train`, `src.exp_cnn` | khoảng 70 phút |
-| 6 | Mất cân bằng I1–I2 | `src.cnn.train`, `src.exp_imbalance` | khoảng 40 phút |
-| 7 | Phân đoạn S1–S2 | `src.exp_segment` | khoảng 10 phút |
-| 8 | Đánh giá cuối trên test, phân tích lỗi, tổng hợp | `src.final_eval`, `src.error_analysis`, `src.summarize` | khoảng 2 phút |
-| 10 | Bộ kiểm tra khó; nhánh G chấm lại | `src.stress`, `src.pipeline` | khoảng 10 phút |
-| 11 | Nhánh T: bản Augmented của tác giả (có sẵn trong `data/aug_author/`) | `src.exp_arm_t` | khoảng 100 phút |
-| 12 | Nhánh B: phương pháp của bài báo | `src.exp_papers` | khoảng 45 phút |
-| 13 | Nhánh X: làm sạch, tiền xử lý, tăng cường; S2 chạy lại | `src.exp_arm_x`, `src.exp_segment --only S2V2` | khoảng 130 phút |
-| 14 | So sánh bốn nhánh, tổng hợp | `src.compare_arms`, `src.summarize` | khoảng 1 phút |
-| 9 | Mô hình demo, báo cáo (md + docx), slide (Beamer + pptx); chạy sau cùng | `src.export_demo`, `src.build_report`, `src.make_slides` | khoảng 2 phút |
+| Bước | Nội dung | Module chính | Huấn luyện lại từ đầu (ước lượng) | Chạy lại, dùng trọng số có sẵn (đo) |
+|---|---|---|---|---|
+| 1 | Chia dữ liệu, ảnh gần trùng, D1 | `src.split_data`, `src.exp_d1` | khoảng 2 phút | 1,5 phút |
+| 2 | Đặc trưng màu M1–M6, bộ phân lớp P1–P6 | `src.exp_color`, `src.exp_classifier` | khoảng 6 phút | 5 phút |
+| 3 | Cạnh, HOG C1–C5, chốt cấu hình truyền thống | `src.exp_shape`, `src.exp_select` | khoảng 25 phút | 19 phút |
+| 4 | CNN hướng A | `src.cnn.train` | khoảng 20 phút | 3 phút |
+| 5 | CNN hướng B, N1–N8 | `src.cnn.train`, `src.exp_cnn` | khoảng 70 phút | 14 phút |
+| 6 | Mất cân bằng I1–I2 | `src.cnn.train`, `src.exp_imbalance` | khoảng 40 phút | 14 phút |
+| 7 | Phân đoạn S1–S2 | `src.exp_segment` | khoảng 10 phút | 7 phút |
+| 8 | Đánh giá cuối trên test, phân tích lỗi, tổng hợp | `src.final_eval`, `src.error_analysis`, `src.summarize` | khoảng 2 phút | 1,4 phút |
+| 10 | Bộ kiểm tra khó; nhánh G chấm lại | `src.stress`, `src.pipeline` | khoảng 10 phút | 6 phút |
+| 11 | Nhánh T: bản Augmented của tác giả (có sẵn trong `data/aug_author/`) | `src.exp_arm_t` | khoảng 100 phút | 13 phút |
+| 12 | Nhánh B: phương pháp của bài báo | `src.exp_papers` | khoảng 45 phút | 23 phút |
+| 13 | Nhánh X: làm sạch, tiền xử lý, tăng cường; S2 chạy lại | `src.exp_arm_x`, `src.exp_segment --only S2V2` | khoảng 130 phút | 41 phút |
+| 14 | So sánh bốn nhánh, tổng hợp | `src.compare_arms`, `src.summarize` | khoảng 1 phút | 45 giây (gồm cả bước 9) |
+| 9 | Mô hình demo, báo cáo (md + docx), slide (Beamer + pptx); chạy sau cùng | `src.export_demo`, `src.build_report`, `src.make_slides` | khoảng 2 phút | chạy cùng bước 14 |
 
 Ghi chú:
 

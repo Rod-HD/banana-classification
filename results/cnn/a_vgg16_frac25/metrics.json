@@ -69,6 +69,7 @@
   "class_weight": false,
   "oversample": false,
   "minority_aug": false,
+  "seed": 42,
   "frozen_backbone": true,
   "params": {
     "total": 25954564,

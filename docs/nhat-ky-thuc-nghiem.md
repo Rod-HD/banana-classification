@@ -1544,6 +1544,69 @@ Clone mới từ GitHub sau khi push (`git clone`, nhánh `dev`): 80 giây, tả
 
 ---
 
+## Bước 15 (bổ sung) — Chạy lại toàn bộ trong một bản clone mới, không huấn luyện lại (13/11/2026)
+
+**Mục tiêu.** Kiểm tra lời hứa "clone về là chạy lại được": lấy repo từ GitHub về một thư mục trống (không có `data/cache/`), chạy `python -m src.cnn.checkpoints` rồi `bash scripts/run_all.sh` cho bước 1–8 và 10–14, đo thời gian từng bước và so mọi file sinh ra với bản đã commit.
+
+**Đã làm.**
+- Clone `dev` (commit `5889e1b`) vào một thư mục riêng; chạy từng bước, ghi thời gian và log của mỗi bước.
+- Máy chạy thí nghiệm bị khởi động lại giữa bước 13 (sau khi xong nhánh X1, X2); bước 13 và 14 được chạy lại từ đầu. Thời gian bước 13 vì thế được đo khi một phần cache của X1–X2 đã có sẵn.
+- So từng file trong `results/`, `models/`, `report/`, `slides/` với bản đã commit: file JSON so theo từng trường, bảng `.md` và `summary.csv` so theo từng cột, mô hình `.keras` so từng mảng trọng số, hình `.png` so từng điểm ảnh.
+- Sửa hai chỗ chưa nhất quán mà lần so này tìm ra (xem Kết quả).
+
+**Lý do chọn cách này.** Chạy trong bản clone mới thì không có file nào "dính" từ máy cũ (cache, checkpoint tạm, kết quả cũ), nên đây là phép thử gần nhất với việc người khác tải repo về chạy.
+
+**Phương án khác và vì sao không chọn.**
+- Chạy lại ngay trong thư mục làm việc: cache và file trung gian còn sẵn, không phát hiện được file thiếu trong repo. **[lập luận]**
+- Chỉ chạy lại một nhánh (đã làm ở Bước 15 với T-kr, 401 giây): không bao phủ bước 1–10 và 12–14. **[đo]**
+
+**Bằng chứng.** **[đo]**
+
+Thời gian (CPU 4 nhân, không huấn luyện lại):
+
+| Bước | Thời gian |
+|---|---|
+| Kiểm tra trọng số (`src.cnn.checkpoints`) | 267 s |
+| 1 | 92 s |
+| 2 | 303 s |
+| 3 | 1.129 s |
+| 4 | 196 s |
+| 5 | 856 s |
+| 6 | 822 s |
+| 7 | 418 s |
+| 8 | 84 s |
+| 10 | 347 s |
+| 11 | 757 s |
+| 12 | 1.390 s |
+| 13 | 2.470 s |
+| 14 (gồm bước 9: mô hình demo, báo cáo, slide) | 45 s |
+| **Tổng** | **9.176 s ≈ 2,5 giờ** |
+
+Khác biệt so với bản đã commit (mọi bước đều kết thúc với mã thoát 0):
+
+| Loại file | Kết quả so sánh |
+|---|---|
+| JSON trong `results/` (81 file) | Chỉ khác ở các trường thời gian (`predict_ms_per_image`, `fit_time_s`, `predict_time_s`, `extract_ms_per_image`, `train_time_s` của N6, …), trừ hai chỗ nêu dưới |
+| `results/summary.csv` (968 dòng × 14 cột) | Chỉ khác 3 cột: `extract_ms_per_image`, `fit_time_s`, `predict_ms_per_image` |
+| Bảng `.md` trong `results/` (8 file) | Chỉ khác ở cột thời gian (C3, M4, N6, P4, P5, chọn cấu hình truyền thống) |
+| `models/*.keras` (3 file) | 0 mảng trọng số khác (10 + 208 + 208 mảng); cùng dung lượng, chỉ khác dấu thời gian trong file zip |
+| Báo cáo, slide | Chỉ khác ở các bảng thời gian lấy từ `results/` |
+| Hình | 4 hình có trục hoặc nhãn ghi thời gian; `E_stress_examples.png` khác 56/1.255.254 điểm ảnh ở 2 hàng sát mép dưới, cả ở cột ảnh gốc, tức do khâu vẽ chứ không do dữ liệu |
+| `results/environment.txt` | Khác phiên bản nhân Linux của máy |
+
+Hai chỗ chưa nhất quán được sửa:
+
+| Chỗ | Trước | Sau |
+|---|---|---|
+| `best_model_file_mb` trong `results/N3`, `N4`, `N5/metrics.json` (12 giá trị) | Vẫn là dung lượng file kèm trạng thái Adam (ví dụ `b_mobilenetv3` 11,74 MB) vì Bước 15 chỉ sửa `results/cnn/` | Dung lượng `best.keras` hiện tại (4,34 MB) |
+| Trường `seed`, `minority_aug` trong `metrics.json` của 15 run cũ và bản tổng hợp N3–N5 | Không có (các run này chạy trước khi thêm hai tùy chọn) | `seed: 42`, `minority_aug: false`, đúng cấu hình lúc huấn luyện |
+
+Bảng `.md`, báo cáo và slide không dùng hai trường này nên không đổi.
+
+**Kết quả và kết luận.** Bản clone từ GitHub chạy lại được toàn bộ thí nghiệm trong khoảng 2,5 giờ mà không huấn luyện lại; không có macro-F1, accuracy, ma trận nhầm lẫn hay lựa chọn mô hình nào khác bản đã commit. Sau khi sửa hai chỗ trên, lần chạy lại tiếp theo chỉ còn khác ở số đo thời gian.
+
+**Ảnh hưởng tới bước sau.** README có thêm cột "Chạy lại, dùng trọng số có sẵn (đo)" bên cạnh cột thời gian huấn luyện lại từ đầu.
+
 ## Bảng quyết định
 
 | Quyết định | Phương án thay thế | Bằng chứng | Nhãn |
@@ -1596,3 +1659,4 @@ Clone mới từ GitHub sau khi push (`git clone`, nhánh `dev`): 80 giây, tả
 | Dung lượng file mô hình đo trên file không kèm trạng thái Adam | Giữ số đo trên file kèm trạng thái Adam | Bước 15, `results/N6/table.md`: file mới xấp xỉ 4 byte × số tham số | [đo] |
 | Không commit `data/cache/` | Commit cả cache | Bước 15: 8,3 GiB, 15 file trên 100 MiB; tính lại được, không cần huấn luyện | [đo] |
 | Nhánh mở rộng mặc định tính lại, dùng lại trọng số; `SKIP_DONE=1` để bỏ qua cấu hình đã xong | Luôn bỏ qua cấu hình đã có kết quả | Bước 15: nhánh T-kr tính lại trùng từng byte trong 401 giây | [đo] |
+| Kiểm chứng tái lập bằng bản clone mới từ GitHub | Chạy lại trong thư mục làm việc | Bước 15 (bổ sung): 2,5 giờ, mọi khác biệt chỉ ở số đo thời gian | [đo] |
