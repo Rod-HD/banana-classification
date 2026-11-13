@@ -54,6 +54,28 @@ Cấu hình đại diện của mỗi nhánh (nguồn: [results/so_sanh_nhanh/ta
 - Tái hiện kết quả bài báo: ViT + SVM đạt 99,49% theo giao thức của bài báo (công bố: 99,70%); khi giữ các file cùng ảnh gốc trong một fold còn 99,20% ([results/E3_bai_bao/table_protocols.md](results/E3_bai_bao/table_protocols.md)).
 - Hạn chế đo được thêm: mỗi quả được chụp nhiều mặt và cách chia ngẫu nhiên không tách theo quả, nên các con số chia ngẫu nhiên lạc quan khoảng 0,02–0,07 so với chia theo khối ảnh liên tiếp ([results/E1_xu_ly/table_blocked_cv.md](results/E1_xu_ly/table_blocked_cv.md)).
 
+## Tải repo
+
+```bash
+git clone https://github.com/Rod-HD/banana-classification.git
+```
+
+Bản clone đầy đủ tải khoảng 1,5 GB (3,2 GB trên đĩa), phần lớn là trọng số CNN trong `checkpoints/`. Nếu chỉ cần code, kết quả, báo cáo, slide và mô hình demo (khoảng 120 MB), clone không kèm `checkpoints/` và `data/aug_author/`:
+
+```bash
+git clone --filter=blob:none --sparse https://github.com/Rod-HD/banana-classification.git
+```
+
+```bash
+cd banana-classification
+```
+
+```bash
+git sparse-checkout set --no-cone '/*' '!/checkpoints/' '!/data/aug_author/'
+```
+
+Với bản clone gọn, demo và mọi kết quả vẫn dùng được; muốn chạy lại các bước có CNN thì cần `checkpoints/` (hoặc huấn luyện lại bằng `RETRAIN=1`).
+
 ## Cài đặt
 
 Cần Python 3.13 và kết nối mạng (lần đầu chạy, Keras và torchvision tải trọng số ImageNet của VGG16, ResNet50, MobileNetV3, SqueezeNet, ViT-B/16). Máy chỉ cần CPU. PyTorch chỉ dùng cho bước 12. Slide Beamer cần `pdflatex` (texlive có gói `vntex`); script cài đặt thử cài bằng `apt-get`, nếu không có thì bước dựng slide chỉ sinh file `.tex` và `.pptx`.

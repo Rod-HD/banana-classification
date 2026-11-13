@@ -1532,6 +1532,8 @@ Chạy lại lệnh huấn luyện khi đã có trọng số (5 lệnh của bư
 
 Chạy lại cả nhánh T-kr (`python -m src.exp_arm_t --only kr`, 9 cấu hình, 5 CNN dùng lại trọng số): 401 giây; `git status results/E2_aug_tac_gia` không có file nào thay đổi, tức `metrics.json`, `predictions.npz`, bảng và hình của cả 9 cấu hình trùng từng byte với bản đã commit.
 
+Clone mới từ GitHub sau khi push (`git clone`, nhánh `dev`): 80 giây, tải 1,5 GB, chiếm 3,2 GB trên đĩa; có đủ 54 file `best.keras`, 7.413 ảnh trong `data/aug_author/`, 64 file log; mã băm SHA-256 của `checkpoints/b_mobilenetv3_lr1e-4/best.keras` trùng file trên máy chạy thí nghiệm. Clone không kèm `checkpoints/` và `data/aug_author/` (lệnh ở README, mục "Tải repo"): 6 giây, 123 MB.
+
 **Kết quả và kết luận.**
 - Repo có sẵn trọng số của cả 54 lần huấn luyện (1.563 MB), bản Augmented của tác giả (7.413 ảnh) và log. Chạy lại bất kỳ bước nào cũng không phải huấn luyện lại; thời gian huấn luyện đã ghi trong `state.json` của 54 run cộng lại là 3,3 giờ.
 - Các con số về độ chính xác tái lập được từ trọng số trong repo: 40/40 run chấm lại trùng kết quả đã ghi, nhánh T-kr tính lại trùng từng byte.
